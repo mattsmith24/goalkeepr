@@ -1,9 +1,7 @@
 <script lang="ts">
-
-    interface Goal {
-        id: number,
-        description: string
-    }
+    import type { Goal } from '$lib/types';
+    import GoalItem from './GoalItem.svelte';
+    import NewGoalForm from './NewGoalForm.svelte';
 
     interface Props {
         goals: Goal[];
@@ -18,15 +16,10 @@
 <h1>Goals</h1>
 <ul>
     {#each goals as goal (goal.id)}
-        <li>{goal.description}</li>
+        <GoalItem {goal} />
     {:else}
         <li class="italic">No goals yet. Time to dream!</li>
     {/each}
 </ul>
-<h1>New Goal</h1>
-<form method="POST">
-    <label for="goal-description">What is your goal?</label>
-    <input id="goal-description" name="goal-description" />
-    <input type="submit" value="Add Goal" />
-</form>
+<NewGoalForm />
 </div>
