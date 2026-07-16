@@ -1,1 +1,28 @@
 @import 'tailwindcss';
+
+body {
+    background-color: white;
+}
+
+h1 {
+    font-size: xx-large;
+}
+
+input {
+    border: 1px solid purple;
+}
+
+input[type="submit"] {
+    padding: 0.25em 0.5em;
+    margin: 0.5em;
+    background-color: magenta;
+    color: white;
+    border-radius: 5px;
+    border: 1px solid purple;
+    box-shadow: 2px 2px 2px purple;
+    text-shadow: 1px 1px 2px rgb(71, 0, 71);
+}
+
+input[type="submit"]:hover {
+        box-shadow: 1px 1px 2px purple;
+}

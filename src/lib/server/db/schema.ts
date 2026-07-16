@@ -10,7 +10,7 @@ export const task = sqliteTable('task', {
 
 //export * from './auth.schema';
 
-export const goals = sqliteTable('goals', {
+export const goalsTable = sqliteTable('goals', {
     id: integer().primaryKey({ autoIncrement: true }),
     description: text().notNull(),
 });
