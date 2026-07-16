@@ -26,6 +26,28 @@ Design components with Storybook
 npm run storybook
 ```
 
+### Testing
+
+Three kinds of tests, all driven by `npm run test`:
+
+- **Unit (server)** — Vitest in Node, runs `*.{test,spec}.{js,ts}` excluding Svelte component tests.
+- **Component / Storybook interaction** — Vitest in a real browser, drives the `play` functions on stories. Also a "test" of the component's rendering and accessibility.
+- **E2E** — Playwright, drives the full app via a browser.
+
+The two browser-based suites need Playwright's Chromium installed. `npm run test:e2e` installs it automatically the first time, but you can also run it on its own:
+
+```sh
+npx playwright install chromium
+```
+
+Run them individually:
+
+```sh
+npm run test:unit    # unit + storybook interaction tests
+npm run test:e2e     # e2e (also runs `playwright install` first)
+npm run test         # both, sequentially
+```
+
 ## Building
 
 To create a production version of your app:

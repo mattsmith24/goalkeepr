@@ -1,5 +1,6 @@
 <script module>
     import { defineMeta } from '@storybook/addon-svelte-csf';
+    import { expect, within } from 'storybook/test';
 
     import NewGoalForm from './NewGoalForm.svelte';
 
@@ -10,4 +11,23 @@
     });
 </script>
 
-<Story name="Default" />
+<Story
+    name="Default"
+    play={async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        await expect(
+            canvas.getByRole('heading', { name: /new goal/i, level: 1 })
+        ).toBeInTheDocument();
+
+        const input = canvas.getByLabelText(/what is your goal\?/i);
+        await expect(input).toBeInTheDocument();
+        await expect(input).toHaveAttribute('name', 'goal-description');
+
+        const form = canvasElement.querySelector('form');
+        await expect(form).not.toBeNull();
+        await expect(form).toHaveAttribute('method', 'POST');
+
+        await expect(canvas.getByRole('button', { name: /add goal/i })).toBeInTheDocument();
+    }}
+/>
