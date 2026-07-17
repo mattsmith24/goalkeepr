@@ -18,7 +18,7 @@ test('deleting a goal removes it from the list', async ({ page }) => {
     await addGoal(page, description);
 
     const item = page.getByRole('listitem').filter({ hasText: description });
-    await item.getByRole('button', { name: /delete/i }).click();
+    await item.getByRole('button', { name: 'Delete', exact: true }).click();
 
     await expect(item).not.toBeVisible();
 });
@@ -33,7 +33,7 @@ test('deleting one goal leaves others intact', async ({ page }) => {
     const target = page.getByRole('listitem').filter({ hasText: goal2 });
     const other = page.getByRole('listitem').filter({ hasText: goal1 });
 
-    await target.getByRole('button', { name: /delete/i }).click();
+    await target.getByRole('button', { name: 'Delete', exact: true }).click();
 
     await expect(target).not.toBeVisible();
     await expect(other).toBeVisible();

@@ -1,8 +1,6 @@
 <script module>
     import { defineMeta } from '@storybook/addon-svelte-csf';
 
-    //import { fn } from 'storybook/test';
-
     import GoalList from './GoalList.svelte';
 
     export const goalData = [{
@@ -18,14 +16,20 @@
     });
 </script>
 
-<Story name="Empty" args={{ goals: [] }} />
-
-<Story name="Default" args={{ goals: goalData }} />
+<Story
+    name="Empty"
+    args={{
+        goals: [],
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (id, description) => console.log('update', id, description),
+    }}
+/>
 
 <Story
-    name="With delete handler"
+    name="Default"
     args={{
         goals: goalData,
         onDelete: (id) => console.log('delete', id),
+        onUpdate: (id, description) => console.log('update', id, description),
     }}
 />

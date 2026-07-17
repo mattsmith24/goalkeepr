@@ -12,13 +12,9 @@
 
 <Story
     name="Default"
-    args={{ goal: { id: 1, description: 'I want to win an Olympic gold medal for break dancing' } }}
-/>
-
-<Story
-    name="With delete handler"
     args={{
-        goal: { id: 2, description: 'Learn to juggle' },
+        goal: { id: 1, description: 'I want to win an Olympic gold medal for break dancing' },
         onDelete: (id) => console.log('delete', id),
+        onUpdate: (id, description) => console.log('update', id, description),
     }}
 />

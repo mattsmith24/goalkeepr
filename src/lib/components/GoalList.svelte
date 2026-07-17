@@ -5,12 +5,14 @@
 
     interface Props {
         goals: Goal[];
-        onDelete?: (id: number) => void;
+        onDelete: (id: number) => void;
+        onUpdate: (id: number, description: string) => void;
     }
 
     const {
         goals = [],
         onDelete,
+        onUpdate,
     }: Props = $props();
 </script>
 
@@ -18,7 +20,7 @@
 <h1>Goals</h1>
 <ul>
     {#each goals as goal (goal.id)}
-        <GoalItem {goal} {onDelete} />
+        <GoalItem {goal} {onDelete} {onUpdate} />
     {:else}
         <li class="italic">No goals yet. Time to dream!</li>
     {/each}

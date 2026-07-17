@@ -29,4 +29,17 @@ export const actions: Actions = {
         await db.delete(goalsTable).where(eq(goalsTable.id, id));
         return { success: true };
     },
+    update: async (event) => {
+        const data = await event.request.formData();
+        const id = Number(data.get('id'));
+        const description = data.get('description')?.toString().trim() ?? '';
+        if (!Number.isInteger(id) || id <= 0) {
+            return { success: false, error: 'invalid id' };
+        }
+        if (!description) {
+            return { success: false, error: 'description cannot be empty' };
+        }
+        await db.update(goalsTable).set({ description }).where(eq(goalsTable.id, id));
+        return { success: true };
+    },
 };
