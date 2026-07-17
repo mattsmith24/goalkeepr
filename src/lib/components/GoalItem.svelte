@@ -3,9 +3,21 @@
 
     interface Props {
         goal: Goal;
+        onDelete?: (id: number) => void;
     }
 
-    const { goal }: Props = $props();
+    const { goal, onDelete }: Props = $props();
 </script>
 
-<li>{goal.description}</li>
+<li class="flex items-center gap-2">
+    <span>{goal.description}</span>
+    {#if onDelete}
+        <button
+            type="button"
+            class="ml-auto text-sm text-red-600 hover:underline"
+            onclick={() => onDelete(goal.id)}
+        >
+            Delete
+        </button>
+    {/if}
+</li>

@@ -21,3 +21,11 @@
 <Story name="Empty" args={{ goals: [] }} />
 
 <Story name="Default" args={{ goals: goalData }} />
+
+<Story
+    name="With delete handler"
+    args={{
+        goals: goalData,
+        onDelete: (id) => console.log('delete', id),
+    }}
+/>

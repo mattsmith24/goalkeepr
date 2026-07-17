@@ -1,5 +1,7 @@
 import type { Actions, PageServerLoad } from './$types';
 
+import { eq } from 'drizzle-orm';
+
 import { db } from '$lib/server/db';
 import { goalsTable } from '$lib/server/db/schema';
 
@@ -10,12 +12,21 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions: Actions = {
-    default: async (event) => {
+    create: async (event) => {
         const data = await event.request.formData();
         const goal_description = data.get('goal-description')?.toString() ?? '';
         const goal: typeof goalsTable.$inferInsert = {
             description: goal_description,
         };
         await db.insert(goalsTable).values(goal);
+    },
+    delete: async (event) => {
+        const data = await event.request.formData();
+        const id = Number(data.get('id'));
+        if (!Number.isInteger(id) || id <= 0) {
+            return { success: false, error: 'invalid id' };
+        }
+        await db.delete(goalsTable).where(eq(goalsTable.id, id));
+        return { success: true };
     },
 };
