@@ -4,11 +4,10 @@
 
     interface Props {
         goal: Goal;
-        onDelete: (id: number) => void;
         onUpdate: (id: number, description: string) => void;
     }
 
-    const { goal, onDelete, onUpdate }: Props = $props();
+    const { goal, onUpdate }: Props = $props();
 
     let editing = $state(false);
     let draft = $state('');
@@ -46,30 +45,22 @@
     }
 </script>
 
-<li class="flex items-center gap-2">
-    {#if editing}
-        <input
-            bind:this={inputElement}
-            bind:value={draft}
-            onkeydown={handleKeydown}
-            onblur={cancelEdit}
-            class="flex-1 border border-gray-800 px-2 py-1"
-        />
-    {:else}
-        <a href="/goals/{goal.id}" class="flex-1 px-2 py-1 hover:underline">{goal.description}</a>
+{#if editing}
+    <input
+        bind:this={inputElement}
+        bind:value={draft}
+        onkeydown={handleKeydown}
+        onblur={cancelEdit}
+        class="w-full border border-gray-800 px-2 py-1 text-2xl font-bold"
+    />
+{:else}
+    <h1>
         <button
             type="button"
-            class="text-sm text-blue-600 hover:underline"
+            class="cursor-text text-left text-2xl font-bold hover:bg-gray-100"
             onclick={startEdit}
         >
-            Edit
+            {goal.description}
         </button>
-        <button
-            type="button"
-            class="text-sm text-red-600 hover:underline"
-            onclick={() => onDelete(goal.id)}
-        >
-            Delete
-        </button>
-    {/if}
-</li>
+    </h1>
+{/if}
