@@ -14,3 +14,11 @@ export const goalsTable = sqliteTable('goals', {
     id: integer().primaryKey({ autoIncrement: true }),
     description: text().notNull(),
 });
+
+export const milestonesTable = sqliteTable('milestones', {
+    id: integer().primaryKey({ autoIncrement: true }),
+    goalId: integer()
+        .notNull()
+        .references(() => goalsTable.id, { onDelete: 'cascade' }),
+    description: text().notNull(),
+});

@@ -2,6 +2,7 @@
     import { invalidateAll } from '$app/navigation';
     import type { PageProps } from './$types';
     import GoalTitle from '$lib/components/GoalTitle.svelte';
+    import MilestoneList from '$lib/components/MilestoneList.svelte';
 
     let { data }: PageProps = $props();
 
@@ -17,9 +18,39 @@
             await invalidateAll();
         }
     }
+
+    async function handleMilestoneUpdate(id: number, description: string) {
+        const formData = new FormData();
+        formData.set('id', String(id));
+        formData.set('description', description);
+        const response = await fetch('?/updateMilestone', {
+            method: 'POST',
+            body: formData,
+        });
+        if (response.ok) {
+            await invalidateAll();
+        }
+    }
+
+    async function handleMilestoneDelete(id: number) {
+        const formData = new FormData();
+        formData.set('id', String(id));
+        const response = await fetch('?/deleteMilestone', {
+            method: 'POST',
+            body: formData,
+        });
+        if (response.ok) {
+            await invalidateAll();
+        }
+    }
 </script>
 
 <a href="/" class="text-sm text-blue-600 hover:underline">&larr; Back</a>
 <div class="mt-2 m-2 p-2">
     <GoalTitle goal={data.goal} onUpdate={handleUpdate} />
 </div>
+<MilestoneList
+    milestones={data.milestones}
+    onDelete={handleMilestoneDelete}
+    onUpdate={handleMilestoneUpdate}
+/>
