@@ -4,6 +4,7 @@
     import GoalTitle from '$lib/components/GoalTitle.svelte';
     import MilestoneList from '$lib/components/MilestoneList.svelte';
     import HabitList from '$lib/components/HabitList.svelte';
+    import MeasurementList from '$lib/components/MeasurementList.svelte';
 
     let { data }: PageProps = $props();
 
@@ -69,6 +70,31 @@
             await invalidateAll();
         }
     }
+
+    async function handleMeasurementUpdate(id: number, description: string) {
+        const formData = new FormData();
+        formData.set('id', String(id));
+        formData.set('description', description);
+        const response = await fetch('?/updateMeasurement', {
+            method: 'POST',
+            body: formData,
+        });
+        if (response.ok) {
+            await invalidateAll();
+        }
+    }
+
+    async function handleMeasurementDelete(id: number) {
+        const formData = new FormData();
+        formData.set('id', String(id));
+        const response = await fetch('?/deleteMeasurement', {
+            method: 'POST',
+            body: formData,
+        });
+        if (response.ok) {
+            await invalidateAll();
+        }
+    }
 </script>
 
 <a href="/" class="text-sm text-blue-600 hover:underline">&larr; Back</a>
@@ -84,4 +110,9 @@
     habits={data.habits}
     onDelete={handleHabitDelete}
     onUpdate={handleHabitUpdate}
+/>
+<MeasurementList
+    measurements={data.measurements}
+    onDelete={handleMeasurementDelete}
+    onUpdate={handleMeasurementUpdate}
 />

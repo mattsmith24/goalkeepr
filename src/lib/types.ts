@@ -14,3 +14,9 @@ export interface Habit {
     goalId: number;
     description: string;
 }
+
+export interface Measurement {
+    id: number;
+    goalId: number;
+    description: string;
+}

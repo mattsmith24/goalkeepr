@@ -30,3 +30,11 @@ export const habitsTable = sqliteTable('habits', {
         .references(() => goalsTable.id, { onDelete: 'cascade' }),
     description: text().notNull(),
 });
+
+export const measurementsTable = sqliteTable('measurements', {
+    id: integer().primaryKey({ autoIncrement: true }),
+    goalId: integer()
+        .notNull()
+        .references(() => goalsTable.id, { onDelete: 'cascade' }),
+    description: text().notNull(),
+});

@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
 
 import { db } from '$lib/server/db';
-import { goalsTable, habitsTable, milestonesTable } from '$lib/server/db/schema';
+import { goalsTable, habitsTable, measurementsTable, milestonesTable } from '$lib/server/db/schema';
 
 export const load: PageServerLoad = async ({ params }) => {
     const id = Number(params.id);
@@ -20,7 +20,11 @@ export const load: PageServerLoad = async ({ params }) => {
         .from(milestonesTable)
         .where(eq(milestonesTable.goalId, id));
     const habits = await db.select().from(habitsTable).where(eq(habitsTable.goalId, id));
-    return { goal, milestones, habits };
+    const measurements = await db
+        .select()
+        .from(measurementsTable)
+        .where(eq(measurementsTable.goalId, id));
+    return { goal, milestones, habits, measurements };
 };
 
 export const actions: Actions = {
@@ -105,6 +109,44 @@ export const actions: Actions = {
             return { success: false, error: 'invalid id' };
         }
         await db.delete(habitsTable).where(eq(habitsTable.id, id));
+        return { success: true };
+    },
+    createMeasurement: async (event) => {
+        const goalId = Number(event.params.id);
+        const data = await event.request.formData();
+        const description = data.get('measurement-description')?.toString().trim() ?? '';
+        if (!Number.isInteger(goalId) || goalId <= 0) {
+            return { success: false, error: 'invalid goal id' };
+        }
+        if (!description) {
+            return { success: false, error: 'description cannot be empty' };
+        }
+        await db.insert(measurementsTable).values({ goalId, description });
+        return { success: true };
+    },
+    updateMeasurement: async (event) => {
+        const data = await event.request.formData();
+        const id = Number(data.get('id'));
+        const description = data.get('description')?.toString().trim() ?? '';
+        if (!Number.isInteger(id) || id <= 0) {
+            return { success: false, error: 'invalid id' };
+        }
+        if (!description) {
+            return { success: false, error: 'description cannot be empty' };
+        }
+        await db
+            .update(measurementsTable)
+            .set({ description })
+            .where(eq(measurementsTable.id, id));
+        return { success: true };
+    },
+    deleteMeasurement: async (event) => {
+        const data = await event.request.formData();
+        const id = Number(data.get('id'));
+        if (!Number.isInteger(id) || id <= 0) {
+            return { success: false, error: 'invalid id' };
+        }
+        await db.delete(measurementsTable).where(eq(measurementsTable.id, id));
         return { success: true };
     },
 };
