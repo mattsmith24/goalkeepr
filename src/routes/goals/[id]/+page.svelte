@@ -3,6 +3,7 @@
     import type { PageProps } from './$types';
     import GoalTitle from '$lib/components/GoalTitle.svelte';
     import MilestoneList from '$lib/components/MilestoneList.svelte';
+    import HabitList from '$lib/components/HabitList.svelte';
 
     let { data }: PageProps = $props();
 
@@ -43,6 +44,31 @@
             await invalidateAll();
         }
     }
+
+    async function handleHabitUpdate(id: number, description: string) {
+        const formData = new FormData();
+        formData.set('id', String(id));
+        formData.set('description', description);
+        const response = await fetch('?/updateHabit', {
+            method: 'POST',
+            body: formData,
+        });
+        if (response.ok) {
+            await invalidateAll();
+        }
+    }
+
+    async function handleHabitDelete(id: number) {
+        const formData = new FormData();
+        formData.set('id', String(id));
+        const response = await fetch('?/deleteHabit', {
+            method: 'POST',
+            body: formData,
+        });
+        if (response.ok) {
+            await invalidateAll();
+        }
+    }
 </script>
 
 <a href="/" class="text-sm text-blue-600 hover:underline">&larr; Back</a>
@@ -53,4 +79,9 @@
     milestones={data.milestones}
     onDelete={handleMilestoneDelete}
     onUpdate={handleMilestoneUpdate}
+/>
+<HabitList
+    habits={data.habits}
+    onDelete={handleHabitDelete}
+    onUpdate={handleHabitUpdate}
 />

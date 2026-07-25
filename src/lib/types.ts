@@ -8,3 +8,9 @@ export interface Milestone {
     goalId: number;
     description: string;
 }
+
+export interface Habit {
+    id: number;
+    goalId: number;
+    description: string;
+}
