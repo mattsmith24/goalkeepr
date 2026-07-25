@@ -18,7 +18,8 @@ test('editing a goal updates its description', async ({ page }) => {
 
     await addGoal(page, original);
 
-    await page.getByRole('button', { name: original }).click();
+    const goalItem = page.getByRole('listitem').filter({ hasText: original });
+    await goalItem.getByRole('button', { name: 'Edit', exact: true }).click();
 
     const input = page.getByRole('list').getByRole('textbox');
     await expect(input).toBeFocused();
@@ -34,7 +35,8 @@ test('escape cancels an edit and keeps the original description', async ({ page 
 
     await addGoal(page, original);
 
-    await page.getByRole('button', { name: original }).click();
+    const goalItem = page.getByRole('listitem').filter({ hasText: original });
+    await goalItem.getByRole('button', { name: 'Edit', exact: true }).click();
 
     const input = page.getByRole('list').getByRole('textbox');
     await input.fill('this should be discarded');

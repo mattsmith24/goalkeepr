@@ -16,4 +16,5 @@ export default defineConfig({
         port: 4173,
     },
     testMatch: '**/*.e2e.{ts,js}',
+    workers: 1,
 });
