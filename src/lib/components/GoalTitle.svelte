@@ -57,7 +57,7 @@
     <h1>
         <button
             type="button"
-            class="cursor-text text-left text-2xl font-bold hover:bg-gray-100"
+            class="cursor-text text-left text-3xl hover:bg-gray-100"
             onclick={startEdit}
         >
             {goal.description}

@@ -1,4 +1,4 @@
-<h1>New Milestone</h1>
+<h2>New Milestone</h2>
 <form method="POST" action="?/createMilestone">
     <label for="milestone-description">What is your milestone?</label>
     <input id="milestone-description" name="milestone-description" class="border border-gray-500"/>

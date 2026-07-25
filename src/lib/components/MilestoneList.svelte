@@ -17,7 +17,7 @@
 </script>
 
 <div class="m-2 p-2">
-<h1>Milestones</h1>
+<h2>Milestones</h2>
 <ul>
     {#each milestones as milestone (milestone.id)}
         <MilestoneItem {milestone} {onDelete} {onUpdate} />

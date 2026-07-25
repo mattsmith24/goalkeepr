@@ -1,4 +1,4 @@
-<h1>New Goal</h1>
+<h2>New Goal</h2>
 <form method="POST" action="?/create">
     <label for="goal-description">What is your goal?</label>
     <input id="goal-description" name="goal-description" class="border border-gray-500"/>
