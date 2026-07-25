@@ -16,9 +16,19 @@
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
 
-        await expect(
-            canvas.getByRole('heading', { name: /new goal/i, level: 1 })
-        ).toBeInTheDocument();
+        const button = canvas.getByRole('button', { name: /add goal/i });
+        await expect(button).toBeInTheDocument();
+
+        await expect(canvas.queryByLabelText(/what is your goal\?/i)).not.toBeInTheDocument();
+    }}
+/>
+
+<Story
+    name="Expanded"
+    play={async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        await canvas.getByRole('button', { name: /add goal/i }).click();
 
         const input = canvas.getByLabelText(/what is your goal\?/i);
         await expect(input).toBeInTheDocument();
@@ -28,6 +38,7 @@
         await expect(form).not.toBeNull();
         await expect(form).toHaveAttribute('method', 'POST');
 
-        await expect(canvas.getByRole('button', { name: /add goal/i })).toBeInTheDocument();
+        await expect(canvas.getByRole('button', { name: /^add goal$/i })).toBeInTheDocument();
+        await expect(canvas.getByRole('button', { name: /^cancel$/i })).toBeInTheDocument();
     }}
 />

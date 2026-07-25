@@ -16,9 +16,19 @@
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
 
-        await expect(
-            canvas.getByRole('heading', { name: /new habit/i, level: 1 })
-        ).toBeInTheDocument();
+        const button = canvas.getByRole('button', { name: /add habit/i });
+        await expect(button).toBeInTheDocument();
+
+        await expect(canvas.queryByLabelText(/what is your habit\?/i)).not.toBeInTheDocument();
+    }}
+/>
+
+<Story
+    name="Expanded"
+    play={async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        await canvas.getByRole('button', { name: /add habit/i }).click();
 
         const input = canvas.getByLabelText(/what is your habit\?/i);
         await expect(input).toBeInTheDocument();
@@ -28,6 +38,7 @@
         await expect(form).not.toBeNull();
         await expect(form).toHaveAttribute('method', 'POST');
 
-        await expect(canvas.getByRole('button', { name: /add habit/i })).toBeInTheDocument();
+        await expect(canvas.getByRole('button', { name: /^add habit$/i })).toBeInTheDocument();
+        await expect(canvas.getByRole('button', { name: /^cancel$/i })).toBeInTheDocument();
     }}
 />

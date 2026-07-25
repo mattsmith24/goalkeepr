@@ -7,8 +7,9 @@ test.beforeEach(() => {
 
 async function addGoal(page: import('@playwright/test').Page, description: string) {
     await page.goto('/');
-    await page.getByLabel(/what is your goal\?/i).fill(description);
     await page.getByRole('button', { name: /add goal/i }).click();
+    await page.getByLabel(/what is your goal\?/i).fill(description);
+    await page.getByRole('button', { name: /^add goal$/i }).click();
     await expect(page.getByRole('listitem').filter({ hasText: description })).toBeVisible();
 }
 

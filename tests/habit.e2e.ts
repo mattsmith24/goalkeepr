@@ -7,8 +7,9 @@ test.beforeEach(() => {
 
 async function addGoalAndOpen(page: import('@playwright/test').Page, description: string) {
     await page.goto('/');
-    await page.getByLabel(/what is your goal\?/i).fill(description);
     await page.getByRole('button', { name: /add goal/i }).click();
+    await page.getByLabel(/what is your goal\?/i).fill(description);
+    await page.getByRole('button', { name: /^add goal$/i }).click();
     await page.getByRole('link', { name: description }).click();
     await expect(page.getByRole('heading', { level: 1, name: description })).toBeVisible();
 }
@@ -22,8 +23,9 @@ test('a habit can be added, edited and deleted', async ({ page }) => {
 
     // Add
     await expect(page.getByText(/no habits yet/i)).toBeVisible();
-    await page.getByLabel(/what is your habit\?/i).fill(habit);
     await page.getByRole('button', { name: /add habit/i }).click();
+    await page.getByLabel(/what is your habit\?/i).fill(habit);
+    await page.getByRole('button', { name: /^add habit$/i }).click();
 
     const item = page.getByRole('listitem').filter({ hasText: habit });
     await expect(item).toBeVisible();

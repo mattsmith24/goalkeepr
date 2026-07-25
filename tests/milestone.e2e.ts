@@ -7,8 +7,9 @@ test.beforeEach(() => {
 
 async function addGoalAndOpen(page: import('@playwright/test').Page, description: string) {
     await page.goto('/');
-    await page.getByLabel(/what is your goal\?/i).fill(description);
     await page.getByRole('button', { name: /add goal/i }).click();
+    await page.getByLabel(/what is your goal\?/i).fill(description);
+    await page.getByRole('button', { name: /^add goal$/i }).click();
     await page.getByRole('link', { name: description }).click();
     await expect(page.getByRole('heading', { level: 1, name: description })).toBeVisible();
 }
@@ -22,8 +23,9 @@ test('a milestone can be added, edited and deleted', async ({ page }) => {
 
     // Add
     await expect(page.getByText(/no milestones yet/i)).toBeVisible();
-    await page.getByLabel(/what is your milestone\?/i).fill(milestone);
     await page.getByRole('button', { name: /add milestone/i }).click();
+    await page.getByLabel(/what is your milestone\?/i).fill(milestone);
+    await page.getByRole('button', { name: /^add milestone$/i }).click();
 
     const item = page.getByRole('listitem').filter({ hasText: milestone });
     await expect(item).toBeVisible();
