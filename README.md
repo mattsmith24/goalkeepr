@@ -9,7 +9,22 @@ Svelte commands used to create this:
 npx sv@0.15.3 create --template minimal --types ts --add prettier eslint vitest="usages:unit" playwright tailwindcss="plugins:none" sveltekit-adapter="adapter:node" drizzle="database:sqlite+sqlite:better-sqlite3" better-auth="demo:github" storybook --install npm fail-again
 ```
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Install dependencies with `npm install` (or `pnpm install` or `yarn`)
+
+Create .env file.
+
+```sh
+cp .env.example .env
+vim .env
+```
+
+Create database:
+
+```sh
+npm run db:push
+```
+
+start a development server:
 
 ```sh
 npm run dev

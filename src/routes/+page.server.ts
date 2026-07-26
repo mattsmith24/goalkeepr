@@ -1,13 +1,16 @@
 import type { Actions, PageServerLoad } from './$types';
 
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 import { db } from '$lib/server/db';
 import { goalsTable } from '$lib/server/db/schema';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ locals }) => {
     return {
-        goals: await db.select().from(goalsTable),
+        goals: await db
+            .select()
+            .from(goalsTable)
+            .where(eq(goalsTable.userId, locals.user!.id)),
     };
 };
 
@@ -17,6 +20,7 @@ export const actions: Actions = {
         const goal_description = data.get('goal-description')?.toString() ?? '';
         const goal: typeof goalsTable.$inferInsert = {
             description: goal_description,
+            userId: event.locals.user!.id,
         };
         await db.insert(goalsTable).values(goal);
     },
@@ -26,7 +30,9 @@ export const actions: Actions = {
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
-        await db.delete(goalsTable).where(eq(goalsTable.id, id));
+        await db
+            .delete(goalsTable)
+            .where(and(eq(goalsTable.id, id), eq(goalsTable.userId, event.locals.user!.id)));
         return { success: true };
     },
     update: async (event) => {
@@ -39,7 +45,10 @@ export const actions: Actions = {
         if (!description) {
             return { success: false, error: 'description cannot be empty' };
         }
-        await db.update(goalsTable).set({ description }).where(eq(goalsTable.id, id));
+        await db
+            .update(goalsTable)
+            .set({ description })
+            .where(and(eq(goalsTable.id, id), eq(goalsTable.userId, event.locals.user!.id)));
         return { success: true };
     },
 };
