@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { resetDb } from './db';
+import { signUpAndSignIn } from './auth';
 
-test.beforeEach(() => {
+test.beforeEach(async ({ page }) => {
     resetDb();
+    await signUpAndSignIn(page);
 });
 
 async function addGoalAndOpen(page: import('@playwright/test').Page, description: string) {
