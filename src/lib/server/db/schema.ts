@@ -8,7 +8,7 @@ export const task = sqliteTable('task', {
     priority: integer('priority').notNull().default(1),
 });
 
-//export * from './auth.schema';
+export * from './auth.schema';
 
 export const goalsTable = sqliteTable('goals', {
     id: integer().primaryKey({ autoIncrement: true }),
