@@ -1,3 +1,4 @@
+import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 import { and, eq } from 'drizzle-orm';
@@ -30,9 +31,12 @@ export const actions: Actions = {
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
-        await db
+        const result = await db
             .delete(goalsTable)
             .where(and(eq(goalsTable.id, id), eq(goalsTable.userId, event.locals.user!.id)));
+        if (result.changes === 0) {
+            return fail(404, { success: false, error: 'goal not found' });
+        }
         return { success: true };
     },
     update: async (event) => {
@@ -45,10 +49,13 @@ export const actions: Actions = {
         if (!description) {
             return { success: false, error: 'description cannot be empty' };
         }
-        await db
+        const result = await db
             .update(goalsTable)
             .set({ description })
             .where(and(eq(goalsTable.id, id), eq(goalsTable.userId, event.locals.user!.id)));
+        if (result.changes === 0) {
+            return fail(404, { success: false, error: 'goal not found' });
+        }
         return { success: true };
     },
 };
