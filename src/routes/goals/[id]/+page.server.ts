@@ -4,7 +4,12 @@ import { and, eq, inArray } from 'drizzle-orm';
 import { error, fail } from '@sveltejs/kit';
 
 import { db } from '$lib/server/db';
-import { goalsTable, habitsTable, measurementsTable, milestonesTable } from '$lib/server/db/schema';
+import {
+    goalsTable,
+    habitsTable,
+    measurementsTable,
+    milestonesTable,
+} from '$lib/server/db/schema';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
     const id = Number(params.id);
@@ -14,7 +19,9 @@ export const load: PageServerLoad = async ({ locals, params }) => {
     const [goal] = await db
         .select()
         .from(goalsTable)
-        .where(and(eq(goalsTable.id, id), eq(goalsTable.userId, locals.user!.id)));
+        .where(
+            and(eq(goalsTable.id, id), eq(goalsTable.userId, locals.user!.id)),
+        );
     if (!goal) {
         error(404, 'Goal not found');
     }
@@ -22,7 +29,10 @@ export const load: PageServerLoad = async ({ locals, params }) => {
         .select()
         .from(milestonesTable)
         .where(eq(milestonesTable.goalId, id));
-    const habits = await db.select().from(habitsTable).where(eq(habitsTable.goalId, id));
+    const habits = await db
+        .select()
+        .from(habitsTable)
+        .where(eq(habitsTable.goalId, id));
     const measurements = await db
         .select()
         .from(measurementsTable)
@@ -44,7 +54,12 @@ export const actions: Actions = {
         const result = await db
             .update(goalsTable)
             .set({ description })
-            .where(and(eq(goalsTable.id, id), eq(goalsTable.userId, event.locals.user!.id)));
+            .where(
+                and(
+                    eq(goalsTable.id, id),
+                    eq(goalsTable.userId, event.locals.user!.id),
+                ),
+            );
         if (result.changes === 0) {
             return fail(404, { success: false, error: 'goal not found' });
         }
@@ -53,7 +68,8 @@ export const actions: Actions = {
     createMilestone: async (event) => {
         const goalId = Number(event.params.id);
         const data = await event.request.formData();
-        const description = data.get('milestone-description')?.toString().trim() ?? '';
+        const description =
+            data.get('milestone-description')?.toString().trim() ?? '';
         if (!Number.isInteger(goalId) || goalId <= 0) {
             return { success: false, error: 'invalid goal id' };
         }
@@ -63,7 +79,12 @@ export const actions: Actions = {
         const [goal] = await db
             .select()
             .from(goalsTable)
-            .where(and(eq(goalsTable.id, goalId), eq(goalsTable.userId, event.locals.user!.id)));
+            .where(
+                and(
+                    eq(goalsTable.id, goalId),
+                    eq(goalsTable.userId, event.locals.user!.id),
+                ),
+            );
         if (!goal) {
             return fail(404, { success: false, error: 'goal not found' });
         }
@@ -74,25 +95,34 @@ export const actions: Actions = {
         const data = await event.request.formData();
         const id = Number(data.get('id'));
         const description = data.get('description')?.toString().trim() ?? '';
+        const dueDateRaw = data.get('dueDate')?.toString().trim() ?? '';
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
         if (!description) {
             return { success: false, error: 'description cannot be empty' };
         }
+        const dueDate = dueDateRaw === '' ? null : dueDateRaw;
+        if (dueDate !== null && !/^\d{4}-\d{2}-\d{2}$/.test(dueDate)) {
+            return { success: false, error: 'invalid due date' };
+        }
         const result = await db
             .update(milestonesTable)
-            .set({ description })
-            .where(and(
-                eq(milestonesTable.id, id),
-                inArray(
-                    milestonesTable.goalId,
-                    db
-                        .select({ id: goalsTable.id })
-                        .from(goalsTable)
-                        .where(eq(goalsTable.userId, event.locals.user!.id))
-                )
-            ));
+            .set({ description, dueDate })
+            .where(
+                and(
+                    eq(milestonesTable.id, id),
+                    inArray(
+                        milestonesTable.goalId,
+                        db
+                            .select({ id: goalsTable.id })
+                            .from(goalsTable)
+                            .where(
+                                eq(goalsTable.userId, event.locals.user!.id),
+                            ),
+                    ),
+                ),
+            );
         if (result.changes === 0) {
             return fail(404, { success: false, error: 'milestone not found' });
         }
@@ -106,16 +136,20 @@ export const actions: Actions = {
         }
         const result = await db
             .delete(milestonesTable)
-            .where(and(
-                eq(milestonesTable.id, id),
-                inArray(
-                    milestonesTable.goalId,
-                    db
-                        .select({ id: goalsTable.id })
-                        .from(goalsTable)
-                        .where(eq(goalsTable.userId, event.locals.user!.id))
-                )
-            ));
+            .where(
+                and(
+                    eq(milestonesTable.id, id),
+                    inArray(
+                        milestonesTable.goalId,
+                        db
+                            .select({ id: goalsTable.id })
+                            .from(goalsTable)
+                            .where(
+                                eq(goalsTable.userId, event.locals.user!.id),
+                            ),
+                    ),
+                ),
+            );
         if (result.changes === 0) {
             return fail(404, { success: false, error: 'milestone not found' });
         }
@@ -124,7 +158,8 @@ export const actions: Actions = {
     createHabit: async (event) => {
         const goalId = Number(event.params.id);
         const data = await event.request.formData();
-        const description = data.get('habit-description')?.toString().trim() ?? '';
+        const description =
+            data.get('habit-description')?.toString().trim() ?? '';
         if (!Number.isInteger(goalId) || goalId <= 0) {
             return { success: false, error: 'invalid goal id' };
         }
@@ -134,7 +169,12 @@ export const actions: Actions = {
         const [goal] = await db
             .select()
             .from(goalsTable)
-            .where(and(eq(goalsTable.id, goalId), eq(goalsTable.userId, event.locals.user!.id)));
+            .where(
+                and(
+                    eq(goalsTable.id, goalId),
+                    eq(goalsTable.userId, event.locals.user!.id),
+                ),
+            );
         if (!goal) {
             return fail(404, { success: false, error: 'goal not found' });
         }
@@ -154,16 +194,20 @@ export const actions: Actions = {
         const result = await db
             .update(habitsTable)
             .set({ description })
-            .where(and(
-                eq(habitsTable.id, id),
-                inArray(
-                    habitsTable.goalId,
-                    db
-                        .select({ id: goalsTable.id })
-                        .from(goalsTable)
-                        .where(eq(goalsTable.userId, event.locals.user!.id))
-                )
-            ));
+            .where(
+                and(
+                    eq(habitsTable.id, id),
+                    inArray(
+                        habitsTable.goalId,
+                        db
+                            .select({ id: goalsTable.id })
+                            .from(goalsTable)
+                            .where(
+                                eq(goalsTable.userId, event.locals.user!.id),
+                            ),
+                    ),
+                ),
+            );
         if (result.changes === 0) {
             return fail(404, { success: false, error: 'habit not found' });
         }
@@ -177,16 +221,20 @@ export const actions: Actions = {
         }
         const result = await db
             .delete(habitsTable)
-            .where(and(
-                eq(habitsTable.id, id),
-                inArray(
-                    habitsTable.goalId,
-                    db
-                        .select({ id: goalsTable.id })
-                        .from(goalsTable)
-                        .where(eq(goalsTable.userId, event.locals.user!.id))
-                )
-            ));
+            .where(
+                and(
+                    eq(habitsTable.id, id),
+                    inArray(
+                        habitsTable.goalId,
+                        db
+                            .select({ id: goalsTable.id })
+                            .from(goalsTable)
+                            .where(
+                                eq(goalsTable.userId, event.locals.user!.id),
+                            ),
+                    ),
+                ),
+            );
         if (result.changes === 0) {
             return fail(404, { success: false, error: 'habit not found' });
         }
@@ -195,7 +243,8 @@ export const actions: Actions = {
     createMeasurement: async (event) => {
         const goalId = Number(event.params.id);
         const data = await event.request.formData();
-        const description = data.get('measurement-description')?.toString().trim() ?? '';
+        const description =
+            data.get('measurement-description')?.toString().trim() ?? '';
         if (!Number.isInteger(goalId) || goalId <= 0) {
             return { success: false, error: 'invalid goal id' };
         }
@@ -205,7 +254,12 @@ export const actions: Actions = {
         const [goal] = await db
             .select()
             .from(goalsTable)
-            .where(and(eq(goalsTable.id, goalId), eq(goalsTable.userId, event.locals.user!.id)));
+            .where(
+                and(
+                    eq(goalsTable.id, goalId),
+                    eq(goalsTable.userId, event.locals.user!.id),
+                ),
+            );
         if (!goal) {
             return fail(404, { success: false, error: 'goal not found' });
         }
@@ -225,18 +279,25 @@ export const actions: Actions = {
         const result = await db
             .update(measurementsTable)
             .set({ description })
-            .where(and(
-                eq(measurementsTable.id, id),
-                inArray(
-                    measurementsTable.goalId,
-                    db
-                        .select({ id: goalsTable.id })
-                        .from(goalsTable)
-                        .where(eq(goalsTable.userId, event.locals.user!.id))
-                )
-            ));
+            .where(
+                and(
+                    eq(measurementsTable.id, id),
+                    inArray(
+                        measurementsTable.goalId,
+                        db
+                            .select({ id: goalsTable.id })
+                            .from(goalsTable)
+                            .where(
+                                eq(goalsTable.userId, event.locals.user!.id),
+                            ),
+                    ),
+                ),
+            );
         if (result.changes === 0) {
-            return fail(404, { success: false, error: 'measurement not found' });
+            return fail(404, {
+                success: false,
+                error: 'measurement not found',
+            });
         }
         return { success: true };
     },
@@ -248,18 +309,25 @@ export const actions: Actions = {
         }
         const result = await db
             .delete(measurementsTable)
-            .where(and(
-                eq(measurementsTable.id, id),
-                inArray(
-                    measurementsTable.goalId,
-                    db
-                        .select({ id: goalsTable.id })
-                        .from(goalsTable)
-                        .where(eq(goalsTable.userId, event.locals.user!.id))
-                )
-            ));
+            .where(
+                and(
+                    eq(measurementsTable.id, id),
+                    inArray(
+                        measurementsTable.goalId,
+                        db
+                            .select({ id: goalsTable.id })
+                            .from(goalsTable)
+                            .where(
+                                eq(goalsTable.userId, event.locals.user!.id),
+                            ),
+                    ),
+                ),
+            );
         if (result.changes === 0) {
-            return fail(404, { success: false, error: 'measurement not found' });
+            return fail(404, {
+                success: false,
+                error: 'measurement not found',
+            });
         }
         return { success: true };
     },

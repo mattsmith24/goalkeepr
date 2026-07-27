@@ -21,10 +21,15 @@
         }
     }
 
-    async function handleMilestoneUpdate(id: number, description: string) {
+    async function handleMilestoneUpdate(
+        id: number,
+        description: string,
+        dueDate: string | null,
+    ) {
         const formData = new FormData();
         formData.set('id', String(id));
         formData.set('description', description);
+        formData.set('dueDate', dueDate ?? '');
         const response = await fetch('?/updateMilestone', {
             method: 'POST',
             body: formData,
@@ -98,7 +103,7 @@
 </script>
 
 <a href="/" class="text-sm text-blue-600 hover:underline">&larr; Back</a>
-<div class="mt-2 m-2 p-2">
+<div class="m-2 mt-2 p-2">
     <GoalTitle goal={data.goal} onUpdate={handleUpdate} />
 </div>
 <MilestoneList

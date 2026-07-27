@@ -7,6 +7,7 @@ export interface Milestone {
     id: number;
     goalId: number;
     description: string;
+    dueDate: string | null;
 }
 
 export interface Habit {
