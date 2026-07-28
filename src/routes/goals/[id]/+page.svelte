@@ -1,5 +1,6 @@
 <script lang="ts">
     import { invalidateAll } from '$app/navigation';
+    import { resolve } from '$app/paths';
     import type { PageProps } from './$types';
     import GoalTitle from '$lib/components/GoalTitle.svelte';
     import MilestoneList from '$lib/components/MilestoneList.svelte';
@@ -102,7 +103,9 @@
     }
 </script>
 
-<a href="/" class="text-sm text-blue-600 hover:underline">&larr; Back</a>
+<a href={resolve('/')} class="text-sm text-blue-600 hover:underline"
+    >&larr; Back</a
+>
 <div class="m-2 mt-2 p-2">
     <GoalTitle goal={data.goal} onUpdate={handleUpdate} />
 </div>

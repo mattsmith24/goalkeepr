@@ -13,7 +13,11 @@
 <Story
     name="Default"
     args={{
-        goal: { id: 1, description: 'I want to win an Olympic gold medal for break dancing' },
+        goal: {
+            id: 1,
+            description:
+                'I want to win an Olympic gold medal for break dancing',
+        },
         onUpdate: (id, description) => console.log('update', id, description),
     }}
 />

@@ -19,7 +19,9 @@
         const button = canvas.getByRole('button', { name: /add measurement/i });
         await expect(button).toBeInTheDocument();
 
-        await expect(canvas.queryByLabelText(/what are you measuring\?/i)).not.toBeInTheDocument();
+        await expect(
+            canvas.queryByLabelText(/what are you measuring\?/i),
+        ).not.toBeInTheDocument();
     }}
 />
 
@@ -38,7 +40,11 @@
         await expect(form).not.toBeNull();
         await expect(form).toHaveAttribute('method', 'POST');
 
-        await expect(canvas.getByRole('button', { name: /^add measurement$/i })).toBeInTheDocument();
-        await expect(canvas.getByRole('button', { name: /^cancel$/i })).toBeInTheDocument();
+        await expect(
+            canvas.getByRole('button', { name: /^add measurement$/i }),
+        ).toBeInTheDocument();
+        await expect(
+            canvas.getByRole('button', { name: /^cancel$/i }),
+        ).toBeInTheDocument();
     }}
 />

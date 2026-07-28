@@ -3,10 +3,13 @@
 
     import GoalList from './GoalList.svelte';
 
-    export const goalData = [{
-        id: 1,
-        description: 'I want to win an Olympic gold medal for break dancing',
-    }];
+    export const goalData = [
+        {
+            id: 1,
+            description:
+                'I want to win an Olympic gold medal for break dancing',
+        },
+    ];
 
     const { Story } = defineMeta({
         component: GoalList,

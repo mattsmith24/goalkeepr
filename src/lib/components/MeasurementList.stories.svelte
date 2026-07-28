@@ -3,11 +3,13 @@
 
     import MeasurementList from './MeasurementList.svelte';
 
-    export const measurementData = [{
-        id: 1,
-        goalId: 1,
-        description: 'Body weight',
-    }];
+    export const measurementData = [
+        {
+            id: 1,
+            goalId: 1,
+            description: 'Body weight',
+        },
+    ];
 
     const { Story } = defineMeta({
         component: MeasurementList,

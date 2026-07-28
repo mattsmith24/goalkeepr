@@ -20,17 +20,17 @@
         const link = canvas.getByRole('link', { name: /goalkeepr/i });
         await expect(link).toHaveAttribute('href', '/');
 
-        await expect(canvas.getByRole('link', { name: /^sign in$/i })).toHaveAttribute(
-            'href',
-            '/sign-in',
-        );
-        await expect(canvas.getByRole('link', { name: /^sign up$/i })).toHaveAttribute(
-            'href',
-            '/sign-up',
-        );
+        await expect(
+            canvas.getByRole('link', { name: /^sign in$/i }),
+        ).toHaveAttribute('href', '/sign-in');
+        await expect(
+            canvas.getByRole('link', { name: /^sign up$/i }),
+        ).toHaveAttribute('href', '/sign-up');
 
         await expect(canvas.queryByText(/alex smith/i)).not.toBeInTheDocument();
-        await expect(canvas.queryByRole('button', { name: /sign out/i })).not.toBeInTheDocument();
+        await expect(
+            canvas.queryByRole('button', { name: /sign out/i }),
+        ).not.toBeInTheDocument();
     }}
 />
 
@@ -42,8 +42,12 @@
 
         await expect(canvas.getByText('Alex Smith')).toBeInTheDocument();
 
-        await expect(canvas.queryByRole('link', { name: /^sign in$/i })).not.toBeInTheDocument();
-        await expect(canvas.queryByRole('link', { name: /^sign up$/i })).not.toBeInTheDocument();
+        await expect(
+            canvas.queryByRole('link', { name: /^sign in$/i }),
+        ).not.toBeInTheDocument();
+        await expect(
+            canvas.queryByRole('link', { name: /^sign up$/i }),
+        ).not.toBeInTheDocument();
 
         const form = canvasElement.querySelector('form');
         await expect(form).not.toBeNull();

@@ -8,7 +8,11 @@ export function uniqueEmail(prefix = 'tester'): string {
 
 export async function signUpAndSignIn(
     page: Page,
-    { email = uniqueEmail(), name = 'Test User', password = TEST_PASSWORD } = {}
+    {
+        email = uniqueEmail(),
+        name = 'Test User',
+        password = TEST_PASSWORD,
+    } = {},
 ) {
     await page.goto('/sign-up');
     await page.getByLabel('Name', { exact: true }).fill(name);

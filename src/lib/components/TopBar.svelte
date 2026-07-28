@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { resolve } from '$app/paths';
+
     interface Props {
         user?: { name?: string } | undefined;
     }
@@ -9,7 +11,7 @@
 <header
     class="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3"
 >
-    <a href="/" class="text-lg font-semibold">goalkeepr</a>
+    <a href={resolve('/')} class="text-lg font-semibold">goalkeepr</a>
     <nav class="flex items-center gap-3">
         {#if user}
             <span class="text-sm text-gray-600">{user.name}</span>
@@ -22,9 +24,9 @@
                 </button>
             </form>
         {:else}
-            <a href="/sign-in" class="text-sm underline">Sign in</a>
+            <a href={resolve('/sign-in')} class="text-sm underline">Sign in</a>
             <a
-                href="/sign-up"
+                href={resolve('/sign-up')}
                 class="rounded-md bg-blue-600 px-3 py-1.5 text-sm text-white transition hover:bg-blue-700"
             >
                 Sign up

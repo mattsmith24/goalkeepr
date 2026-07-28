@@ -87,7 +87,7 @@
                 <h3>
                     <button
                         type="button"
-                        class="hover:bg-gray-100 px-2 py-1"
+                        class="px-2 py-1 hover:bg-gray-100"
                         onclick={startEditDescription}
                     >
                         {milestone.description}
@@ -120,7 +120,7 @@
             {:else}
                 <button
                     type="button"
-                    class="hover:bg-gray-100 px-2 py-1"
+                    class="px-2 py-1 hover:bg-gray-100"
                     onclick={startEditDate}
                 >
                     Due Date: {milestone.dueDate ?? 'None'}
@@ -129,7 +129,7 @@
             <div>
                 <button
                     type="button"
-                    class="text-sm text-red-600 hover:underline px-2 py-1"
+                    class="px-2 py-1 text-sm text-red-600 hover:underline"
                     onclick={() => onDelete(milestone.id)}
                 >
                     Delete

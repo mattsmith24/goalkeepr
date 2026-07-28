@@ -1,5 +1,6 @@
 <script lang="ts">
     import { enhance } from '$app/forms';
+    import { resolve } from '$app/paths';
     import type { ActionData } from './$types';
 
     let { form }: { form: ActionData } = $props();
@@ -14,7 +15,13 @@
 <form method="post" use:enhance class="m-2 flex flex-col gap-2">
     <label class="flex flex-col gap-1">
         Email
-        <input name="email" type="email" required autocomplete="email" class="rounded border p-1" />
+        <input
+            name="email"
+            type="email"
+            required
+            autocomplete="email"
+            class="rounded border p-1"
+        />
     </label>
     <label class="flex flex-col gap-1">
         Password
@@ -35,5 +42,5 @@
 </form>
 
 <p class="m-2">
-    No account yet? <a href="/sign-up" class="underline">Sign up</a>
+    No account yet? <a href={resolve('/sign-up')} class="underline">Sign up</a>
 </p>

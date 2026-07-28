@@ -7,12 +7,17 @@ test.beforeEach(async ({ page }) => {
     await signUpAndSignIn(page);
 });
 
-async function addGoal(page: import('@playwright/test').Page, description: string) {
+async function addGoal(
+    page: import('@playwright/test').Page,
+    description: string,
+) {
     await page.goto('/');
     await page.getByRole('button', { name: /add goal/i }).click();
     await page.getByLabel(/what is your goal\?/i).fill(description);
     await page.getByRole('button', { name: /^add goal$/i }).click();
-    await expect(page.getByRole('listitem').filter({ hasText: description })).toBeVisible();
+    await expect(
+        page.getByRole('listitem').filter({ hasText: description }),
+    ).toBeVisible();
 }
 
 test('deleting a goal removes it from the list', async ({ page }) => {

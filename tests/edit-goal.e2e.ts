@@ -7,12 +7,17 @@ test.beforeEach(async ({ page }) => {
     await signUpAndSignIn(page);
 });
 
-async function addGoal(page: import('@playwright/test').Page, description: string) {
+async function addGoal(
+    page: import('@playwright/test').Page,
+    description: string,
+) {
     await page.goto('/');
     await page.getByRole('button', { name: /add goal/i }).click();
     await page.getByLabel(/what is your goal\?/i).fill(description);
     await page.getByRole('button', { name: /^add goal$/i }).click();
-    await expect(page.getByRole('listitem').filter({ hasText: description })).toBeVisible();
+    await expect(
+        page.getByRole('listitem').filter({ hasText: description }),
+    ).toBeVisible();
 }
 
 test('editing a goal updates its description', async ({ page }) => {
@@ -29,11 +34,17 @@ test('editing a goal updates its description', async ({ page }) => {
     await input.fill(updated);
     await input.press('Enter');
 
-    await expect(page.getByRole('listitem').filter({ hasText: updated })).toBeVisible();
-    await expect(page.getByRole('listitem').filter({ hasText: original })).not.toBeVisible();
+    await expect(
+        page.getByRole('listitem').filter({ hasText: updated }),
+    ).toBeVisible();
+    await expect(
+        page.getByRole('listitem').filter({ hasText: original }),
+    ).not.toBeVisible();
 });
 
-test('escape cancels an edit and keeps the original description', async ({ page }) => {
+test('escape cancels an edit and keeps the original description', async ({
+    page,
+}) => {
     const original = `E2E escape goal ${Date.now()}`;
 
     await addGoal(page, original);
@@ -45,6 +56,10 @@ test('escape cancels an edit and keeps the original description', async ({ page 
     await input.fill('this should be discarded');
     await input.press('Escape');
 
-    await expect(page.getByRole('listitem').filter({ hasText: original })).toBeVisible();
-    await expect(page.getByRole('listitem').filter({ hasText: 'discarded' })).not.toBeVisible();
+    await expect(
+        page.getByRole('listitem').filter({ hasText: original }),
+    ).toBeVisible();
+    await expect(
+        page.getByRole('listitem').filter({ hasText: 'discarded' }),
+    ).not.toBeVisible();
 });

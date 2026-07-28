@@ -1,5 +1,6 @@
 <script lang="ts">
     import { enhance } from '$app/forms';
+    import { resolve } from '$app/paths';
     import type { ActionData } from './$types';
 
     let { form }: { form: ActionData } = $props();
@@ -14,11 +15,23 @@
 <form method="post" use:enhance class="m-2 flex flex-col gap-2">
     <label class="flex flex-col gap-1">
         Name
-        <input name="name" type="text" required autocomplete="name" class="rounded border p-1" />
+        <input
+            name="name"
+            type="text"
+            required
+            autocomplete="name"
+            class="rounded border p-1"
+        />
     </label>
     <label class="flex flex-col gap-1">
         Email
-        <input name="email" type="email" required autocomplete="email" class="rounded border p-1" />
+        <input
+            name="email"
+            type="email"
+            required
+            autocomplete="email"
+            class="rounded border p-1"
+        />
     </label>
     <label class="flex flex-col gap-1">
         Password
@@ -39,4 +52,8 @@
     </button>
 </form>
 
-<p class="m-2">Already have an account? <a href="/sign-in" class="underline">Sign in</a></p>
+<p class="m-2">
+    Already have an account? <a href={resolve('/sign-in')} class="underline"
+        >Sign in</a
+    >
+</p>

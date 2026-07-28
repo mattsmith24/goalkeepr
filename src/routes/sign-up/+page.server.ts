@@ -18,7 +18,9 @@ export const actions: Actions = {
         const password = data.get('password')?.toString() ?? '';
 
         if (!name || !email || !password) {
-            return fail(400, { message: 'Name, email, and password are required.' });
+            return fail(400, {
+                message: 'Name, email, and password are required.',
+            });
         }
 
         try {

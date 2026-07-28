@@ -1,5 +1,6 @@
 <script lang="ts">
     import { tick } from 'svelte';
+    import { resolve } from '$app/paths';
     import type { Goal } from '$lib/types';
 
     interface Props {
@@ -56,7 +57,10 @@
             class="flex-1 border border-gray-800 px-2 py-1"
         />
     {:else}
-        <a href="/goals/{goal.id}" class="flex-1 px-2 py-1 hover:underline">{goal.description}</a>
+        <a
+            href={resolve('/goals/[id]', { id: String(goal.id) })}
+            class="flex-1 px-2 py-1 hover:underline">{goal.description}</a
+        >
         <button
             type="button"
             class="text-sm text-blue-600 hover:underline"

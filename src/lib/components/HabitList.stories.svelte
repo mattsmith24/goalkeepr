@@ -3,11 +3,13 @@
 
     import HabitList from './HabitList.svelte';
 
-    export const habitData = [{
-        id: 1,
-        goalId: 1,
-        description: 'Stretch for 10 minutes each morning',
-    }];
+    export const habitData = [
+        {
+            id: 1,
+            goalId: 1,
+            description: 'Stretch for 10 minutes each morning',
+        },
+    ];
 
     const { Story } = defineMeta({
         component: HabitList,

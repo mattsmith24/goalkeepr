@@ -1,5 +1,3 @@
-
-
 ## Developing
 
 Svelte commands used to create this:

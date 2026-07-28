@@ -7,13 +7,18 @@ test.beforeEach(async ({ page }) => {
     await signUpAndSignIn(page);
 });
 
-async function addGoalAndOpen(page: import('@playwright/test').Page, description: string) {
+async function addGoalAndOpen(
+    page: import('@playwright/test').Page,
+    description: string,
+) {
     await page.goto('/');
     await page.getByRole('button', { name: /add goal/i }).click();
     await page.getByLabel(/what is your goal\?/i).fill(description);
     await page.getByRole('button', { name: /^add goal$/i }).click();
     await page.getByRole('link', { name: description }).click();
-    await expect(page.getByRole('heading', { level: 1, name: description })).toBeVisible();
+    await expect(
+        page.getByRole('heading', { level: 1, name: description }),
+    ).toBeVisible();
 }
 
 test('a measurement can be added, edited and deleted', async ({ page }) => {
@@ -39,12 +44,18 @@ test('a measurement can be added, edited and deleted', async ({ page }) => {
     await input.fill(edited);
     await input.press('Enter');
 
-    await expect(page.getByRole('listitem').filter({ hasText: edited })).toBeVisible();
-    await expect(page.getByRole('listitem').filter({ hasText: measurement })).not.toBeVisible();
+    await expect(
+        page.getByRole('listitem').filter({ hasText: edited }),
+    ).toBeVisible();
+    await expect(
+        page.getByRole('listitem').filter({ hasText: measurement }),
+    ).not.toBeVisible();
 
     // Delete
     const editedItem = page.getByRole('listitem').filter({ hasText: edited });
-    await editedItem.getByRole('button', { name: 'Delete', exact: true }).click();
+    await editedItem
+        .getByRole('button', { name: 'Delete', exact: true })
+        .click();
 
     await expect(editedItem).not.toBeVisible();
     await expect(page.getByText(/no measurements yet/i)).toBeVisible();

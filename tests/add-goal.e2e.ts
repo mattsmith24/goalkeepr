@@ -18,7 +18,9 @@ test('adding a goal appends it to the list', async ({ page }) => {
     await page.getByLabel(/what is your goal\?/i).fill(description);
     await page.getByRole('button', { name: /^add goal$/i }).click();
 
-    await expect(page.getByRole('listitem').filter({ hasText: description })).toBeVisible();
+    await expect(
+        page.getByRole('listitem').filter({ hasText: description }),
+    ).toBeVisible();
 });
 
 test('the new-goal form can be cancelled', async ({ page }) => {
@@ -27,7 +29,10 @@ test('the new-goal form can be cancelled', async ({ page }) => {
     await page.getByRole('button', { name: /add goal/i }).click();
     await expect(page.getByLabel(/what is your goal\?/i)).toBeVisible();
 
-    await page.getByRole('button', { name: /^cancel$/i }).first().click();
+    await page
+        .getByRole('button', { name: /^cancel$/i })
+        .first()
+        .click();
     await expect(page.getByLabel(/what is your goal\?/i)).not.toBeVisible();
 });
 

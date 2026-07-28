@@ -33,7 +33,12 @@ export const actions: Actions = {
         }
         const result = await db
             .delete(goalsTable)
-            .where(and(eq(goalsTable.id, id), eq(goalsTable.userId, event.locals.user!.id)));
+            .where(
+                and(
+                    eq(goalsTable.id, id),
+                    eq(goalsTable.userId, event.locals.user!.id),
+                ),
+            );
         if (result.changes === 0) {
             return fail(404, { success: false, error: 'goal not found' });
         }
@@ -52,7 +57,12 @@ export const actions: Actions = {
         const result = await db
             .update(goalsTable)
             .set({ description })
-            .where(and(eq(goalsTable.id, id), eq(goalsTable.userId, event.locals.user!.id)));
+            .where(
+                and(
+                    eq(goalsTable.id, id),
+                    eq(goalsTable.userId, event.locals.user!.id),
+                ),
+            );
         if (result.changes === 0) {
             return fail(404, { success: false, error: 'goal not found' });
         }
