@@ -10,6 +10,8 @@
             id: number,
             description: string,
             dueDate: string | null,
+            doneDate: string | null,
+            note: string | null,
         ) => void;
     }
 

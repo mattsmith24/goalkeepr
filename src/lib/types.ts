@@ -8,6 +8,8 @@ export interface Milestone {
     goalId: number;
     description: string;
     dueDate: string | null;
+    doneDate: string | null;
+    note: string | null;
 }
 
 export interface Habit {

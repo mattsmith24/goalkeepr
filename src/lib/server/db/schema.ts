@@ -27,6 +27,8 @@ export const milestonesTable = sqliteTable('milestones', {
         .references(() => goalsTable.id, { onDelete: 'cascade' }),
     description: text().notNull(),
     dueDate: text('due_date'),
+    doneDate: text('done_date'),
+    note: text(),
 });
 
 export const habitsTable = sqliteTable('habits', {

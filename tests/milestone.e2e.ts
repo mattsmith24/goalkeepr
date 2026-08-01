@@ -78,11 +78,11 @@ test('a milestone due date can be set, edited and cleared', async ({
 
     const item = page.getByRole('listitem').filter({ hasText: milestone });
     await expect(
-        item.getByRole('button', { name: /due date: none/i }),
+        item.getByRole('button', { name: /add due date/i }),
     ).toBeVisible();
 
     // Set
-    await item.getByRole('button', { name: /due date: none/i }).click();
+    await item.getByRole('button', { name: /add due date/i }).click();
     const dateInput = item.getByLabel(/due date/i);
     await dateInput.fill(dueDate);
     await item.getByRole('button', { name: /^save$/i }).click();
@@ -109,6 +109,108 @@ test('a milestone due date can be set, edited and cleared', async ({
     await item.getByRole('button', { name: /^save$/i }).click();
 
     await expect(
-        item.getByRole('button', { name: /due date: none/i }),
+        item.getByRole('button', { name: /add due date/i }),
     ).toBeVisible();
+});
+
+test('a milestone done date can be set, edited and cleared', async ({
+    page,
+}) => {
+    const goal = `E2E milestone done date goal ${Date.now()}`;
+    const milestone = `E2E done milestone ${Date.now()}`;
+    const doneDate = '2026-08-15';
+    const newDoneDate = '2026-08-20';
+
+    await addGoalAndOpen(page, goal);
+
+    // Create
+    await page.getByRole('button', { name: /add milestone/i }).click();
+    await page.getByLabel(/what is your milestone\?/i).fill(milestone);
+    await page.getByRole('button', { name: /^add milestone$/i }).click();
+
+    const item = page.getByRole('listitem').filter({ hasText: milestone });
+    await expect(
+        item.getByRole('button', { name: /add done date/i }),
+    ).toBeVisible();
+
+    // Set
+    await item.getByRole('button', { name: /add done date/i }).click();
+    const dateInput = item.getByLabel(/done date/i);
+    await dateInput.fill(doneDate);
+    await item.getByRole('button', { name: /^save$/i }).click();
+
+    await expect(
+        item.getByRole('button', { name: new RegExp(doneDate) }),
+    ).toBeVisible();
+
+    // Edit
+    await item.getByRole('button', { name: new RegExp(doneDate) }).click();
+    await item.getByLabel(/done date/i).fill(newDoneDate);
+    await item.getByRole('button', { name: /^save$/i }).click();
+
+    await expect(
+        item.getByRole('button', { name: new RegExp(newDoneDate) }),
+    ).toBeVisible();
+    await expect(
+        item.getByRole('button', { name: new RegExp(doneDate) }),
+    ).not.toBeVisible();
+
+    // Clear
+    await item.getByRole('button', { name: new RegExp(newDoneDate) }).click();
+    await item.getByLabel(/done date/i).fill('');
+    await item.getByRole('button', { name: /^save$/i }).click();
+
+    await expect(
+        item.getByRole('button', { name: /add done date/i }),
+    ).toBeVisible();
+});
+
+test('a milestone note can be set, edited and cleared', async ({ page }) => {
+    const goal = `E2E milestone note goal ${Date.now()}`;
+    const milestone = `E2E noted milestone ${Date.now()}`;
+    const note = `E2E note ${Date.now()}`;
+    const editedNote = `${note} edited`;
+
+    await addGoalAndOpen(page, goal);
+
+    // Create
+    await page.getByRole('button', { name: /add milestone/i }).click();
+    await page.getByLabel(/what is your milestone\?/i).fill(milestone);
+    await page.getByRole('button', { name: /^add milestone$/i }).click();
+
+    const item = page.getByRole('listitem').filter({ hasText: milestone });
+    await expect(item.getByRole('button', { name: /add note/i })).toBeVisible();
+
+    // Set
+    await item.getByRole('button', { name: /add note/i }).click();
+    const input = item.getByLabel(/note/i);
+    await expect(input).toBeFocused();
+    await input.fill(note);
+    await input.press('Enter');
+
+    await expect(
+        item.getByRole('button', { name: new RegExp(note) }),
+    ).toBeVisible();
+
+    // Edit
+    await item.getByRole('button', { name: new RegExp(note) }).click();
+    const editInput = item.getByLabel(/note/i);
+    await expect(editInput).toBeFocused();
+    await editInput.fill(editedNote);
+    await editInput.press('Enter');
+
+    await expect(
+        item.getByRole('button', { name: new RegExp(editedNote) }),
+    ).toBeVisible();
+    await expect(
+        item.getByRole('button', { name: new RegExp(`^Note: ${note}$`) }),
+    ).not.toBeVisible();
+
+    // Clear
+    await item.getByRole('button', { name: new RegExp(editedNote) }).click();
+    const clearInput = item.getByLabel(/note/i);
+    await clearInput.fill('');
+    await clearInput.press('Enter');
+
+    await expect(item.getByRole('button', { name: /add note/i })).toBeVisible();
 });

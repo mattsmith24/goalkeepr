@@ -96,6 +96,8 @@ export const actions: Actions = {
         const id = Number(data.get('id'));
         const description = data.get('description')?.toString().trim() ?? '';
         const dueDateRaw = data.get('dueDate')?.toString().trim() ?? '';
+        const doneDateRaw = data.get('doneDate')?.toString().trim() ?? '';
+        const noteRaw = data.get('note')?.toString().trim() ?? '';
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
@@ -106,9 +108,14 @@ export const actions: Actions = {
         if (dueDate !== null && !/^\d{4}-\d{2}-\d{2}$/.test(dueDate)) {
             return { success: false, error: 'invalid due date' };
         }
+        const doneDate = doneDateRaw === '' ? null : doneDateRaw;
+        if (doneDate !== null && !/^\d{4}-\d{2}-\d{2}$/.test(doneDate)) {
+            return { success: false, error: 'invalid done date' };
+        }
+        const note = noteRaw === '' ? null : noteRaw;
         const result = await db
             .update(milestonesTable)
-            .set({ description, dueDate })
+            .set({ description, dueDate, doneDate, note })
             .where(
                 and(
                     eq(milestonesTable.id, id),
