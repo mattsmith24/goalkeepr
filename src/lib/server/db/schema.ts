@@ -39,6 +39,15 @@ export const habitsTable = sqliteTable('habits', {
     description: text().notNull(),
 });
 
+export const habitRecordsTable = sqliteTable('habit_records', {
+    id: integer().primaryKey({ autoIncrement: true }),
+    habitId: integer()
+        .notNull()
+        .references(() => habitsTable.id, { onDelete: 'cascade' }),
+    date: text().notNull(),
+    note: text(),
+});
+
 export const measurementsTable = sqliteTable('measurements', {
     id: integer().primaryKey({ autoIncrement: true }),
     goalId: integer()

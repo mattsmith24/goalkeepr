@@ -25,6 +25,7 @@
         habits: [],
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
+        onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
 />
 
@@ -34,5 +35,6 @@
         habits: habitData,
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
+        onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
 />

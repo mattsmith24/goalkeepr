@@ -81,6 +81,24 @@
         }
     }
 
+    async function handleHabitMarkDone(
+        id: number,
+        date: string,
+        note: string | null,
+    ) {
+        const formData = new FormData();
+        formData.set('id', String(id));
+        formData.set('date', date);
+        formData.set('note', note ?? '');
+        const response = await fetch('?/markHabitDone', {
+            method: 'POST',
+            body: formData,
+        });
+        if (response.ok) {
+            await invalidateAll();
+        }
+    }
+
     async function handleMeasurementUpdate(id: number, description: string) {
         const formData = new FormData();
         formData.set('id', String(id));
@@ -122,6 +140,7 @@
     habits={data.habits}
     onDelete={handleHabitDelete}
     onUpdate={handleHabitUpdate}
+    onMarkDone={handleHabitMarkDone}
 />
 <MeasurementList
     measurements={data.measurements}

@@ -23,3 +23,10 @@ export interface Measurement {
     goalId: number;
     description: string;
 }
+
+export interface HabitRecord {
+    id: number;
+    habitId: number;
+    date: string;
+    note: string | null;
+}

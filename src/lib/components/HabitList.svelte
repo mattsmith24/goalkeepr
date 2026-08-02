@@ -7,16 +7,17 @@
         habits: Habit[];
         onDelete: (id: number) => void;
         onUpdate: (id: number, description: string) => void;
+        onMarkDone: (id: number, date: string, note: string | null) => void;
     }
 
-    const { habits = [], onDelete, onUpdate }: Props = $props();
+    const { habits = [], onDelete, onUpdate, onMarkDone }: Props = $props();
 </script>
 
 <div class="m-2 p-2">
     <h2>Habits</h2>
     <ul>
         {#each habits as habit (habit.id)}
-            <HabitItem {habit} {onDelete} {onUpdate} />
+            <HabitItem {habit} {onDelete} {onUpdate} {onMarkDone} />
         {:else}
             <li class="italic">No habits yet. Build a routine!</li>
         {/each}
