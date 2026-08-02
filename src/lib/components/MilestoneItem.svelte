@@ -1,5 +1,6 @@
 <script lang="ts">
     import { tick } from 'svelte';
+    import EditableItem from './EditableItem.svelte';
     import type { Milestone } from '$lib/types';
 
     interface Props {
@@ -16,38 +17,18 @@
 
     const { milestone, onDelete, onUpdate }: Props = $props();
 
-    let editing = $state(false);
     let editingDate = $state(false);
     let editingDoneDate = $state(false);
     let editingNote = $state(false);
-    let draft = $state('');
     let draftDate = $state('');
     let draftDoneDate = $state('');
     let draftNote = $state('');
-    let inputElement: HTMLInputElement | undefined = $state();
     let noteInputElement: HTMLInputElement | undefined = $state();
 
-    async function startEditDescription() {
-        draft = milestone.description;
-        editing = true;
-        await tick();
-        inputElement?.focus();
-        inputElement?.select();
-    }
-
-    function cancelEditDescription() {
-        editing = false;
-        draft = '';
-    }
-
-    function saveEditDescription() {
-        const trimmed = draft.trim();
-        editing = false;
-        draft = '';
-        if (!trimmed || trimmed === milestone.description) return;
+    function updateDescription(description: string) {
         onUpdate(
             milestone.id,
-            trimmed,
+            description,
             milestone.dueDate,
             milestone.doneDate,
             milestone.note,
@@ -129,16 +110,6 @@
         );
     }
 
-    function handleKeydown(event: KeyboardEvent) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            saveEditDescription();
-        } else if (event.key === 'Escape') {
-            event.preventDefault();
-            cancelEditDescription();
-        }
-    }
-
     function handleNoteKeydown(event: KeyboardEvent) {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -150,147 +121,130 @@
     }
 </script>
 
-<li class="my-2 rounded-lg border border-gray-300 px-2 py-1 shadow">
-    <div class="flex items-center gap-2">
-        <div>
-            {#if editing}
-                <div>
-                    <input
-                        bind:this={inputElement}
-                        bind:value={draft}
-                        onkeydown={handleKeydown}
-                        onblur={cancelEditDescription}
-                        class="flex-1 border border-gray-800 px-2 py-1"
-                    />
-                </div>
-            {:else}
-                <h3>
-                    <button
-                        type="button"
-                        class="px-2 py-1 hover:bg-gray-100"
-                        onclick={startEditDescription}
-                    >
-                        {milestone.description}
-                    </button>
-                </h3>
-            {/if}
-            {#if editingDate}
-                <div class="flex items-center gap-2">
-                    <input
-                        type="date"
-                        bind:value={draftDate}
-                        aria-label="Due date"
-                        class="border border-gray-800 px-2 py-1"
-                    />
-                    <button
-                        type="button"
-                        class="text-sm text-blue-600 hover:underline"
-                        onclick={saveEditDate}
-                    >
-                        Save
-                    </button>
-                    <button
-                        type="button"
-                        class="text-sm text-gray-600 hover:underline"
-                        onclick={cancelEditDate}
-                    >
-                        Cancel
-                    </button>
-                </div>
-            {:else if milestone.dueDate}
-                <button
-                    type="button"
-                    class="block px-2 py-1 hover:bg-gray-100"
-                    onclick={startEditDate}
-                >
-                    Due Date: {milestone.dueDate}
-                </button>
-            {:else}
-                <button
-                    type="button"
-                    class="block px-2 py-1 text-blue-600 hover:underline"
-                    onclick={startEditDate}
-                >
-                    Add Due Date
-                </button>
-            {/if}
-            {#if editingDoneDate}
-                <div class="flex items-center gap-2">
-                    <input
-                        type="date"
-                        bind:value={draftDoneDate}
-                        aria-label="Done date"
-                        class="border border-gray-800 px-2 py-1"
-                    />
-                    <button
-                        type="button"
-                        class="text-sm text-blue-600 hover:underline"
-                        onclick={saveEditDoneDate}
-                    >
-                        Save
-                    </button>
-                    <button
-                        type="button"
-                        class="text-sm text-gray-600 hover:underline"
-                        onclick={cancelEditDoneDate}
-                    >
-                        Cancel
-                    </button>
-                </div>
-            {:else if milestone.doneDate}
-                <button
-                    type="button"
-                    class="block px-2 py-1 hover:bg-gray-100"
-                    onclick={startEditDoneDate}
-                >
-                    Done Date: {milestone.doneDate}
-                </button>
-            {:else}
-                <button
-                    type="button"
-                    class="block px-2 py-1 text-blue-600 hover:underline"
-                    onclick={startEditDoneDate}
-                >
-                    Add Done Date
-                </button>
-            {/if}
-            {#if editingNote}
-                <div>
-                    <input
-                        bind:this={noteInputElement}
-                        bind:value={draftNote}
-                        onkeydown={handleNoteKeydown}
-                        onblur={cancelEditNote}
-                        aria-label="Note"
-                        class="flex-1 border border-gray-800 px-2 py-1"
-                    />
-                </div>
-            {:else if milestone.note}
-                <button
-                    type="button"
-                    class="block px-2 py-1 text-left hover:bg-gray-100"
-                    onclick={startEditNote}
-                >
-                    Note: {milestone.note}
-                </button>
-            {:else}
-                <button
-                    type="button"
-                    class="block px-2 py-1 text-left text-blue-600 hover:underline"
-                    onclick={startEditNote}
-                >
-                    Add Note
-                </button>
-            {/if}
-            <div>
-                <button
-                    type="button"
-                    class="px-2 py-1 text-sm text-red-600 hover:underline"
-                    onclick={() => onDelete(milestone.id)}
-                >
-                    Delete
-                </button>
-            </div>
+<EditableItem
+    description={milestone.description}
+    onUpdateDescription={updateDescription}
+    onDelete={() => onDelete(milestone.id)}
+>
+    {#if editingDate}
+        <div class="flex items-center gap-2">
+            <input
+                type="date"
+                bind:value={draftDate}
+                aria-label="Due date"
+                class="border border-gray-800 px-2 py-1"
+            />
+            <button
+                type="button"
+                class="text-sm text-blue-600 hover:underline"
+                onclick={saveEditDate}
+            >
+                Save
+            </button>
+            <button
+                type="button"
+                class="text-sm text-gray-600 hover:underline"
+                onclick={cancelEditDate}
+            >
+                Cancel
+            </button>
         </div>
-    </div>
-</li>
+    {:else if milestone.dueDate}
+        <button
+            type="button"
+            class="block px-2 py-1 hover:bg-gray-100"
+            onclick={startEditDate}
+        >
+            Due Date: {milestone.dueDate}
+        </button>
+    {:else}
+        <button
+            type="button"
+            class="block px-2 py-1 text-blue-600 hover:underline"
+            onclick={startEditDate}
+        >
+            Add Due Date
+        </button>
+    {/if}
+    {#if editingDoneDate}
+        <div class="flex items-center gap-2">
+            <input
+                type="date"
+                bind:value={draftDoneDate}
+                aria-label="Done date"
+                class="border border-gray-800 px-2 py-1"
+            />
+            <button
+                type="button"
+                class="text-sm text-blue-600 hover:underline"
+                onclick={saveEditDoneDate}
+            >
+                Save
+            </button>
+            <button
+                type="button"
+                class="text-sm text-gray-600 hover:underline"
+                onclick={cancelEditDoneDate}
+            >
+                Cancel
+            </button>
+        </div>
+    {:else if milestone.doneDate}
+        <button
+            type="button"
+            class="block px-2 py-1 hover:bg-gray-100"
+            onclick={startEditDoneDate}
+        >
+            Done Date: {milestone.doneDate}
+        </button>
+    {:else}
+        <button
+            type="button"
+            class="block px-2 py-1 text-blue-600 hover:underline"
+            onclick={startEditDoneDate}
+        >
+            Add Done Date
+        </button>
+    {/if}
+    {#if editingNote}
+        <div>
+            <input
+                bind:this={noteInputElement}
+                bind:value={draftNote}
+                onkeydown={handleNoteKeydown}
+                aria-label="Note"
+                class="flex-1 border border-gray-800 px-2 py-1"
+            />
+            <button
+                type="button"
+                class="text-sm text-blue-600 hover:underline"
+                onclick={saveEditNote}
+            >
+                Save
+            </button>
+            <button
+                type="button"
+                class="text-sm text-gray-600 hover:underline"
+                onclick={cancelEditNote}
+            >
+                Cancel
+            </button>
+        </div>
+    {:else if milestone.note}
+        <button
+            type="button"
+            class="block px-2 py-1 text-left hover:bg-gray-100"
+            onclick={startEditNote}
+        >
+            Note: {milestone.note}
+        </button>
+    {:else}
+        <button
+            type="button"
+            class="block px-2 py-1 text-left text-blue-600 hover:underline"
+            onclick={startEditNote}
+        >
+            Add Note
+        </button>
+    {/if}
+</EditableItem>

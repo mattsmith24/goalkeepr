@@ -38,7 +38,7 @@ test('a habit can be added, edited and deleted', async ({ page }) => {
     await expect(item).toBeVisible();
 
     // Edit
-    await item.getByRole('button', { name: 'Edit', exact: true }).click();
+    await item.getByRole('button', { name: habit, exact: true }).click();
     const input = page.getByRole('list').getByRole('textbox');
     await expect(input).toBeFocused();
     await input.fill(edited);
