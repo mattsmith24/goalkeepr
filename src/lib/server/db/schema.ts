@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { integer, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 import { user } from './auth.schema';
 
@@ -54,4 +54,14 @@ export const measurementsTable = sqliteTable('measurements', {
         .notNull()
         .references(() => goalsTable.id, { onDelete: 'cascade' }),
     description: text().notNull(),
+});
+
+export const measurementRecordsTable = sqliteTable('measurement_records', {
+    id: integer().primaryKey({ autoIncrement: true }),
+    measurementId: integer()
+        .notNull()
+        .references(() => measurementsTable.id, { onDelete: 'cascade' }),
+    date: text().notNull(),
+    value: real().notNull(),
+    note: text(),
 });

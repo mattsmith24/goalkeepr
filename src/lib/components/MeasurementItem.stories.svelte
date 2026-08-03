@@ -16,5 +16,7 @@
         measurement: { id: 1, goalId: 1, description: 'Body weight' },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
+        onRecord: (id, date, value, note) =>
+            console.log('record', id, date, value, note),
     }}
 />

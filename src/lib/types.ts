@@ -30,3 +30,11 @@ export interface HabitRecord {
     date: string;
     note: string | null;
 }
+
+export interface MeasurementRecord {
+    id: number;
+    measurementId: number;
+    date: string;
+    value: number;
+    note: string | null;
+}

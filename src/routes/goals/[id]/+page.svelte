@@ -123,6 +123,26 @@
             await invalidateAll();
         }
     }
+
+    async function handleMeasurementRecord(
+        id: number,
+        date: string,
+        value: number,
+        note: string | null,
+    ) {
+        const formData = new FormData();
+        formData.set('id', String(id));
+        formData.set('date', date);
+        formData.set('value', String(value));
+        formData.set('note', note ?? '');
+        const response = await fetch('?/recordMeasurement', {
+            method: 'POST',
+            body: formData,
+        });
+        if (response.ok) {
+            await invalidateAll();
+        }
+    }
 </script>
 
 <a href={resolve('/')} class="text-sm text-blue-600 hover:underline"
@@ -146,4 +166,5 @@
     measurements={data.measurements}
     onDelete={handleMeasurementDelete}
     onUpdate={handleMeasurementUpdate}
+    onRecord={handleMeasurementRecord}
 />

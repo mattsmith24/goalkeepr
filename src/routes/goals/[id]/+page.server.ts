@@ -8,6 +8,7 @@ import {
     goalsTable,
     habitRecordsTable,
     habitsTable,
+    measurementRecordsTable,
     measurementsTable,
     milestonesTable,
 } from '$lib/server/db/schema';
@@ -372,6 +373,51 @@ export const actions: Actions = {
                 error: 'measurement not found',
             });
         }
+        return { success: true };
+    },
+    recordMeasurement: async (event) => {
+        const data = await event.request.formData();
+        const measurementId = Number(data.get('id'));
+        const date = data.get('date')?.toString().trim() ?? '';
+        const valueRaw = data.get('value')?.toString().trim() ?? '';
+        const noteRaw = data.get('note')?.toString().trim() ?? '';
+        if (!Number.isInteger(measurementId) || measurementId <= 0) {
+            return { success: false, error: 'invalid id' };
+        }
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+            return { success: false, error: 'invalid date' };
+        }
+        if (valueRaw === '' || Number.isNaN(Number(valueRaw))) {
+            return { success: false, error: 'invalid value' };
+        }
+        const value = Number(valueRaw);
+        const note = noteRaw === '' ? null : noteRaw;
+        const [measurement] = await db
+            .select()
+            .from(measurementsTable)
+            .where(
+                and(
+                    eq(measurementsTable.id, measurementId),
+                    inArray(
+                        measurementsTable.goalId,
+                        db
+                            .select({ id: goalsTable.id })
+                            .from(goalsTable)
+                            .where(
+                                eq(goalsTable.userId, event.locals.user!.id),
+                            ),
+                    ),
+                ),
+            );
+        if (!measurement) {
+            return fail(404, {
+                success: false,
+                error: 'measurement not found',
+            });
+        }
+        await db
+            .insert(measurementRecordsTable)
+            .values({ measurementId, date, value, note });
         return { success: true };
     },
 };
