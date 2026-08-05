@@ -31,6 +31,7 @@
     args={{
         records: [],
         onDelete: (id) => console.log('delete', id),
+        onUpdate: (id, date, note) => console.log('update', id, date, note),
     }}
 />
 
@@ -39,5 +40,6 @@
     args={{
         records: recordData,
         onDelete: (id) => console.log('delete', id),
+        onUpdate: (id, date, note) => console.log('update', id, date, note),
     }}
 />

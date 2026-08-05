@@ -17,6 +17,24 @@
             await invalidateAll();
         }
     }
+
+    async function handleHabitRecordUpdate(
+        id: number,
+        date: string,
+        note: string | null,
+    ) {
+        const formData = new FormData();
+        formData.set('id', String(id));
+        formData.set('date', date);
+        formData.set('note', note ?? '');
+        const response = await fetch('?/updateHabitRecord', {
+            method: 'POST',
+            body: formData,
+        });
+        if (response.ok) {
+            await invalidateAll();
+        }
+    }
 </script>
 
 <a
@@ -28,5 +46,6 @@
     <HabitHistoryList
         records={data.records}
         onDelete={handleHabitRecordDelete}
+        onUpdate={handleHabitRecordUpdate}
     />
 </div>

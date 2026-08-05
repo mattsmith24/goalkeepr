@@ -16,9 +16,12 @@ const GOAL = 'Alice private goal';
 const MILESTONE = 'Alice private milestone';
 const HABIT = 'Alice private habit';
 const MEASUREMENT = 'Alice private measurement';
+const RECORD_DATE = '2026-01-15';
+const RECORD_NOTE = 'Alice private record note';
 
 type ResourceTable = 'goals' | 'milestones' | 'habits' | 'measurements';
 type ResourceRow = { id: number; description: string };
+type HabitRecordRow = { id: number; date: string; note: string | null };
 
 let aliceContext: BrowserContext | undefined;
 let bobContext: BrowserContext | undefined;
@@ -64,6 +67,21 @@ function countResources(table: ResourceTable): number {
             .prepare(`SELECT COUNT(*) AS count FROM ${table}`)
             .get() as { count: number };
         return row.count;
+    } finally {
+        db.close();
+    }
+}
+
+function readHabitRecord(habitId: number): HabitRecordRow {
+    const db = new Database(TEST_DB, { readonly: true });
+    try {
+        const row = db
+            .prepare(
+                `SELECT id, date, note FROM habit_records WHERE habitId = ?`,
+            )
+            .get(habitId) as HabitRecordRow | undefined;
+        if (!row) throw new Error('habit record not found');
+        return row;
     } finally {
         db.close();
     }
@@ -272,4 +290,28 @@ test("a user cannot update or delete another user's resources", async () => {
             resource.row,
         );
     }
+});
+
+test("a user cannot update another user's habit record", async () => {
+    const { goalId, habit } = await createGoalTree(alice);
+
+    const item = alice.getByRole('listitem').filter({ hasText: HABIT });
+    await item.getByRole('button', { name: /mark done/i }).click();
+    await item.getByLabel(/done date/i).fill(RECORD_DATE);
+    await item.getByLabel(/^note$/i).fill(RECORD_NOTE);
+    await item.getByRole('button', { name: /^save$/i }).click();
+    await expect(item.getByRole('link', { name: /history/i })).toBeVisible();
+
+    const record = readHabitRecord(habit.id);
+
+    const update = await postAction(
+        `/goals/${goalId}/habits/${habit.id}?/updateHabitRecord`,
+        {
+            id: record.id,
+            date: '2020-01-01',
+            note: 'Bob changed this record',
+        },
+    );
+    await expectNotFound(update);
+    expect(readHabitRecord(habit.id)).toEqual(record);
 });

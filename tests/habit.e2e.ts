@@ -100,10 +100,36 @@ test('a habit can be marked done, viewed on history page, and deleted', async ({
     await expect(record).toBeVisible();
     await expect(record).toContainText(note);
 
-    // Delete
-    await record.getByRole('button', { name: 'Delete', exact: true }).click();
+    // Edit the date. While the date is being edited it is an input rather than
+    // text, so locate the row by its note.
+    const earlier = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    const byNote = page.getByRole('listitem').filter({ hasText: note });
+    await byNote.getByRole('button', { name: today, exact: true }).click();
+    await byNote.getByLabel(/^date$/i).fill(earlier);
+    await byNote.getByRole('button', { name: /^save$/i }).click();
 
-    await expect(record).not.toBeVisible();
+    const editedRecord = page
+        .getByRole('listitem')
+        .filter({ hasText: new RegExp(earlier) });
+    await expect(editedRecord).toBeVisible();
+
+    // Edit the note, locating the row by its now-stable date.
+    const editedNote = `E2E edited note ${Date.now()}`;
+    await editedRecord.getByRole('button', { name: new RegExp(note) }).click();
+    const noteInput = editedRecord.getByLabel(/^note$/i);
+    await expect(noteInput).toBeFocused();
+    await noteInput.fill(editedNote);
+    await noteInput.press('Enter');
+
+    await expect(editedRecord).toContainText(editedNote);
+    await expect(editedRecord).not.toContainText(note);
+
+    // Delete
+    await editedRecord
+        .getByRole('button', { name: 'Delete', exact: true })
+        .click();
+
+    await expect(editedRecord).not.toBeVisible();
     await expect(page.getByText(/no records yet/i)).toBeVisible();
 
     // Back to goal page
