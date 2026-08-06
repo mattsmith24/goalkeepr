@@ -46,6 +46,49 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 };
 
 export const actions: Actions = {
+    updateMeasurementRecord: async (event) => {
+        const data = await event.request.formData();
+        const id = Number(data.get('id'));
+        const date = data.get('date')?.toString().trim() ?? '';
+        const valueRaw = data.get('value')?.toString().trim() ?? '';
+        const noteRaw = data.get('note')?.toString().trim() ?? '';
+        if (!Number.isInteger(id) || id <= 0) {
+            return { success: false, error: 'invalid id' };
+        }
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+            return { success: false, error: 'invalid date' };
+        }
+        const value = Number(valueRaw);
+        if (valueRaw === '' || !Number.isFinite(value)) {
+            return { success: false, error: 'invalid value' };
+        }
+        const note = noteRaw === '' ? null : noteRaw;
+        const userGoalIds = db
+            .select({ id: goalsTable.id })
+            .from(goalsTable)
+            .where(eq(goalsTable.userId, event.locals.user!.id));
+        const result = await db
+            .update(measurementRecordsTable)
+            .set({ date, value, note })
+            .where(
+                and(
+                    eq(measurementRecordsTable.id, id),
+                    inArray(
+                        measurementRecordsTable.measurementId,
+                        db
+                            .select({ id: measurementsTable.id })
+                            .from(measurementsTable)
+                            .where(
+                                inArray(measurementsTable.goalId, userGoalIds),
+                            ),
+                    ),
+                ),
+            );
+        if (result.changes === 0) {
+            return fail(404, { success: false, error: 'record not found' });
+        }
+        return { success: true };
+    },
     deleteMeasurementRecord: async (event) => {
         const data = await event.request.formData();
         const id = Number(data.get('id'));

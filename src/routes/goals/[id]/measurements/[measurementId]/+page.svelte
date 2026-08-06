@@ -17,6 +17,26 @@
             await invalidateAll();
         }
     }
+
+    async function handleMeasurementRecordUpdate(
+        id: number,
+        date: string,
+        value: number,
+        note: string | null,
+    ) {
+        const formData = new FormData();
+        formData.set('id', String(id));
+        formData.set('date', date);
+        formData.set('value', String(value));
+        formData.set('note', note ?? '');
+        const response = await fetch('?/updateMeasurementRecord', {
+            method: 'POST',
+            body: formData,
+        });
+        if (response.ok) {
+            await invalidateAll();
+        }
+    }
 </script>
 
 <a
@@ -28,5 +48,6 @@
     <MeasurementRecordList
         records={data.records}
         onDelete={handleMeasurementRecordDelete}
+        onUpdate={handleMeasurementRecordUpdate}
     />
 </div>

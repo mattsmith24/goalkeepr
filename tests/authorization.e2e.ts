@@ -17,11 +17,18 @@ const MILESTONE = 'Alice private milestone';
 const HABIT = 'Alice private habit';
 const MEASUREMENT = 'Alice private measurement';
 const RECORD_DATE = '2026-01-15';
+const RECORD_VALUE = '70.5';
 const RECORD_NOTE = 'Alice private record note';
 
 type ResourceTable = 'goals' | 'milestones' | 'habits' | 'measurements';
 type ResourceRow = { id: number; description: string };
 type HabitRecordRow = { id: number; date: string; note: string | null };
+type MeasurementRecordRow = {
+    id: number;
+    date: string;
+    value: number;
+    note: string | null;
+};
 
 let aliceContext: BrowserContext | undefined;
 let bobContext: BrowserContext | undefined;
@@ -81,6 +88,21 @@ function readHabitRecord(habitId: number): HabitRecordRow {
             )
             .get(habitId) as HabitRecordRow | undefined;
         if (!row) throw new Error('habit record not found');
+        return row;
+    } finally {
+        db.close();
+    }
+}
+
+function readMeasurementRecord(measurementId: number): MeasurementRecordRow {
+    const db = new Database(TEST_DB, { readonly: true });
+    try {
+        const row = db
+            .prepare(
+                `SELECT id, date, value, note FROM measurement_records WHERE measurementId = ?`,
+            )
+            .get(measurementId) as MeasurementRecordRow | undefined;
+        if (!row) throw new Error('measurement record not found');
         return row;
     } finally {
         db.close();
@@ -314,4 +336,30 @@ test("a user cannot update another user's habit record", async () => {
     );
     await expectNotFound(update);
     expect(readHabitRecord(habit.id)).toEqual(record);
+});
+
+test("a user cannot update another user's measurement record", async () => {
+    const { goalId, measurement } = await createGoalTree(alice);
+
+    const item = alice.getByRole('listitem').filter({ hasText: MEASUREMENT });
+    await item.getByRole('button', { name: /add record/i }).click();
+    await item.getByLabel(/^date$/i).fill(RECORD_DATE);
+    await item.getByLabel(/^value$/i).fill(RECORD_VALUE);
+    await item.getByLabel(/^note$/i).fill(RECORD_NOTE);
+    await item.getByRole('button', { name: /^save$/i }).click();
+    await expect(item.getByRole('link', { name: /history/i })).toBeVisible();
+
+    const record = readMeasurementRecord(measurement.id);
+
+    const update = await postAction(
+        `/goals/${goalId}/measurements/${measurement.id}?/updateMeasurementRecord`,
+        {
+            id: record.id,
+            date: '2020-01-01',
+            value: '99.9',
+            note: 'Bob changed this record',
+        },
+    );
+    await expectNotFound(update);
+    expect(readMeasurementRecord(measurement.id)).toEqual(record);
 });
