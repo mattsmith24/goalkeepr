@@ -3,9 +3,10 @@
 
     interface Props {
         user?: { name?: string } | undefined;
+        signupsEnabled: boolean;
     }
 
-    let { user }: Props = $props();
+    let { user, signupsEnabled }: Props = $props();
 </script>
 
 <header
@@ -25,12 +26,14 @@
             </form>
         {:else}
             <a href={resolve('/sign-in')} class="text-sm underline">Sign in</a>
-            <a
-                href={resolve('/sign-up')}
-                class="rounded-md bg-blue-600 px-3 py-1.5 text-sm text-white transition hover:bg-blue-700"
-            >
-                Sign up
-            </a>
+            {#if signupsEnabled}
+                <a
+                    href={resolve('/sign-up')}
+                    class="rounded-md bg-blue-600 px-3 py-1.5 text-sm text-white transition hover:bg-blue-700"
+                >
+                    Sign up
+                </a>
+            {/if}
         {/if}
     </nav>
 </header>

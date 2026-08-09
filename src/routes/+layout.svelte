@@ -7,5 +7,5 @@
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
-<TopBar user={data.user} />
+<TopBar user={data.user} signupsEnabled={data.signupsEnabled} />
 {@render children()}

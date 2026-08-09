@@ -13,7 +13,7 @@
 
 <Story
     name="Signed out"
-    args={{ user: undefined }}
+    args={{ user: undefined, signupsEnabled: true }}
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
 
@@ -30,6 +30,21 @@
         await expect(canvas.queryByText(/alex smith/i)).not.toBeInTheDocument();
         await expect(
             canvas.queryByRole('button', { name: /sign out/i }),
+        ).not.toBeInTheDocument();
+    }}
+/>
+
+<Story
+    name="Signed out, signups disabled"
+    args={{ user: undefined, signupsEnabled: false }}
+    play={async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        await expect(
+            canvas.getByRole('link', { name: /^sign in$/i }),
+        ).toHaveAttribute('href', '/sign-in');
+        await expect(
+            canvas.queryByRole('link', { name: /^sign up$/i }),
         ).not.toBeInTheDocument();
     }}
 />

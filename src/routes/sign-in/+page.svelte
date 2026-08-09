@@ -1,9 +1,9 @@
 <script lang="ts">
     import { enhance } from '$app/forms';
     import { resolve } from '$app/paths';
-    import type { ActionData } from './$types';
+    import type { ActionData, PageData } from './$types';
 
-    let { form }: { form: ActionData } = $props();
+    let { data, form }: { data: PageData; form: ActionData } = $props();
 </script>
 
 <h1>Sign in</h1>
@@ -41,6 +41,8 @@
     </button>
 </form>
 
-<p class="m-2">
-    No account yet? <a href={resolve('/sign-up')} class="underline">Sign up</a>
-</p>
+{#if data.signupsEnabled}
+    <p class="m-2">
+        No account yet? <a href={resolve('/sign-up')} class="underline">Sign up</a>
+    </p>
+{/if}

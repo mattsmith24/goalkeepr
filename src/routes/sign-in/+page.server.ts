@@ -1,4 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit';
+import { env } from '$env/dynamic/private';
 import { APIError } from 'better-auth/api';
 import type { Actions, PageServerLoad } from './$types';
 import { auth } from '$lib/server/auth';
@@ -7,7 +8,9 @@ export const load: PageServerLoad = (event) => {
     if (event.locals.user) {
         return redirect(302, '/');
     }
-    return {};
+    return {
+        signupsEnabled: !(env.SIGNUPS_ENABLED === 'false' || env.SIGNUPS_ENABLED === '0'),
+    };
 };
 
 export const actions: Actions = {
