@@ -63,7 +63,9 @@ npm run test         # both, sequentially
 
 ## Building
 
-To create a production version of your app:
+Assuming node_adapter is the deployment method.
+
+To create a production version:
 
 ```sh
 npm run build
@@ -71,4 +73,51 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## Deploying
+
+Make a user `goalkeepr` with the "no-login" options with home directory /home/goalkeepr
+
+Install nvm:
+
+```sh
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | sudo -u goalkeepr bash
+```
+
+On a Digital Ocean Droplet, might need swap:
+
+```sh
+# Source - https://stackoverflow.com/a/45921532
+# Posted by Yuriy Korman
+# Retrieved 2026-08-09, License - CC BY-SA 3.0
+
+  sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
+  sudo /sbin/mkswap /var/swap.1
+  sudo /sbin/swapon /var/swap.1
+```
+
+Copy the build directory and package*.json to the server.
+
+```sh
+rsync -av --exclude .env --exclude node_modules --exclude local.db * $SERVER:/home/goalkeepr/
+```
+
+Install dependencies
+
+```sh
+npm ci --omit dev
+```
+
+Init the DB
+
+```sh
+npm run db:push
+```
+
+Create .env using .env.example as the template.
+
+Run it to see what errors you get
+
+```sh
+node --env-file=.env build
+```
+

@@ -16,7 +16,7 @@
     <nav class="flex items-center gap-3">
         {#if user}
             <span class="text-sm text-gray-600">{user.name}</span>
-            <form method="post" action="/sign-out">
+            <form method="post" action={resolve('/sign-out')}>
                 <button
                     type="submit"
                     class="rounded-md bg-blue-600 px-3 py-1.5 text-sm text-white transition hover:bg-blue-700"

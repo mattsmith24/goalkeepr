@@ -1,4 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit';
+import { resolve } from '$app/paths';
 import { env } from '$env/dynamic/private';
 import { APIError } from 'better-auth/api';
 import type { Actions, PageServerLoad } from './$types';
@@ -9,10 +10,10 @@ const signupsEnabled = () =>
 
 export const load: PageServerLoad = (event) => {
     if (event.locals.user) {
-        return redirect(302, '/');
+        return redirect(302, resolve('/'));
     }
     if (!signupsEnabled()) {
-        return redirect(302, '/sign-in');
+        return redirect(302, resolve('/sign-in'));
     }
     return {};
 };
@@ -47,6 +48,6 @@ export const actions: Actions = {
             throw err;
         }
 
-        return redirect(302, '/');
+        return redirect(302, resolve('/'));
     },
 };

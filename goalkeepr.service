@@ -1,0 +1,19 @@
+[Unit]
+Description=Goalkeepr Production App
+After=network.target
+
+[Service]
+Type=simple
+User=goalkeepr
+WorkingDirectory=/home/goalkeepr
+ExecStart=/home/goalkeepr/.nvm/nvm-exec node --env-file=/home/goalkeepr/.env /home/goalkeepr/build
+Environment=NODE_VERSION=24.15.0 NODE_ENV=production
+Restart=always
+RestartSec=5
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=homenest
+
+[Install]
+WantedBy=multi-user.target
