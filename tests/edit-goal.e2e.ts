@@ -20,20 +20,33 @@ async function addGoal(
     ).toBeVisible();
 }
 
+async function openGoal(
+    page: import('@playwright/test').Page,
+    description: string,
+) {
+    await page.getByRole('link', { name: description, exact: true }).click();
+    await expect(page.getByRole('heading', { name: description })).toBeVisible();
+}
+
 test('editing a goal updates its description', async ({ page }) => {
     const original = `E2E edit goal ${Date.now()}`;
     const updated = `E2E edited goal ${Date.now()}`;
 
     await addGoal(page, original);
+    await openGoal(page, original);
 
-    const goalItem = page.getByRole('listitem').filter({ hasText: original });
-    await goalItem.getByRole('button', { name: 'Edit', exact: true }).click();
+    await page.getByRole('button', { name: original, exact: true }).click();
 
-    const input = page.getByRole('list').getByRole('textbox');
+    const input = page.getByRole('textbox');
     await expect(input).toBeFocused();
     await input.fill(updated);
     await input.press('Enter');
 
+    await expect(
+        page.getByRole('heading', { name: updated, exact: true }),
+    ).toBeVisible();
+
+    await page.goto('/');
     await expect(
         page.getByRole('listitem').filter({ hasText: updated }),
     ).toBeVisible();
@@ -48,18 +61,15 @@ test('escape cancels an edit and keeps the original description', async ({
     const original = `E2E escape goal ${Date.now()}`;
 
     await addGoal(page, original);
+    await openGoal(page, original);
 
-    const goalItem = page.getByRole('listitem').filter({ hasText: original });
-    await goalItem.getByRole('button', { name: 'Edit', exact: true }).click();
+    await page.getByRole('button', { name: original, exact: true }).click();
 
-    const input = page.getByRole('list').getByRole('textbox');
+    const input = page.getByRole('textbox');
     await input.fill('this should be discarded');
     await input.press('Escape');
 
     await expect(
-        page.getByRole('listitem').filter({ hasText: original }),
+        page.getByRole('heading', { name: original, exact: true }),
     ).toBeVisible();
-    await expect(
-        page.getByRole('listitem').filter({ hasText: 'discarded' }),
-    ).not.toBeVisible();
 });

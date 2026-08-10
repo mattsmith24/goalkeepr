@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { invalidateAll } from '$app/navigation';
+    import { goto, invalidateAll } from '$app/navigation';
     import { resolve } from '$app/paths';
     import type { PageProps } from './$types';
     import GoalTitle from '$lib/components/GoalTitle.svelte';
@@ -8,6 +8,18 @@
     import MeasurementList from '$lib/components/MeasurementList.svelte';
 
     let { data }: PageProps = $props();
+
+    async function handleDelete() {
+        const formData = new FormData();
+        formData.set('id', String(data.goal.id));
+        const response = await fetch('?/deleteGoal', {
+            method: 'POST',
+            body: formData,
+        });
+        if (response.ok) {
+            await goto(resolve('/'));
+        }
+    }
 
     async function handleUpdate(id: number, description: string) {
         const formData = new FormData();
@@ -168,3 +180,13 @@
     onUpdate={handleMeasurementUpdate}
     onRecord={handleMeasurementRecord}
 />
+
+<div class="m-2 mt-8 flex justify-center">
+    <button
+        type="button"
+        class="text-sm text-red-600 hover:underline"
+        onclick={handleDelete}
+    >
+        Delete goal
+    </button>
+</div>

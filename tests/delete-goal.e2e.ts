@@ -20,15 +20,26 @@ async function addGoal(
     ).toBeVisible();
 }
 
+async function openGoal(
+    page: import('@playwright/test').Page,
+    description: string,
+) {
+    await page.getByRole('link', { name: description, exact: true }).click();
+    await expect(page.getByRole('heading', { name: description })).toBeVisible();
+}
+
 test('deleting a goal removes it from the list', async ({ page }) => {
     const description = `E2E delete goal ${Date.now()}`;
 
     await addGoal(page, description);
+    await openGoal(page, description);
 
-    const item = page.getByRole('listitem').filter({ hasText: description });
-    await item.getByRole('button', { name: 'Delete', exact: true }).click();
+    await page.getByRole('button', { name: 'Delete goal', exact: true }).click();
 
-    await expect(item).not.toBeVisible();
+    await expect(page).toHaveURL('/');
+    await expect(
+        page.getByRole('listitem').filter({ hasText: description }),
+    ).not.toBeVisible();
 });
 
 test('deleting one goal leaves others intact', async ({ page }) => {
@@ -37,12 +48,15 @@ test('deleting one goal leaves others intact', async ({ page }) => {
 
     await addGoal(page, goal1);
     await addGoal(page, goal2);
+    await openGoal(page, goal2);
 
-    const target = page.getByRole('listitem').filter({ hasText: goal2 });
-    const other = page.getByRole('listitem').filter({ hasText: goal1 });
+    await page.getByRole('button', { name: 'Delete goal', exact: true }).click();
 
-    await target.getByRole('button', { name: 'Delete', exact: true }).click();
-
-    await expect(target).not.toBeVisible();
-    await expect(other).toBeVisible();
+    await expect(page).toHaveURL('/');
+    await expect(
+        page.getByRole('listitem').filter({ hasText: goal2 }),
+    ).not.toBeVisible();
+    await expect(
+        page.getByRole('listitem').filter({ hasText: goal1 }),
+    ).toBeVisible();
 });

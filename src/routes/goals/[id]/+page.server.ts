@@ -375,6 +375,25 @@ export const actions: Actions = {
         }
         return { success: true };
     },
+    deleteGoal: async (event) => {
+        const data = await event.request.formData();
+        const id = Number(data.get('id'));
+        if (!Number.isInteger(id) || id <= 0) {
+            return { success: false, error: 'invalid id' };
+        }
+        const result = await db
+            .delete(goalsTable)
+            .where(
+                and(
+                    eq(goalsTable.id, id),
+                    eq(goalsTable.userId, event.locals.user!.id),
+                ),
+            );
+        if (result.changes === 0) {
+            return fail(404, { success: false, error: 'goal not found' });
+        }
+        return { success: true };
+    },
     recordMeasurement: async (event) => {
         const data = await event.request.formData();
         const measurementId = Number(data.get('id'));

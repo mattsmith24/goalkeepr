@@ -19,20 +19,6 @@
     });
 </script>
 
-<Story
-    name="Empty"
-    args={{
-        goals: [],
-        onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
-    }}
-/>
+<Story name="Empty" args={{ goals: [] }} />
 
-<Story
-    name="Default"
-    args={{
-        goals: goalData,
-        onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
-    }}
-/>
+<Story name="Default" args={{ goals: goalData }} />
