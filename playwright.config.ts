@@ -10,8 +10,8 @@ export default defineConfig({
         command: [
             `rm -f ${TEST_DB}`,
             withDb('npm run db:push -- --force'),
-            withDb('npm run build'),
-            withDb('npm run preview'),
+            `SIGNUPS_ENABLED=1 ${withDb('npm run build')}`,
+            `SIGNUPS_ENABLED=1 ${withDb('npm run preview')}`,
         ].join(' && '),
         port: 4173,
     },

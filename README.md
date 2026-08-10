@@ -71,6 +71,11 @@ To create a production version:
 npm run build
 ```
 
+To serve at a non-root base path, use:
+```sh
+BASE_PATH=/somepath npm run build
+```
+
 You can preview the production build with `npm run preview`.
 
 ## Deploying
