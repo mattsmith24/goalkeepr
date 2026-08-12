@@ -56,6 +56,7 @@ test('a measurement can be added, edited and deleted', async ({ page }) => {
     await editedItem
         .getByRole('button', { name: 'Delete', exact: true })
         .click();
+    await editedItem.getByRole('button', { name: 'Yes', exact: true }).click();
 
     await expect(editedItem).not.toBeVisible();
     await expect(page.getByText(/no measurements yet/i)).toBeVisible();
@@ -146,6 +147,9 @@ test('a measurement can be recorded, viewed on history page, and deleted', async
     // Delete
     await editedRecord
         .getByRole('button', { name: 'Delete', exact: true })
+        .click();
+    await editedRecord
+        .getByRole('button', { name: 'Yes', exact: true })
         .click();
 
     await expect(editedRecord).not.toBeVisible();

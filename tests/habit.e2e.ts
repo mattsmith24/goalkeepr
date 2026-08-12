@@ -56,6 +56,7 @@ test('a habit can be added, edited and deleted', async ({ page }) => {
     await editedItem
         .getByRole('button', { name: 'Delete', exact: true })
         .click();
+    await editedItem.getByRole('button', { name: 'Yes', exact: true }).click();
 
     await expect(editedItem).not.toBeVisible();
     await expect(page.getByText(/no habits yet/i)).toBeVisible();
@@ -127,6 +128,9 @@ test('a habit can be marked done, viewed on history page, and deleted', async ({
     // Delete
     await editedRecord
         .getByRole('button', { name: 'Delete', exact: true })
+        .click();
+    await editedRecord
+        .getByRole('button', { name: 'Yes', exact: true })
         .click();
 
     await expect(editedRecord).not.toBeVisible();

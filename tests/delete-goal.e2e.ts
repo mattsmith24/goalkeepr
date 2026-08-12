@@ -25,7 +25,9 @@ async function openGoal(
     description: string,
 ) {
     await page.getByRole('link', { name: description, exact: true }).click();
-    await expect(page.getByRole('heading', { name: description })).toBeVisible();
+    await expect(
+        page.getByRole('heading', { name: description }),
+    ).toBeVisible();
 }
 
 test('deleting a goal removes it from the list', async ({ page }) => {
@@ -34,7 +36,10 @@ test('deleting a goal removes it from the list', async ({ page }) => {
     await addGoal(page, description);
     await openGoal(page, description);
 
-    await page.getByRole('button', { name: 'Delete goal', exact: true }).click();
+    await page
+        .getByRole('button', { name: 'Delete goal', exact: true })
+        .click();
+    await page.getByRole('button', { name: 'Yes', exact: true }).click();
 
     await expect(page).toHaveURL('/');
     await expect(
@@ -50,7 +55,10 @@ test('deleting one goal leaves others intact', async ({ page }) => {
     await addGoal(page, goal2);
     await openGoal(page, goal2);
 
-    await page.getByRole('button', { name: 'Delete goal', exact: true }).click();
+    await page
+        .getByRole('button', { name: 'Delete goal', exact: true })
+        .click();
+    await page.getByRole('button', { name: 'Yes', exact: true }).click();
 
     await expect(page).toHaveURL('/');
     await expect(
@@ -58,5 +66,22 @@ test('deleting one goal leaves others intact', async ({ page }) => {
     ).not.toBeVisible();
     await expect(
         page.getByRole('listitem').filter({ hasText: goal1 }),
+    ).toBeVisible();
+});
+
+test('cancelling the confirmation keeps the goal', async ({ page }) => {
+    const description = `E2E cancel delete ${Date.now()}`;
+
+    await addGoal(page, description);
+    await openGoal(page, description);
+
+    await page
+        .getByRole('button', { name: 'Delete goal', exact: true })
+        .click();
+    await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+
+    await expect(page.getByText('Are you sure?')).not.toBeVisible();
+    await expect(
+        page.getByRole('heading', { name: description }),
     ).toBeVisible();
 });

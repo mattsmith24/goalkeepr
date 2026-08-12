@@ -56,6 +56,7 @@ test('a milestone can be added, edited and deleted', async ({ page }) => {
     await editedItem
         .getByRole('button', { name: 'Delete', exact: true })
         .click();
+    await editedItem.getByRole('button', { name: 'Yes', exact: true }).click();
 
     await expect(editedItem).not.toBeVisible();
     await expect(page.getByText(/no milestones yet/i)).toBeVisible();
