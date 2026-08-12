@@ -6,6 +6,7 @@
     import MilestoneList from '$lib/components/MilestoneList.svelte';
     import HabitList from '$lib/components/HabitList.svelte';
     import MeasurementList from '$lib/components/MeasurementList.svelte';
+    import DeleteButton from '$lib/components/DeleteButton.svelte';
 
     let { data }: PageProps = $props();
 
@@ -182,11 +183,5 @@
 />
 
 <div class="m-2 mt-8 flex justify-center">
-    <button
-        type="button"
-        class="text-sm text-red-600 hover:underline"
-        onclick={handleDelete}
-    >
-        Delete goal
-    </button>
+    <DeleteButton onDelete={handleDelete} label="Delete goal" />
 </div>

@@ -1,6 +1,7 @@
 <script lang="ts">
     import { tick } from 'svelte';
     import type { Snippet } from 'svelte';
+    import DeleteButton from './DeleteButton.svelte';
 
     interface Props {
         description: string;
@@ -76,13 +77,7 @@
                 {@render children()}
             {/if}
             <div>
-                <button
-                    type="button"
-                    class="px-2 py-1 text-sm text-red-600 hover:underline"
-                    onclick={onDelete}
-                >
-                    Delete
-                </button>
+                <DeleteButton {onDelete} />
             </div>
         </div>
     </div>

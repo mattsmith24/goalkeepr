@@ -1,6 +1,7 @@
 <script lang="ts">
     import { tick } from 'svelte';
     import type { MeasurementRecord } from '$lib/types';
+    import DeleteButton from './DeleteButton.svelte';
 
     interface Props {
         record: MeasurementRecord;
@@ -197,12 +198,6 @@
         </button>
     {/if}
     {#if !editingDate && !editingValue && !editingNote}
-        <button
-            type="button"
-            class="text-sm text-red-600 hover:underline"
-            onclick={() => onDelete(record.id)}
-        >
-            Delete
-        </button>
+        <DeleteButton onDelete={() => onDelete(record.id)} />
     {/if}
 </li>
