@@ -2,6 +2,7 @@
     import { resolve } from '$app/paths';
     import EditableItem from './EditableItem.svelte';
     import type { Measurement } from '$lib/types';
+    import { todayLocalDateString } from '$lib/dates';
 
     interface Props {
         measurement: Measurement;
@@ -27,7 +28,7 @@
     }
 
     function startRecord() {
-        draftDate = new Date().toISOString().slice(0, 10);
+        draftDate = todayLocalDateString();
         draftValue = '';
         draftNote = '';
         recording = true;
