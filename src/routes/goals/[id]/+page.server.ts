@@ -13,6 +13,25 @@ import {
     milestonesTable,
 } from '$lib/server/db/schema';
 
+function toDateString(date: Date) {
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${date.getFullYear()}-${month}-${day}`;
+}
+
+function currentStreak(dates: Set<string>) {
+    const day = new Date();
+    if (!dates.has(toDateString(day))) {
+        day.setDate(day.getDate() - 1);
+    }
+    let streak = 0;
+    while (dates.has(toDateString(day))) {
+        streak += 1;
+        day.setDate(day.getDate() - 1);
+    }
+    return streak;
+}
+
 export const load: PageServerLoad = async ({ locals, params }) => {
     const id = Number(params.id);
     if (!Number.isInteger(id) || id <= 0) {
@@ -39,7 +58,35 @@ export const load: PageServerLoad = async ({ locals, params }) => {
         .select()
         .from(measurementsTable)
         .where(eq(measurementsTable.goalId, id));
-    return { goal, milestones, habits, measurements };
+    const habitRecords = habits.length
+        ? await db
+              .select({
+                  habitId: habitRecordsTable.habitId,
+                  date: habitRecordsTable.date,
+              })
+              .from(habitRecordsTable)
+              .where(
+                  inArray(
+                      habitRecordsTable.habitId,
+                      habits.map((habit) => habit.id),
+                  ),
+              )
+        : [];
+    const datesByHabit = new Map<number, Set<string>>();
+    for (const record of habitRecords) {
+        const dates = datesByHabit.get(record.habitId) ?? new Set<string>();
+        dates.add(record.date);
+        datesByHabit.set(record.habitId, dates);
+    }
+    return {
+        goal,
+        milestones,
+        habits: habits.map((habit) => ({
+            ...habit,
+            streak: currentStreak(datesByHabit.get(habit.id) ?? new Set()),
+        })),
+        measurements,
+    };
 };
 
 export const actions: Actions = {

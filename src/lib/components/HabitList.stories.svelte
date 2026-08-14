@@ -8,6 +8,7 @@
             id: 1,
             goalId: 1,
             description: 'Stretch for 10 minutes each morning',
+            streak: 4,
         },
     ];
 

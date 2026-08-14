@@ -16,6 +16,7 @@ export interface Habit {
     id: number;
     goalId: number;
     description: string;
+    streak: number;
 }
 
 export interface Measurement {

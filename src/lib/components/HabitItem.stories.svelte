@@ -17,6 +17,7 @@
             id: 1,
             goalId: 1,
             description: 'Stretch for 10 minutes each morning',
+            streak: 4,
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),

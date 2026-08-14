@@ -49,6 +49,11 @@
     onUpdateDescription={updateDescription}
     onDelete={() => onDelete(habit.id)}
 >
+    <p class="px-2 py-1 text-sm text-gray-600">
+        {habit.streak === 0
+            ? 'No current streak'
+            : `${habit.streak} day streak`}
+    </p>
     {#if markingDone}
         <form
             class="flex flex-wrap items-center gap-2"
