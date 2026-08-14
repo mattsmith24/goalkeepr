@@ -2,7 +2,7 @@
     import { resolve } from '$app/paths';
     import EditableItem from './EditableItem.svelte';
     import type { Habit } from '$lib/types';
-    import { todayLocalDateString } from '$lib/dates';
+    import { toDateString } from '$lib/dates';
 
     interface Props {
         habit: Habit;
@@ -22,7 +22,7 @@
     }
 
     function startMarkDone() {
-        draftDate = todayLocalDateString();
+        draftDate = toDateString();
         draftNote = '';
         markingDone = true;
     }

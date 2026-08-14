@@ -12,25 +12,7 @@ import {
     measurementsTable,
     milestonesTable,
 } from '$lib/server/db/schema';
-
-function toDateString(date: Date) {
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${date.getFullYear()}-${month}-${day}`;
-}
-
-function currentStreak(dates: Set<string>) {
-    const day = new Date();
-    if (!dates.has(toDateString(day))) {
-        day.setDate(day.getDate() - 1);
-    }
-    let streak = 0;
-    while (dates.has(toDateString(day))) {
-        streak += 1;
-        day.setDate(day.getDate() - 1);
-    }
-    return streak;
-}
+import { currentStreak } from '$lib/dates';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
     const id = Number(params.id);
