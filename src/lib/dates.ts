@@ -4,7 +4,10 @@ export function toDateString(date: Date = new Date()): string {
     return `${date.getFullYear()}-${month}-${day}`;
 }
 
-export function currentStreak(dates: Set<string>, now: Date = new Date()): number {
+export function currentStreak(
+    dates: Set<string>,
+    now: Date = new Date(),
+): number {
     const day = new Date(now);
     if (!dates.has(toDateString(day))) {
         day.setDate(day.getDate() - 1);

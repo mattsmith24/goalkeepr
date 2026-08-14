@@ -72,6 +72,7 @@ npm run build
 ```
 
 To serve at a non-root base path, use:
+
 ```sh
 BASE_PATH=/somepath npm run build
 ```
@@ -100,7 +101,7 @@ On a Digital Ocean Droplet, might need swap:
   sudo /sbin/swapon /var/swap.1
 ```
 
-Copy the build directory and package*.json to the server.
+Copy the build directory and package\*.json to the server.
 
 ```sh
 rsync -av --exclude .env --exclude node_modules --exclude local.db * $SERVER:/home/goalkeepr/
@@ -125,4 +126,3 @@ Run it to see what errors you get
 ```sh
 node --env-file=.env build
 ```
-

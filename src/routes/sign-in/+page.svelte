@@ -43,6 +43,8 @@
 
 {#if data.signupsEnabled}
     <p class="m-2">
-        No account yet? <a href={resolve('/sign-up')} class="underline">Sign up</a>
+        No account yet? <a href={resolve('/sign-up')} class="underline"
+            >Sign up</a
+        >
     </p>
 {/if}

@@ -11,7 +11,8 @@ export const auth = betterAuth({
     database: drizzleAdapter(db, { provider: 'sqlite' }),
     emailAndPassword: {
         enabled: true,
-        disableSignUp: env.SIGNUPS_ENABLED === 'false' || env.SIGNUPS_ENABLED === '0',
+        disableSignUp:
+            env.SIGNUPS_ENABLED === 'false' || env.SIGNUPS_ENABLED === '0',
     },
     socialProviders: {
         github: {

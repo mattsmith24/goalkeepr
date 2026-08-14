@@ -25,7 +25,9 @@ async function openGoal(
     description: string,
 ) {
     await page.getByRole('link', { name: description, exact: true }).click();
-    await expect(page.getByRole('heading', { name: description })).toBeVisible();
+    await expect(
+        page.getByRole('heading', { name: description }),
+    ).toBeVisible();
 }
 
 test('editing a goal updates its description', async ({ page }) => {

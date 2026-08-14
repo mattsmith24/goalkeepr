@@ -37,10 +37,10 @@
 
         await canvas.getByRole('button', { name: 'Delete' }).click();
 
-        const yesButton = canvas.getByRole('button', { name: 'Yes' })
+        const yesButton = canvas.getByRole('button', { name: 'Yes' });
         await expect(yesButton).toBeInTheDocument();
 
-        const cancelButton = canvas.getByRole('button', { name: 'Cancel' })
+        const cancelButton = canvas.getByRole('button', { name: 'Cancel' });
         await expect(cancelButton).toBeInTheDocument();
     }}
 />

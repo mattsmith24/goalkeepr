@@ -29,16 +29,23 @@ describe('currentStreak', () => {
     });
 
     it('counts consecutive days ending today', () => {
-        expect(currentStreak(new Set([today, yesterday, twoDaysAgo]), NOW)).toBe(3);
+        expect(
+            currentStreak(new Set([today, yesterday, twoDaysAgo]), NOW),
+        ).toBe(3);
     });
 
     it('counts consecutive days ending yesterday', () => {
-        expect(currentStreak(new Set([yesterday, twoDaysAgo, threeDaysAgo]), NOW)).toBe(3);
+        expect(
+            currentStreak(new Set([yesterday, twoDaysAgo, threeDaysAgo]), NOW),
+        ).toBe(3);
     });
 
     it('stops at a gap — counts only the contiguous run ending today', () => {
         expect(
-            currentStreak(new Set([today, yesterday, threeDaysAgo, fourDaysAgo]), NOW),
+            currentStreak(
+                new Set([today, yesterday, threeDaysAgo, fourDaysAgo]),
+                NOW,
+            ),
         ).toBe(2);
     });
 

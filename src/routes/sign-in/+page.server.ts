@@ -10,7 +10,9 @@ export const load: PageServerLoad = (event) => {
         return redirect(302, resolve('/'));
     }
     return {
-        signupsEnabled: !(env.SIGNUPS_ENABLED === 'false' || env.SIGNUPS_ENABLED === '0'),
+        signupsEnabled: !(
+            env.SIGNUPS_ENABLED === 'false' || env.SIGNUPS_ENABLED === '0'
+        ),
     };
 };
 

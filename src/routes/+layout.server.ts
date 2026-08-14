@@ -11,6 +11,8 @@ export const load: LayoutServerLoad = (event) => {
     }
     return {
         user: event.locals.user,
-        signupsEnabled: !(env.SIGNUPS_ENABLED === 'false' || env.SIGNUPS_ENABLED === '0'),
+        signupsEnabled: !(
+            env.SIGNUPS_ENABLED === 'false' || env.SIGNUPS_ENABLED === '0'
+        ),
     };
 };
