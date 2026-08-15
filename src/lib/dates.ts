@@ -4,6 +4,19 @@ export function toDateString(date: Date = new Date()): string {
     return `${date.getFullYear()}-${month}-${day}`;
 }
 
+/*
+fromDateString - Convert a date string like 2026-08-15 to a Date.
+params:
+  date: The date as a string YYYY-MM-DD
+*/
+export function fromDateString(date: string): Date {
+    // When the time zone offset is absent, date-only forms are interpreted as a
+    // UTC time and date-time forms are interpreted as a local time.
+    // Add the time so that it will be parsed as localtime.
+    const withTime = `${date}T00:00:00`;
+    return new Date(withTime);
+}
+
 export function currentStreak(
     dates: Set<string>,
     now: Date = new Date(),

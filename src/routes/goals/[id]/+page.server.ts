@@ -60,6 +60,17 @@ export const load: PageServerLoad = async ({ locals, params }) => {
         dates.add(record.date);
         datesByHabit.set(record.habitId, dates);
     }
+    const measurementRecords = measurements.length
+        ? await db
+              .select()
+              .from(measurementRecordsTable)
+              .where(
+                  inArray(
+                      measurementRecordsTable.measurementId,
+                      measurements.map((measurement) => measurement.id),
+                  ),
+              )
+        : [];
     return {
         goal,
         milestones,
@@ -67,7 +78,12 @@ export const load: PageServerLoad = async ({ locals, params }) => {
             ...habit,
             streak: currentStreak(datesByHabit.get(habit.id) ?? new Set()),
         })),
-        measurements,
+        measurements: measurements.map((measurement) => ({
+            ...measurement,
+            records: measurementRecords.filter(
+                (record) => record.measurementId == measurement.id,
+            ),
+        })),
     };
 };
 

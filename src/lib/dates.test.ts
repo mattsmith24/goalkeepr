@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { currentStreak, toDateString } from './dates';
+import { currentStreak, fromDateString, toDateString } from './dates';
 
 const NOW = new Date(2026, 6, 15);
 const today = toDateString(NOW);
@@ -12,6 +12,12 @@ const aWeekAgo = toDateString(new Date(2026, 6, 8));
 describe('toDateString', () => {
     it('formats a date as YYYY-MM-DD with zero-padding', () => {
         expect(toDateString(new Date(2026, 0, 5))).toBe('2026-01-05');
+    });
+});
+
+describe('fromDateString', () => {
+    it('converts a date from YYYY-MM-DD to a Date', () => {
+        expect(fromDateString('2026-08-15').toDateString() == '2026-08-15');
     });
 });
 

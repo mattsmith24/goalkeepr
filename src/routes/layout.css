@@ -1,6 +1,10 @@
 @import 'tailwindcss';
 
 body {
+    /* LayerChart defines a set of CSS variables that can be customized to
+       change the default appearance of charts.
+       --color-primary: The primary color used for marks (e.g., lines, bars). */
+    --color-primary: var(--color-gray-500);
     background-color: white;
 }
 

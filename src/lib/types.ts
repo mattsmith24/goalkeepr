@@ -23,6 +23,7 @@ export interface Measurement {
     id: number;
     goalId: number;
     description: string;
+    records: MeasurementRecord[];
 }
 
 export interface HabitRecord {

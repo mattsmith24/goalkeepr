@@ -1,8 +1,9 @@
 <script lang="ts">
+    import { LineChart } from 'layerchart';
     import { resolve } from '$app/paths';
     import EditableItem from './EditableItem.svelte';
     import type { Measurement } from '$lib/types';
-    import { toDateString } from '$lib/dates';
+    import { toDateString, fromDateString } from '$lib/dates';
 
     interface Props {
         measurement: Measurement;
@@ -61,6 +62,22 @@
     onUpdateDescription={updateDescription}
     onDelete={() => onDelete(measurement.id)}
 >
+    <LineChart
+        data={measurement.records}
+        x={(d) => fromDateString(d.date)}
+        y="value"
+        yDomain={null}
+        axis={false}
+        grid={false}
+        props={{
+            highlight: {
+                points: { r: 3, class: 'stroke-2 stroke-surface-100' },
+            },
+            /*, spline: {class: 'stroke-blue-600'},*/
+        }}
+        width={124}
+        height={18}
+    />
     {#if recording}
         <form
             class="flex flex-wrap items-center gap-2"
