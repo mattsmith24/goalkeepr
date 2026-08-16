@@ -31,3 +31,5 @@ storybook-static
 
 TODO.md
 deploy.sh
+goalkeepr-post-deploy.sh
+nvm-exec.sh
