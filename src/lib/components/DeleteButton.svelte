@@ -36,7 +36,7 @@
         <button
             bind:this={cancelElement}
             type="button"
-            class="px-2 py-1 text-sm hover:underline"
+            class="px-2 py-1 text-sm btn-cancel"
             onclick={() => (confirming = false)}
         >
             Cancel

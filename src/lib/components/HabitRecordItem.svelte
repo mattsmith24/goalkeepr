@@ -79,14 +79,14 @@
         />
         <button
             type="button"
-            class="text-sm text-blue-600 hover:underline"
+            class="text-sm btn-link"
             onclick={saveEditDate}
         >
             Save
         </button>
         <button
             type="button"
-            class="text-sm text-gray-600 hover:underline"
+            class="text-sm btn-cancel"
             onclick={cancelEditDate}
         >
             Cancel
@@ -110,14 +110,14 @@
         />
         <button
             type="button"
-            class="text-sm text-blue-600 hover:underline"
+            class="text-sm btn-link"
             onclick={saveEditNote}
         >
             Save
         </button>
         <button
             type="button"
-            class="text-sm text-gray-600 hover:underline"
+            class="text-sm btn-cancel"
             onclick={cancelEditNote}
         >
             Cancel
@@ -133,7 +133,7 @@
     {:else}
         <button
             type="button"
-            class="flex-1 text-left text-sm text-blue-600 hover:underline"
+            class="flex-1 text-left text-sm btn-link"
             onclick={startEditNote}
         >
             Add note

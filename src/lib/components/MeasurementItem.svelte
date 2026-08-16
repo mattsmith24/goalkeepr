@@ -109,12 +109,12 @@
                 aria-label="Note"
                 class="border border-gray-800 px-2 py-1"
             />
-            <button type="submit" class="text-sm text-blue-600 hover:underline">
+            <button type="submit" class="text-sm btn-link">
                 Save
             </button>
             <button
                 type="button"
-                class="text-sm text-gray-600 hover:underline"
+                class="text-sm btn-cancel"
                 onclick={cancelRecord}
             >
                 Cancel
@@ -123,7 +123,7 @@
     {:else}
         <button
             type="button"
-            class="block px-2 py-1 text-green-700 hover:underline"
+            class="block px-2 py-1 btn-link"
             onclick={startRecord}
         >
             Add record
@@ -134,7 +134,7 @@
             id: String(measurement.goalId),
             measurementId: String(measurement.id),
         })}
-        class="block px-2 py-1 text-blue-600 hover:underline"
+        class="block px-2 py-1 btn-link"
     >
         History
     </a>

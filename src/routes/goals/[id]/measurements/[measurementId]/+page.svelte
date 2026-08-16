@@ -41,7 +41,7 @@
 
 <a
     href={resolve('/goals/[id]', { id: String(data.measurement.goalId) })}
-    class="text-sm text-blue-600 hover:underline">&larr; Back</a
+    class="text-sm btn-link">&larr; Back</a
 >
 <div class="m-2 p-2">
     <h2>{data.measurement.description}</h2>

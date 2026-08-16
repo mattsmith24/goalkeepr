@@ -5,10 +5,5 @@
 <h1>Sign out</h1>
 
 <form method="post" use:enhance class="m-2">
-    <button
-        type="submit"
-        class="rounded-md bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
-    >
-        Sign out
-    </button>
+    <button type="submit" class="btn-primary">Sign out</button>
 </form>

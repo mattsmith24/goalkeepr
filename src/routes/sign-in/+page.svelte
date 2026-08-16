@@ -33,12 +33,7 @@
             class="rounded border p-1"
         />
     </label>
-    <button
-        type="submit"
-        class="mt-2 rounded-md bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
-    >
-        Sign in
-    </button>
+    <button type="submit" class="mt-2 btn-primary">Sign in</button>
 </form>
 
 {#if data.signupsEnabled}

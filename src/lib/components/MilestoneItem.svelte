@@ -136,14 +136,14 @@
             />
             <button
                 type="button"
-                class="text-sm text-blue-600 hover:underline"
+                class="text-sm btn-link"
                 onclick={saveEditDate}
             >
                 Save
             </button>
             <button
                 type="button"
-                class="text-sm text-gray-600 hover:underline"
+                class="text-sm btn-cancel"
                 onclick={cancelEditDate}
             >
                 Cancel
@@ -160,7 +160,7 @@
     {:else}
         <button
             type="button"
-            class="block px-2 py-1 text-blue-600 hover:underline"
+            class="block px-2 py-1 btn-link"
             onclick={startEditDate}
         >
             Add Due Date
@@ -176,14 +176,14 @@
             />
             <button
                 type="button"
-                class="text-sm text-blue-600 hover:underline"
+                class="text-sm btn-link"
                 onclick={saveEditDoneDate}
             >
                 Save
             </button>
             <button
                 type="button"
-                class="text-sm text-gray-600 hover:underline"
+                class="text-sm btn-cancel"
                 onclick={cancelEditDoneDate}
             >
                 Cancel
@@ -200,7 +200,7 @@
     {:else}
         <button
             type="button"
-            class="block px-2 py-1 text-blue-600 hover:underline"
+            class="block px-2 py-1 btn-link"
             onclick={startEditDoneDate}
         >
             Add Done Date
@@ -217,14 +217,14 @@
             />
             <button
                 type="button"
-                class="text-sm text-blue-600 hover:underline"
+                class="text-sm btn-link"
                 onclick={saveEditNote}
             >
                 Save
             </button>
             <button
                 type="button"
-                class="text-sm text-gray-600 hover:underline"
+                class="text-sm btn-cancel"
                 onclick={cancelEditNote}
             >
                 Cancel
@@ -241,7 +241,7 @@
     {:else}
         <button
             type="button"
-            class="block px-2 py-1 text-left text-blue-600 hover:underline"
+            class="block px-2 py-1 text-left btn-link"
             onclick={startEditNote}
         >
             Add Note

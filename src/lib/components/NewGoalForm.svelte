@@ -26,11 +26,11 @@
         <input
             type="submit"
             value="Add Goal"
-            class="text-blue-800 hover:underline"
+            class="btn-link"
         />
         <button
             type="button"
-            class="text-gray-600 hover:underline"
+            class="btn-cancel"
             onclick={close}
         >
             Cancel
@@ -39,7 +39,7 @@
 {:else}
     <button
         type="button"
-        class="text-blue-800 hover:underline"
+        class="btn-link"
         onclick={() => (open = true)}
     >
         Add Goal

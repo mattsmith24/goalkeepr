@@ -158,7 +158,7 @@
     }
 </script>
 
-<a href={resolve('/')} class="text-sm text-blue-600 hover:underline"
+<a href={resolve('/')} class="text-sm btn-link"
     >&larr; Back</a
 >
 <div class="m-2 mt-2 p-2">
