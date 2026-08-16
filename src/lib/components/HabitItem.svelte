@@ -67,14 +67,14 @@
                 bind:value={draftDate}
                 aria-label="Done date"
                 required
-                class="border border-gray-800 px-2 py-1"
+                class="input"
             />
             <input
                 type="text"
                 bind:value={draftNote}
                 placeholder="Note (optional)"
                 aria-label="Note"
-                class="border border-gray-800 px-2 py-1"
+                class="input"
             />
             <button type="submit" class="text-sm btn-link">
                 Save

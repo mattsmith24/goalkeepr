@@ -21,7 +21,7 @@
         <input
             id="measurement-description"
             name="measurement-description"
-            class="border border-gray-500"
+            class="input"
         />
         <input
             type="submit"

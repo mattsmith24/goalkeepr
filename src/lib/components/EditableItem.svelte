@@ -59,14 +59,14 @@
                         bind:value={draft}
                         onkeydown={handleKeydown}
                         onblur={cancelEdit}
-                        class="flex-1 border border-gray-800 px-2 py-1"
+                        class="flex-1 input"
                     />
                 </div>
             {:else}
                 <h3>
                     <button
                         type="button"
-                        class="px-2 py-1 hover:bg-gray-100"
+                        class="px-2 py-1 btn-edit"
                         onclick={startEdit}
                     >
                         {description}

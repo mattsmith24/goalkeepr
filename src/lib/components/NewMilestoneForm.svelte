@@ -21,7 +21,7 @@
         <input
             id="milestone-description"
             name="milestone-description"
-            class="border border-gray-500"
+            class="input"
         />
         <input
             type="submit"

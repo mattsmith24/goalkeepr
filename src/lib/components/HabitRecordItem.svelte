@@ -75,7 +75,7 @@
             type="date"
             bind:value={draftDate}
             aria-label="Date"
-            class="border border-gray-800 px-2 py-1"
+            class="input"
         />
         <button
             type="button"
@@ -94,7 +94,7 @@
     {:else}
         <button
             type="button"
-            class="font-medium hover:bg-gray-100"
+            class="font-medium btn-edit"
             onclick={startEditDate}
         >
             {record.date}
@@ -106,7 +106,7 @@
             bind:value={draftNote}
             onkeydown={handleNoteKeydown}
             aria-label="Note"
-            class="flex-1 border border-gray-800 px-2 py-1"
+            class="flex-1 input"
         />
         <button
             type="button"
@@ -125,7 +125,7 @@
     {:else if record.note}
         <button
             type="button"
-            class="flex-1 text-left text-gray-700 hover:bg-gray-100"
+            class="flex-1 text-left btn-edit"
             onclick={startEditNote}
         >
             — {record.note}

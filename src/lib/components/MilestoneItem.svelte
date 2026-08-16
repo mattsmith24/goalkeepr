@@ -132,7 +132,7 @@
                 type="date"
                 bind:value={draftDate}
                 aria-label="Due date"
-                class="border border-gray-800 px-2 py-1"
+                class="input"
             />
             <button
                 type="button"
@@ -152,7 +152,7 @@
     {:else if milestone.dueDate}
         <button
             type="button"
-            class="block px-2 py-1 hover:bg-gray-100"
+            class="block px-2 py-1 btn-edit"
             onclick={startEditDate}
         >
             Due Date: {milestone.dueDate}
@@ -172,7 +172,7 @@
                 type="date"
                 bind:value={draftDoneDate}
                 aria-label="Done date"
-                class="border border-gray-800 px-2 py-1"
+                class="input"
             />
             <button
                 type="button"
@@ -192,7 +192,7 @@
     {:else if milestone.doneDate}
         <button
             type="button"
-            class="block px-2 py-1 hover:bg-gray-100"
+            class="block px-2 py-1 btn-edit"
             onclick={startEditDoneDate}
         >
             Done Date: {milestone.doneDate}
@@ -213,7 +213,7 @@
                 bind:value={draftNote}
                 onkeydown={handleNoteKeydown}
                 aria-label="Note"
-                class="flex-1 border border-gray-800 px-2 py-1"
+                class="flex-1 input"
             />
             <button
                 type="button"
@@ -233,7 +233,7 @@
     {:else if milestone.note}
         <button
             type="button"
-            class="block px-2 py-1 text-left hover:bg-gray-100"
+            class="block px-2 py-1 text-left btn-edit"
             onclick={startEditNote}
         >
             Note: {milestone.note}

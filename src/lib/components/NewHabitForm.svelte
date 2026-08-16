@@ -21,7 +21,7 @@
         <input
             id="habit-description"
             name="habit-description"
-            class="border border-gray-500"
+            class="input"
         />
         <input
             type="submit"

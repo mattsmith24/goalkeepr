@@ -21,7 +21,7 @@
         <input
             id="goal-description"
             name="goal-description"
-            class="border border-gray-500"
+            class="input"
         />
         <input
             type="submit"
