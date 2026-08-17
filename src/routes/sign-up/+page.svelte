@@ -44,7 +44,7 @@
             class="rounded border p-1"
         />
     </label>
-    <button type="submit" class="mt-2 btn-primary">Sign up</button>
+    <button type="submit" class="btn-primary mt-2">Sign up</button>
 </form>
 
 <p class="m-2">

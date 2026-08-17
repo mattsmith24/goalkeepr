@@ -136,14 +136,14 @@
             />
             <button
                 type="button"
-                class="text-sm btn-link"
+                class="btn-link text-sm"
                 onclick={saveEditDate}
             >
                 Save
             </button>
             <button
                 type="button"
-                class="text-sm btn-cancel"
+                class="btn-cancel text-sm"
                 onclick={cancelEditDate}
             >
                 Cancel
@@ -152,7 +152,7 @@
     {:else if milestone.dueDate}
         <button
             type="button"
-            class="block px-2 py-1 btn-edit"
+            class="btn-edit block px-2 py-1"
             onclick={startEditDate}
         >
             Due Date: {milestone.dueDate}
@@ -160,7 +160,7 @@
     {:else}
         <button
             type="button"
-            class="block px-2 py-1 btn-link"
+            class="btn-link block px-2 py-1"
             onclick={startEditDate}
         >
             Add Due Date
@@ -176,14 +176,14 @@
             />
             <button
                 type="button"
-                class="text-sm btn-link"
+                class="btn-link text-sm"
                 onclick={saveEditDoneDate}
             >
                 Save
             </button>
             <button
                 type="button"
-                class="text-sm btn-cancel"
+                class="btn-cancel text-sm"
                 onclick={cancelEditDoneDate}
             >
                 Cancel
@@ -192,7 +192,7 @@
     {:else if milestone.doneDate}
         <button
             type="button"
-            class="block px-2 py-1 btn-edit"
+            class="btn-edit block px-2 py-1"
             onclick={startEditDoneDate}
         >
             Done Date: {milestone.doneDate}
@@ -200,7 +200,7 @@
     {:else}
         <button
             type="button"
-            class="block px-2 py-1 btn-link"
+            class="btn-link block px-2 py-1"
             onclick={startEditDoneDate}
         >
             Add Done Date
@@ -213,18 +213,18 @@
                 bind:value={draftNote}
                 onkeydown={handleNoteKeydown}
                 aria-label="Note"
-                class="flex-1 input"
+                class="input flex-1"
             />
             <button
                 type="button"
-                class="text-sm btn-link"
+                class="btn-link text-sm"
                 onclick={saveEditNote}
             >
                 Save
             </button>
             <button
                 type="button"
-                class="text-sm btn-cancel"
+                class="btn-cancel text-sm"
                 onclick={cancelEditNote}
             >
                 Cancel
@@ -233,7 +233,7 @@
     {:else if milestone.note}
         <button
             type="button"
-            class="block px-2 py-1 text-left btn-edit"
+            class="btn-edit block px-2 py-1 text-left"
             onclick={startEditNote}
         >
             Note: {milestone.note}
@@ -241,7 +241,7 @@
     {:else}
         <button
             type="button"
-            class="block px-2 py-1 text-left btn-link"
+            class="btn-link block px-2 py-1 text-left"
             onclick={startEditNote}
         >
             Add Note

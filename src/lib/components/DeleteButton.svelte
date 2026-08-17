@@ -36,7 +36,7 @@
         <button
             bind:this={cancelElement}
             type="button"
-            class="px-2 py-1 text-sm btn-cancel"
+            class="btn-cancel px-2 py-1 text-sm"
             onclick={() => (confirming = false)}
         >
             Cancel

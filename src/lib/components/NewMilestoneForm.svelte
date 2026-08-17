@@ -23,25 +23,13 @@
             name="milestone-description"
             class="input"
         />
-        <input
-            type="submit"
-            value="Add Milestone"
-            class="btn-link"
-        />
-        <button
-            type="button"
-            class="btn-cancel"
-            onclick={close}
-        >
+        <input type="submit" value="Add Milestone" class="btn-link" />
+        <button type="button" class="btn-cancel" onclick={close}>
             Cancel
         </button>
     </form>
 {:else}
-    <button
-        type="button"
-        class="btn-link"
-        onclick={() => (open = true)}
-    >
+    <button type="button" class="btn-link" onclick={() => (open = true)}>
         Add Milestone
     </button>
 {/if}

@@ -57,7 +57,7 @@
     <h1>
         <button
             type="button"
-            class="cursor-text text-left text-3xl btn-edit"
+            class="btn-edit cursor-text text-left text-3xl"
             onclick={startEdit}
         >
             {goal.description}

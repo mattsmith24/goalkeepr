@@ -77,16 +77,12 @@
             aria-label="Date"
             class="input"
         />
-        <button
-            type="button"
-            class="text-sm btn-link"
-            onclick={saveEditDate}
-        >
+        <button type="button" class="btn-link text-sm" onclick={saveEditDate}>
             Save
         </button>
         <button
             type="button"
-            class="text-sm btn-cancel"
+            class="btn-cancel text-sm"
             onclick={cancelEditDate}
         >
             Cancel
@@ -94,7 +90,7 @@
     {:else}
         <button
             type="button"
-            class="font-medium btn-edit"
+            class="btn-edit font-medium"
             onclick={startEditDate}
         >
             {record.date}
@@ -106,18 +102,14 @@
             bind:value={draftNote}
             onkeydown={handleNoteKeydown}
             aria-label="Note"
-            class="flex-1 input"
+            class="input flex-1"
         />
-        <button
-            type="button"
-            class="text-sm btn-link"
-            onclick={saveEditNote}
-        >
+        <button type="button" class="btn-link text-sm" onclick={saveEditNote}>
             Save
         </button>
         <button
             type="button"
-            class="text-sm btn-cancel"
+            class="btn-cancel text-sm"
             onclick={cancelEditNote}
         >
             Cancel
@@ -125,7 +117,7 @@
     {:else if record.note}
         <button
             type="button"
-            class="flex-1 text-left btn-edit"
+            class="btn-edit flex-1 text-left"
             onclick={startEditNote}
         >
             — {record.note}
@@ -133,7 +125,7 @@
     {:else}
         <button
             type="button"
-            class="flex-1 text-left text-sm btn-link"
+            class="btn-link flex-1 text-left text-sm"
             onclick={startEditNote}
         >
             Add note

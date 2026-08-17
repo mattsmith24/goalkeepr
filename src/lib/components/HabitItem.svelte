@@ -76,12 +76,10 @@
                 aria-label="Note"
                 class="input"
             />
-            <button type="submit" class="text-sm btn-link">
-                Save
-            </button>
+            <button type="submit" class="btn-link text-sm"> Save </button>
             <button
                 type="button"
-                class="text-sm btn-cancel"
+                class="btn-cancel text-sm"
                 onclick={cancelMarkDone}
             >
                 Cancel
@@ -90,7 +88,7 @@
     {:else}
         <button
             type="button"
-            class="block px-2 py-1 btn-link"
+            class="btn-link block px-2 py-1"
             onclick={startMarkDone}
         >
             Mark done
@@ -101,7 +99,7 @@
             id: String(habit.goalId),
             habitId: String(habit.id),
         })}
-        class="block px-2 py-1 btn-link"
+        class="btn-link block px-2 py-1"
     >
         History
     </a>

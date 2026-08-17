@@ -158,9 +158,7 @@
     }
 </script>
 
-<a href={resolve('/')} class="text-sm btn-link"
-    >&larr; Back</a
->
+<a href={resolve('/')} class="btn-link text-sm">&larr; Back</a>
 <div class="m-2 mt-2 p-2">
     <GoalTitle goal={data.goal} onUpdate={handleUpdate} />
 </div>
