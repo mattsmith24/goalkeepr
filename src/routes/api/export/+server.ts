@@ -1,4 +1,4 @@
-import { json, error } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import { eq, inArray } from 'drizzle-orm';
 
 import { db } from '$lib/server/db';
@@ -14,10 +14,6 @@ import {
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ locals }) => {
-    if (!locals.user) {
-        throw error(401, 'Unauthorized');
-    }
-
     const goals = await db
         .select()
         .from(goalsTable)

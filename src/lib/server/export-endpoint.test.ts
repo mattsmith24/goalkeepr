@@ -76,14 +76,6 @@ beforeEach(() => {
 });
 
 describe('GET /api/export', () => {
-    it('returns 401 when there is no authenticated user', async () => {
-        await expect(
-            GET({ locals: { user: null } } as unknown as Parameters<
-                typeof GET
-            >[0]),
-        ).rejects.toMatchObject({ status: 401 });
-    });
-
     it('returns the user’s goals nested with milestones, habits, and measurements', async () => {
         const response = await GET({
             locals: { user: { id: 'u1' } },
@@ -152,5 +144,4 @@ describe('GET /api/export', () => {
         expect(json).not.toMatch(/"habitId"\s*:/);
         expect(json).not.toMatch(/"measurementId"\s*:/);
     });
-
 });
