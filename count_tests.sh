@@ -13,4 +13,9 @@ for tf in $(find src -type f -name '*.test.ts' ); do
 	found_tests=$((found_tests + tc))
 	echo "$found_tests"
 done
-
+for tf in $(find src -type f -name '*.stories.svelte' ); do
+	tc=$(grep ' play=' $tf | wc -l)
+	echo "$tf: $tc"
+	found_tests=$((found_tests + tc))
+	echo "$found_tests"
+done
