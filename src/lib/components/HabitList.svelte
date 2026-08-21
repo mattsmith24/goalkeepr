@@ -8,16 +8,32 @@
         onDelete: (id: number) => void;
         onUpdate: (id: number, description: string) => void;
         onMarkDone: (id: number, date: string, note: string | null) => void;
+        onUpdateSchedule?: (
+            id: number,
+            schedule: 'daily' | 'weekly' | 'monthly',
+        ) => void;
     }
 
-    const { habits = [], onDelete, onUpdate, onMarkDone }: Props = $props();
+    const {
+        habits = [],
+        onDelete,
+        onUpdate,
+        onMarkDone,
+        onUpdateSchedule = () => {},
+    }: Props = $props();
 </script>
 
 <div class="m-2 p-2">
     <h2>Habits</h2>
     <ul>
         {#each habits as habit (habit.id)}
-            <HabitItem {habit} {onDelete} {onUpdate} {onMarkDone} />
+            <HabitItem
+                {habit}
+                {onDelete}
+                {onUpdate}
+                {onMarkDone}
+                {onUpdateSchedule}
+            />
         {:else}
             <li class="italic">No habits yet. Build a routine!</li>
         {/each}

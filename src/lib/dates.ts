@@ -17,18 +17,46 @@ export function fromDateString(date: string): Date {
     return new Date(withTime);
 }
 
+const MS_PER_DAY = 86_400_000;
+
 export function currentStreak(
     dates: Set<string>,
+    schedule: 'daily' | 'weekly' | 'monthly',
     now: Date = new Date(),
 ): number {
-    const day = new Date(now);
-    if (!dates.has(toDateString(day))) {
-        day.setDate(day.getDate() - 1);
-    }
+    const periodDays = { daily: 1, weekly: 7, monthly: 30 }[schedule];
+    const lookback = periodDays * 1.5;
+
+    if (dates.size === 0) return 0;
+
+    const sortedDesc = [...dates]
+        .map(fromDateString)
+        .sort((a, b) => b.getTime() - a.getTime());
+
+    const nowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const daysSinceLatest =
+        (nowStart.getTime() - sortedDesc[0].getTime()) / MS_PER_DAY;
+    if (daysSinceLatest > lookback) return 0;
+
     let streak = 0;
-    while (dates.has(toDateString(day))) {
+    let anchor = nowStart.getTime();
+    let i = 0;
+    while (i < sortedDesc.length) {
+        const windowStart = anchor - lookback * MS_PER_DAY;
+        let itemsInWindow = 0;
+        let oldestInWindow = anchor;
+        while (
+            i < sortedDesc.length &&
+            sortedDesc[i].getTime() > windowStart &&
+            sortedDesc[i].getTime() <= anchor
+        ) {
+            itemsInWindow += 1;
+            oldestInWindow = sortedDesc[i].getTime();
+            i += 1;
+        }
+        if (itemsInWindow === 0) break;
         streak += 1;
-        day.setDate(day.getDate() - 1);
+        anchor = oldestInWindow;
     }
     return streak;
 }

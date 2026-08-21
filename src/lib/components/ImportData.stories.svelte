@@ -19,7 +19,9 @@
         const button = canvas.getByRole('button', { name: /import data/i });
         await expect(button).toBeInTheDocument();
 
-        await expect(canvas.queryByLabelText(/import file/i)).not.toBeInTheDocument();
+        await expect(
+            canvas.queryByLabelText(/import file/i),
+        ).not.toBeInTheDocument();
     }}
 />
 

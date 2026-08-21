@@ -1,6 +1,7 @@
 <script lang="ts">
     import { resolve } from '$app/paths';
     import EditableItem from './EditableItem.svelte';
+    import HabitSchedule from './HabitSchedule.svelte';
     import type { Habit } from '$lib/types';
     import { toDateString } from '$lib/dates';
 
@@ -8,10 +9,15 @@
         habit: Habit;
         onDelete: (id: number) => void;
         onUpdate: (id: number, description: string) => void;
+        onUpdateSchedule: (
+            id: number,
+            schedule: 'daily' | 'weekly' | 'monthly',
+        ) => void;
         onMarkDone: (id: number, date: string, note: string | null) => void;
     }
 
-    const { habit, onDelete, onUpdate, onMarkDone }: Props = $props();
+    const { habit, onDelete, onUpdate, onUpdateSchedule, onMarkDone }: Props =
+        $props();
 
     let markingDone = $state(false);
     let draftDate = $state('');
@@ -19,6 +25,20 @@
 
     function updateDescription(description: string) {
         onUpdate(habit.id, description);
+    }
+
+    function updateSchedule(schedule: 'daily' | 'weekly' | 'monthly') {
+        onUpdateSchedule(habit.id, schedule);
+    }
+
+    function periodUnit(schedule: Habit['schedule'], count: number): string {
+        const base =
+            schedule === 'daily'
+                ? 'day'
+                : schedule === 'weekly'
+                  ? 'week'
+                  : 'month';
+        return count === 1 ? base : `${base}s`;
     }
 
     function startMarkDone() {
@@ -52,8 +72,9 @@
     <p class="px-2 py-1 text-sm text-gray-600">
         {habit.streak === 0
             ? 'No current streak'
-            : `${habit.streak} day streak`}
+            : `${habit.streak} ${periodUnit(habit.schedule, habit.streak)} streak`}
     </p>
+    <HabitSchedule schedule={habit.schedule} onUpdate={updateSchedule} />
     {#if markingDone}
         <form
             class="flex flex-wrap items-center gap-2"

@@ -76,7 +76,10 @@ export const load: PageServerLoad = async ({ locals, params }) => {
         milestones,
         habits: habits.map((habit) => ({
             ...habit,
-            streak: currentStreak(datesByHabit.get(habit.id) ?? new Set()),
+            streak: currentStreak(
+                datesByHabit.get(habit.id) ?? new Set(),
+                habit.schedule,
+            ),
         })),
         measurements: measurements.map((measurement) => ({
             ...measurement,
@@ -248,6 +251,42 @@ export const actions: Actions = {
         const result = await db
             .update(habitsTable)
             .set({ description })
+            .where(
+                and(
+                    eq(habitsTable.id, id),
+                    inArray(
+                        habitsTable.goalId,
+                        db
+                            .select({ id: goalsTable.id })
+                            .from(goalsTable)
+                            .where(
+                                eq(goalsTable.userId, event.locals.user!.id),
+                            ),
+                    ),
+                ),
+            );
+        if (result.changes === 0) {
+            return fail(404, { success: false, error: 'habit not found' });
+        }
+        return { success: true };
+    },
+    updateHabitSchedule: async (event) => {
+        const data = await event.request.formData();
+        const id = Number(data.get('id'));
+        const schedule = data.get('schedule')?.toString() ?? '';
+        if (!Number.isInteger(id) || id <= 0) {
+            return { success: false, error: 'invalid id' };
+        }
+        if (
+            schedule !== 'daily' &&
+            schedule !== 'weekly' &&
+            schedule !== 'monthly'
+        ) {
+            return { success: false, error: 'invalid schedule' };
+        }
+        const result = await db
+            .update(habitsTable)
+            .set({ schedule })
             .where(
                 and(
                     eq(habitsTable.id, id),

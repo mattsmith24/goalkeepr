@@ -9,7 +9,7 @@
 
 <GoalList goals={data.goals} />
 
-<div class="flex items-center gap-2 m-2 p-2">
+<div class="m-2 flex items-center gap-2 p-2">
     <a href={resolve('/api/export')} download class="btn-link">Export Data</a>
     <ImportData />
 </div>

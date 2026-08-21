@@ -56,7 +56,10 @@
             close();
             await invalidateAll();
         } catch (err) {
-            error = err instanceof SyntaxError ? 'File is not valid JSON.' : 'Import failed.';
+            error =
+                err instanceof SyntaxError
+                    ? 'File is not valid JSON.'
+                    : 'Import failed.';
         } finally {
             submitting = false;
         }
@@ -78,7 +81,12 @@
         <button type="submit" class="btn-link" disabled={submitting}>
             {submitting ? 'Importing…' : 'Import'}
         </button>
-        <button type="button" class="btn-cancel" onclick={close} disabled={submitting}>
+        <button
+            type="button"
+            class="btn-cancel"
+            onclick={close}
+            disabled={submitting}
+        >
             Cancel
         </button>
         {#if error}

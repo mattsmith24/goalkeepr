@@ -37,6 +37,10 @@ export const habitsTable = sqliteTable('habits', {
         .notNull()
         .references(() => goalsTable.id, { onDelete: 'cascade' }),
     description: text().notNull(),
+    schedule: text()
+        .$type<'daily' | 'weekly' | 'monthly'>()
+        .notNull()
+        .default('daily'),
 });
 
 export const habitRecordsTable = sqliteTable('habit_records', {

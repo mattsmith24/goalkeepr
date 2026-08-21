@@ -112,6 +112,22 @@
         }
     }
 
+    async function handleHabitScheduleUpdate(
+        id: number,
+        schedule: 'daily' | 'weekly' | 'monthly',
+    ) {
+        const formData = new FormData();
+        formData.set('id', String(id));
+        formData.set('schedule', schedule);
+        const response = await fetch('?/updateHabitSchedule', {
+            method: 'POST',
+            body: formData,
+        });
+        if (response.ok) {
+            await invalidateAll();
+        }
+    }
+
     async function handleMeasurementUpdate(id: number, description: string) {
         const formData = new FormData();
         formData.set('id', String(id));
@@ -172,6 +188,7 @@
     onDelete={handleHabitDelete}
     onUpdate={handleHabitUpdate}
     onMarkDone={handleHabitMarkDone}
+    onUpdateSchedule={handleHabitScheduleUpdate}
 />
 <MeasurementList
     measurements={data.measurements}

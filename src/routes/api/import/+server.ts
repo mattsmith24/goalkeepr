@@ -33,6 +33,7 @@ type MeasurementRecordImport = {
 
 type HabitImport = {
     description: string;
+    schedule: 'daily' | 'weekly' | 'monthly';
     records: HabitRecordImport[];
 };
 
@@ -90,6 +91,9 @@ function validateHabit(v: unknown): v is HabitImport {
     const h = v as Record<string, unknown>;
     return (
         isString(h.description) &&
+        (h.schedule === 'daily' ||
+            h.schedule === 'weekly' ||
+            h.schedule === 'monthly') &&
         Array.isArray(h.records) &&
         h.records.every(validateHabitRecord)
     );
@@ -167,6 +171,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
                     .values({
                         goalId: insertedGoal.id,
                         description: habit.description,
+                        schedule: habit.schedule,
                     })
                     .returning({ id: habitsTable.id })
                     .all();
