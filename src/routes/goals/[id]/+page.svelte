@@ -115,10 +115,12 @@
     async function handleHabitScheduleUpdate(
         id: number,
         schedule: 'daily' | 'weekly' | 'monthly',
+        count: number,
     ) {
         const formData = new FormData();
         formData.set('id', String(id));
         formData.set('schedule', schedule);
+        formData.set('count', String(count));
         const response = await fetch('?/updateHabitSchedule', {
             method: 'POST',
             body: formData,

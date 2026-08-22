@@ -79,6 +79,8 @@ export const load: PageServerLoad = async ({ locals, params }) => {
             streak: currentStreak(
                 datesByHabit.get(habit.id) ?? new Set(),
                 habit.schedule,
+                habit.count,
+                new Date(),
             ),
         })),
         measurements: measurements.map((measurement) => ({
@@ -274,6 +276,7 @@ export const actions: Actions = {
         const data = await event.request.formData();
         const id = Number(data.get('id'));
         const schedule = data.get('schedule')?.toString() ?? '';
+        const count = Number(data.get('count'));
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
@@ -284,9 +287,12 @@ export const actions: Actions = {
         ) {
             return { success: false, error: 'invalid schedule' };
         }
+        if (!Number.isInteger(count) || count < 1) {
+            return { success: false, error: 'invalid count' };
+        }
         const result = await db
             .update(habitsTable)
-            .set({ schedule })
+            .set({ schedule, count })
             .where(
                 and(
                     eq(habitsTable.id, id),

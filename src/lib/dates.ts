@@ -22,6 +22,7 @@ const MS_PER_DAY = 86_400_000;
 export function currentStreak(
     dates: Set<string>,
     schedule: 'daily' | 'weekly' | 'monthly',
+    count: number = 1,
     now: Date = new Date(),
 ): number {
     const periodDays = { daily: 1, weekly: 7, monthly: 30 }[schedule];
@@ -54,7 +55,7 @@ export function currentStreak(
             oldestInWindow = sortedDesc[i].getTime();
             i += 1;
         }
-        if (itemsInWindow === 0) break;
+        if (itemsInWindow < count) break;
         streak += 1;
         anchor = oldestInWindow;
     }

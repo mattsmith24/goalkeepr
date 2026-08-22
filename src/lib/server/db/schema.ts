@@ -41,6 +41,7 @@ export const habitsTable = sqliteTable('habits', {
         .$type<'daily' | 'weekly' | 'monthly'>()
         .notNull()
         .default('daily'),
+    count: integer().notNull().default(1),
 });
 
 export const habitRecordsTable = sqliteTable('habit_records', {

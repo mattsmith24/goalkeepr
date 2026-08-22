@@ -15,40 +15,57 @@
     name="Daily"
     args={{
         schedule: 'daily',
-        onUpdate: (s) => console.log('update', s),
+        count: 1,
+        onUpdate: (s, c) => console.log('update', s, c),
     }}
 />
 
 <Story
-    name="Weekly"
+    name="WeeklyFourTimes"
     args={{
         schedule: 'weekly',
-        onUpdate: (s) => console.log('update', s),
+        count: 4,
+        onUpdate: (s, c) => console.log('update', s, c),
     }}
 />
 
 <Story
-    name="Monthly"
+    name="WeeklyOnce"
+    args={{
+        schedule: 'weekly',
+        count: 1,
+        onUpdate: (s, c) => console.log('update', s, c),
+    }}
+/>
+
+<Story
+    name="MonthlyTwice"
     args={{
         schedule: 'monthly',
-        onUpdate: (s) => console.log('update', s),
+        count: 2,
+        onUpdate: (s, c) => console.log('update', s, c),
     }}
 />
 
 <Story
-    name="Expanded"
+    name="ExpandedWeekly"
     args={{
-        schedule: 'daily',
-        onUpdate: (s) => console.log('update', s),
+        schedule: 'weekly',
+        count: 1,
+        onUpdate: (s, c) => console.log('update', s, c),
     }}
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
 
-        await canvas.getByRole('button', { name: /schedule: daily/i }).click();
+        await canvas.getByRole('button', { name: /schedule: weekly/i }).click();
 
-        const select = canvas.getByLabelText(/schedule/i);
+        const select = canvas.getByLabelText(/^schedule$/i);
         await expect(select).toBeInTheDocument();
-        await expect(select).toHaveValue('daily');
+        await expect(select).toHaveValue('weekly');
+
+        const count = canvas.getByLabelText(/times per week/i);
+        await expect(count).toBeInTheDocument();
+        await expect(count).toHaveValue(1);
 
         await expect(
             canvas.getByRole('button', { name: /^save$/i }),
@@ -56,5 +73,26 @@
         await expect(
             canvas.getByRole('button', { name: /^cancel$/i }),
         ).toBeInTheDocument();
+    }}
+/>
+
+<Story
+    name="ExpandedDaily"
+    args={{
+        schedule: 'daily',
+        count: 1,
+        onUpdate: (s, c) => console.log('update', s, c),
+    }}
+    play={async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        await canvas.getByRole('button', { name: /schedule: daily/i }).click();
+
+        const select = canvas.getByLabelText(/^schedule$/i);
+        await expect(select).toBeInTheDocument();
+
+        await expect(
+            canvas.queryByLabelText(/times per/i),
+        ).not.toBeInTheDocument();
     }}
 />

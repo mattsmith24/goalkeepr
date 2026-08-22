@@ -20,11 +20,12 @@
             description: 'Stretch for 10 minutes each morning',
             streak: 4,
             schedule: 'daily',
+            count: 1,
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
-        onUpdateSchedule: (id, schedule) =>
-            console.log('updateSchedule', id, schedule),
+        onUpdateSchedule: (id, schedule, count) =>
+            console.log('updateSchedule', id, schedule, count),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
 />
@@ -38,11 +39,12 @@
             description: 'Stretch',
             streak: 1,
             schedule: 'daily',
+            count: 1,
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
-        onUpdateSchedule: (id, schedule) =>
-            console.log('updateSchedule', id, schedule),
+        onUpdateSchedule: (id, schedule, count) =>
+            console.log('updateSchedule', id, schedule, count),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
     play={async ({ canvasElement }) => {
@@ -60,16 +62,18 @@
             description: 'Review goals',
             streak: 4,
             schedule: 'weekly',
+            count: 4,
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
-        onUpdateSchedule: (id, schedule) =>
-            console.log('updateSchedule', id, schedule),
+        onUpdateSchedule: (id, schedule, count) =>
+            console.log('updateSchedule', id, schedule, count),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
         await expect(canvas.getByText('4 weeks streak')).toBeInTheDocument();
+        await expect(canvas.getByText(/4 times per week/i)).toBeInTheDocument();
     }}
 />
 
@@ -82,16 +86,23 @@
             description: 'Review goals',
             streak: 1,
             schedule: 'weekly',
+            count: 1,
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
-        onUpdateSchedule: (id, schedule) =>
-            console.log('updateSchedule', id, schedule),
+        onUpdateSchedule: (id, schedule, count) =>
+            console.log('updateSchedule', id, schedule, count),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
         await expect(canvas.getByText('1 week streak')).toBeInTheDocument();
+        await expect(
+            canvas.queryByText(/1 time per week/i),
+        ).not.toBeInTheDocument();
+        await expect(
+            canvas.getByRole('button', { name: /schedule: weekly/i }),
+        ).toBeInTheDocument();
     }}
 />
 
@@ -104,16 +115,20 @@
             description: 'Take measurements',
             streak: 6,
             schedule: 'monthly',
+            count: 2,
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
-        onUpdateSchedule: (id, schedule) =>
-            console.log('updateSchedule', id, schedule),
+        onUpdateSchedule: (id, schedule, count) =>
+            console.log('updateSchedule', id, schedule, count),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
         await expect(canvas.getByText('6 months streak')).toBeInTheDocument();
+        await expect(
+            canvas.getByText(/2 times per month/i),
+        ).toBeInTheDocument();
     }}
 />
 
@@ -126,11 +141,12 @@
             description: 'Stretch',
             streak: 0,
             schedule: 'daily',
+            count: 1,
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
-        onUpdateSchedule: (id, schedule) =>
-            console.log('updateSchedule', id, schedule),
+        onUpdateSchedule: (id, schedule, count) =>
+            console.log('updateSchedule', id, schedule, count),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
     play={async ({ canvasElement }) => {

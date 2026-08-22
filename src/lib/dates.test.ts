@@ -35,20 +35,22 @@ describe('fromDateString', () => {
 describe('currentStreak', () => {
     describe('daily', () => {
         it('returns 0 for an empty history', () => {
-            expect(currentStreak(new Set(), 'daily', NOW)).toBe(0);
+            expect(currentStreak(new Set(), 'daily', 1, NOW)).toBe(0);
         });
 
         it('returns 1 when only today is recorded', () => {
-            expect(currentStreak(new Set([today]), 'daily', NOW)).toBe(1);
+            expect(currentStreak(new Set([today]), 'daily', 1, NOW)).toBe(1);
         });
 
         it('returns 1 when only yesterday is recorded (grace day)', () => {
-            expect(currentStreak(new Set([yesterday]), 'daily', NOW)).toBe(1);
+            expect(currentStreak(new Set([yesterday]), 'daily', 1, NOW)).toBe(
+                1,
+            );
         });
 
         it('returns 1 when today and yesterday are both in the current 1.5-day period', () => {
             expect(
-                currentStreak(new Set([today, yesterday]), 'daily', NOW),
+                currentStreak(new Set([today, yesterday]), 'daily', 1, NOW),
             ).toBe(1);
         });
 
@@ -57,6 +59,7 @@ describe('currentStreak', () => {
                 currentStreak(
                     new Set([today, yesterday, twoDaysAgo]),
                     'daily',
+                    1,
                     NOW,
                 ),
             ).toBe(2);
@@ -73,6 +76,7 @@ describe('currentStreak', () => {
                         fourDaysAgo,
                     ]),
                     'daily',
+                    1,
                     NOW,
                 ),
             ).toBe(4);
@@ -80,37 +84,56 @@ describe('currentStreak', () => {
 
         it('returns 0 when only old entries exist', () => {
             expect(
-                currentStreak(new Set([aWeekAgo, fourDaysAgo]), 'daily', NOW),
+                currentStreak(
+                    new Set([aWeekAgo, fourDaysAgo]),
+                    'daily',
+                    1,
+                    NOW,
+                ),
             ).toBe(0);
         });
 
         it('ignores duplicate entries', () => {
             expect(
-                currentStreak(new Set([today, today, yesterday]), 'daily', NOW),
+                currentStreak(
+                    new Set([today, today, yesterday]),
+                    'daily',
+                    1,
+                    NOW,
+                ),
             ).toBe(1);
         });
     });
 
     describe('weekly', () => {
         it('returns 0 for an empty history', () => {
-            expect(currentStreak(new Set(), 'weekly', NOW)).toBe(0);
+            expect(currentStreak(new Set(), 'weekly', 1, NOW)).toBe(0);
         });
 
         it('returns 1 when only today is recorded', () => {
-            expect(currentStreak(new Set([today]), 'weekly', NOW)).toBe(1);
+            expect(currentStreak(new Set([today]), 'weekly', 1, NOW)).toBe(1);
         });
 
         it('returns 1 when four days in the same week are all recorded', () => {
-            expect(currentStreak(new Set(sameWeekDays), 'weekly', NOW)).toBe(1);
+            expect(currentStreak(new Set(sameWeekDays), 'weekly', 1, NOW)).toBe(
+                1,
+            );
         });
 
         it('returns 1 when only a week ago is recorded', () => {
-            expect(currentStreak(new Set([aWeekAgo]), 'weekly', NOW)).toBe(1);
+            expect(currentStreak(new Set([aWeekAgo]), 'weekly', 1, NOW)).toBe(
+                1,
+            );
         });
 
         it('counts two periods when entries fall into consecutive 10.5-day windows', () => {
             expect(
-                currentStreak(new Set([aWeekAgo, twoWeeksAgo]), 'weekly', NOW),
+                currentStreak(
+                    new Set([aWeekAgo, twoWeeksAgo]),
+                    'weekly',
+                    1,
+                    NOW,
+                ),
             ).toBe(2);
         });
 
@@ -119,6 +142,7 @@ describe('currentStreak', () => {
                 currentStreak(
                     new Set([aWeekAgo, threeWeeksAgo]),
                     'weekly',
+                    1,
                     NOW,
                 ),
             ).toBe(1);
@@ -129,6 +153,7 @@ describe('currentStreak', () => {
                 currentStreak(
                     new Set([threeWeeksAgo, twoMonthsAgo]),
                     'weekly',
+                    1,
                     NOW,
                 ),
             ).toBe(0);
@@ -137,27 +162,92 @@ describe('currentStreak', () => {
 
     describe('monthly', () => {
         it('returns 0 for an empty history', () => {
-            expect(currentStreak(new Set(), 'monthly', NOW)).toBe(0);
+            expect(currentStreak(new Set(), 'monthly', 1, NOW)).toBe(0);
         });
 
         it('returns 1 when only today is recorded', () => {
-            expect(currentStreak(new Set([today]), 'monthly', NOW)).toBe(1);
+            expect(currentStreak(new Set([today]), 'monthly', 1, NOW)).toBe(1);
         });
 
         it('returns 1 when only a month ago is recorded', () => {
-            expect(currentStreak(new Set([aMonthAgo]), 'monthly', NOW)).toBe(1);
+            expect(currentStreak(new Set([aMonthAgo]), 'monthly', 1, NOW)).toBe(
+                1,
+            );
         });
 
         it('returns 1 when entries fall within the same 45-day window', () => {
             expect(
-                currentStreak(new Set([today, aMonthAgo]), 'monthly', NOW),
+                currentStreak(new Set([today, aMonthAgo]), 'monthly', 1, NOW),
             ).toBe(1);
         });
 
         it('returns 0 when the most recent entry is older than the lookback', () => {
-            expect(currentStreak(new Set([twoMonthsAgo]), 'monthly', NOW)).toBe(
-                0,
+            expect(
+                currentStreak(new Set([twoMonthsAgo]), 'monthly', 1, NOW),
+            ).toBe(0);
+        });
+    });
+
+    describe('count threshold', () => {
+        it('returns 0 when a daily count of 2 has only one entry in the window', () => {
+            expect(currentStreak(new Set([today]), 'daily', 2, NOW)).toBe(0);
+        });
+
+        it('returns 1 for daily count of 2 with two entries in the same window', () => {
+            expect(
+                currentStreak(new Set([today, yesterday]), 'daily', 2, NOW),
+            ).toBe(1);
+        });
+
+        it('breaks the streak when the next window has fewer than count entries', () => {
+            expect(
+                currentStreak(
+                    new Set([today, yesterday, twoDaysAgo]),
+                    'daily',
+                    2,
+                    NOW,
+                ),
+            ).toBe(1);
+        });
+
+        it('counts two periods for weekly count of 2 when entries fall into consecutive windows', () => {
+            const sixDaysAgo = toDateString(new Date(2026, 6, 9));
+            const thirteenDaysAgo = toDateString(new Date(2026, 6, 2));
+            const fourteenDaysAgo = toDateString(new Date(2026, 6, 1));
+            expect(
+                currentStreak(
+                    new Set([
+                        today,
+                        sixDaysAgo,
+                        thirteenDaysAgo,
+                        fourteenDaysAgo,
+                    ]),
+                    'weekly',
+                    2,
+                    NOW,
+                ),
+            ).toBe(2);
+        });
+
+        it('returns 1 for weekly count of 4 when four entries fall in the same week', () => {
+            expect(currentStreak(new Set(sameWeekDays), 'weekly', 4, NOW)).toBe(
+                1,
             );
+        });
+
+        it('returns 0 for weekly count of 4 when only one entry exists', () => {
+            expect(currentStreak(new Set([today]), 'weekly', 4, NOW)).toBe(0);
+        });
+
+        it('breaks for weekly count of 2 when the prior window has only one entry', () => {
+            expect(
+                currentStreak(
+                    new Set([today, aWeekAgo, twoWeeksAgo]),
+                    'weekly',
+                    2,
+                    NOW,
+                ),
+            ).toBe(1);
         });
     });
 });

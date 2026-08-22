@@ -12,6 +12,7 @@
         onUpdateSchedule: (
             id: number,
             schedule: 'daily' | 'weekly' | 'monthly',
+            count: number,
         ) => void;
         onMarkDone: (id: number, date: string, note: string | null) => void;
     }
@@ -27,8 +28,11 @@
         onUpdate(habit.id, description);
     }
 
-    function updateSchedule(schedule: 'daily' | 'weekly' | 'monthly') {
-        onUpdateSchedule(habit.id, schedule);
+    function updateSchedule(
+        schedule: 'daily' | 'weekly' | 'monthly',
+        count: number,
+    ) {
+        onUpdateSchedule(habit.id, schedule, count);
     }
 
     function periodUnit(schedule: Habit['schedule'], count: number): string {
@@ -74,7 +78,11 @@
             ? 'No current streak'
             : `${habit.streak} ${periodUnit(habit.schedule, habit.streak)} streak`}
     </p>
-    <HabitSchedule schedule={habit.schedule} onUpdate={updateSchedule} />
+    <HabitSchedule
+        schedule={habit.schedule}
+        count={habit.count}
+        onUpdate={updateSchedule}
+    />
     {#if markingDone}
         <form
             class="flex flex-wrap items-center gap-2"
