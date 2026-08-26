@@ -25,13 +25,21 @@ const milestones = [
 ];
 
 const habits = [
-    { id: 20, goalId: 1, description: 'Jog', schedule: 'daily', count: 1 },
+    {
+        id: 20,
+        goalId: 1,
+        description: 'Jog',
+        schedule: 'daily',
+        count: 1,
+        period: 1,
+    },
     {
         id: 21,
         goalId: 2,
         description: 'Read 20 min',
         schedule: 'weekly',
         count: 4,
+        period: 1,
     },
 ];
 
@@ -109,6 +117,7 @@ describe('GET /api/export', () => {
                         description: 'Jog',
                         schedule: 'daily',
                         count: 1,
+                        period: 1,
                         records: [
                             { date: '2026-08-17', note: null },
                             { date: '2026-08-16', note: null },
@@ -139,6 +148,7 @@ describe('GET /api/export', () => {
                         description: 'Read 20 min',
                         schedule: 'weekly',
                         count: 4,
+                        period: 1,
                         records: [],
                     },
                 ],

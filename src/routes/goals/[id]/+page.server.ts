@@ -81,6 +81,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
                 habit.schedule,
                 habit.count,
                 new Date(),
+                habit.period,
             ),
         })),
         measurements: measurements.map((measurement) => ({
@@ -277,6 +278,7 @@ export const actions: Actions = {
         const id = Number(data.get('id'));
         const schedule = data.get('schedule')?.toString() ?? '';
         const count = Number(data.get('count'));
+        const periodRaw = Number(data.get('period'));
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
@@ -290,9 +292,13 @@ export const actions: Actions = {
         if (!Number.isInteger(count) || count < 1) {
             return { success: false, error: 'invalid count' };
         }
+        const period = schedule === 'daily' ? 1 : periodRaw;
+        if (schedule !== 'daily' && (!Number.isInteger(period) || period < 1)) {
+            return { success: false, error: 'invalid period' };
+        }
         const result = await db
             .update(habitsTable)
-            .set({ schedule, count })
+            .set({ schedule, count, period })
             .where(
                 and(
                     eq(habitsTable.id, id),

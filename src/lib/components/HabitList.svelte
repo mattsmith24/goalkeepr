@@ -12,6 +12,7 @@
             id: number,
             schedule: 'daily' | 'weekly' | 'monthly',
             count: number,
+            period: number,
         ) => void;
     }
 

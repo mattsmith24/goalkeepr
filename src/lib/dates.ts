@@ -24,9 +24,11 @@ export function currentStreak(
     schedule: 'daily' | 'weekly' | 'monthly',
     count: number = 1,
     now: Date = new Date(),
+    period: number = 1,
 ): number {
     const periodDays = { daily: 1, weekly: 7, monthly: 30 }[schedule];
-    const lookback = periodDays * 1.5;
+    const windowDays = periodDays * period;
+    const lookback = windowDays * 1.5;
 
     if (dates.size === 0) return 0;
 

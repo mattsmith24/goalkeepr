@@ -21,11 +21,12 @@
             streak: 4,
             schedule: 'daily',
             count: 1,
+            period: 1,
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
-        onUpdateSchedule: (id, schedule, count) =>
-            console.log('updateSchedule', id, schedule, count),
+        onUpdateSchedule: (id, schedule, count, period) =>
+            console.log('updateSchedule', id, schedule, count, period),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
 />
@@ -40,11 +41,12 @@
             streak: 1,
             schedule: 'daily',
             count: 1,
+            period: 1,
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
-        onUpdateSchedule: (id, schedule, count) =>
-            console.log('updateSchedule', id, schedule, count),
+        onUpdateSchedule: (id, schedule, count, period) =>
+            console.log('updateSchedule', id, schedule, count, period),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
     play={async ({ canvasElement }) => {
@@ -63,11 +65,12 @@
             streak: 4,
             schedule: 'weekly',
             count: 4,
+            period: 1,
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
-        onUpdateSchedule: (id, schedule, count) =>
-            console.log('updateSchedule', id, schedule, count),
+        onUpdateSchedule: (id, schedule, count, period) =>
+            console.log('updateSchedule', id, schedule, count, period),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
     play={async ({ canvasElement }) => {
@@ -87,11 +90,12 @@
             streak: 1,
             schedule: 'weekly',
             count: 1,
+            period: 1,
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
-        onUpdateSchedule: (id, schedule, count) =>
-            console.log('updateSchedule', id, schedule, count),
+        onUpdateSchedule: (id, schedule, count, period) =>
+            console.log('updateSchedule', id, schedule, count, period),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
     play={async ({ canvasElement }) => {
@@ -116,11 +120,12 @@
             streak: 6,
             schedule: 'monthly',
             count: 2,
+            period: 1,
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
-        onUpdateSchedule: (id, schedule, count) =>
-            console.log('updateSchedule', id, schedule, count),
+        onUpdateSchedule: (id, schedule, count, period) =>
+            console.log('updateSchedule', id, schedule, count, period),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
     play={async ({ canvasElement }) => {
@@ -128,6 +133,59 @@
         await expect(canvas.getByText('6 months streak')).toBeInTheDocument();
         await expect(
             canvas.getByText(/2 times per month/i),
+        ).toBeInTheDocument();
+    }}
+/>
+
+<Story
+    name="WeeklyOnceEveryTwoWeeks"
+    args={{
+        habit: {
+            id: 1,
+            goalId: 1,
+            description: 'Deep clean kitchen',
+            streak: 2,
+            schedule: 'weekly',
+            count: 1,
+            period: 2,
+        },
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdateSchedule: (id, schedule, count, period) =>
+            console.log('updateSchedule', id, schedule, count, period),
+        onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
+    }}
+    play={async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        await expect(canvas.getByText('2 weeks streak')).toBeInTheDocument();
+        await expect(
+            canvas.getByText(/1 time per 2 weeks/i),
+        ).toBeInTheDocument();
+    }}
+/>
+
+<Story
+    name="MonthlyFourInTwoMonths"
+    args={{
+        habit: {
+            id: 1,
+            goalId: 1,
+            description: 'Quarterly review',
+            streak: 1,
+            schedule: 'monthly',
+            count: 4,
+            period: 2,
+        },
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdateSchedule: (id, schedule, count, period) =>
+            console.log('updateSchedule', id, schedule, count, period),
+        onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
+    }}
+    play={async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        await expect(
+            canvas.getByText(/4 times per 2 months/i),
         ).toBeInTheDocument();
     }}
 />
@@ -142,11 +200,12 @@
             streak: 0,
             schedule: 'daily',
             count: 1,
+            period: 1,
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
-        onUpdateSchedule: (id, schedule, count) =>
-            console.log('updateSchedule', id, schedule, count),
+        onUpdateSchedule: (id, schedule, count, period) =>
+            console.log('updateSchedule', id, schedule, count, period),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
     play={async ({ canvasElement }) => {

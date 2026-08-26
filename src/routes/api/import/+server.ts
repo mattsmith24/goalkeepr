@@ -35,6 +35,7 @@ type HabitImport = {
     description: string;
     schedule: 'daily' | 'weekly' | 'monthly';
     count: number;
+    period: number;
     records: HabitRecordImport[];
 };
 
@@ -90,6 +91,9 @@ function validateMeasurementRecord(v: unknown): v is MeasurementRecordImport {
 function validateHabit(v: unknown): v is HabitImport {
     if (typeof v !== 'object' || v === null) return false;
     const h = v as Record<string, unknown>;
+    const hasPeriod =
+        h.period === undefined ||
+        (Number.isInteger(h.period) && (h.period as number) >= 1);
     return (
         isString(h.description) &&
         (h.schedule === 'daily' ||
@@ -97,6 +101,7 @@ function validateHabit(v: unknown): v is HabitImport {
             h.schedule === 'monthly') &&
         Number.isInteger(h.count) &&
         (h.count as number) >= 1 &&
+        hasPeriod &&
         Array.isArray(h.records) &&
         h.records.every(validateHabitRecord)
     );
@@ -176,6 +181,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
                         description: habit.description,
                         schedule: habit.schedule,
                         count: habit.count,
+                        period: habit.period,
                     })
                     .returning({ id: habitsTable.id })
                     .all();

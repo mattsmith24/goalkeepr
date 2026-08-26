@@ -13,6 +13,7 @@
             id: number,
             schedule: 'daily' | 'weekly' | 'monthly',
             count: number,
+            period: number,
         ) => void;
         onMarkDone: (id: number, date: string, note: string | null) => void;
     }
@@ -31,8 +32,9 @@
     function updateSchedule(
         schedule: 'daily' | 'weekly' | 'monthly',
         count: number,
+        period: number,
     ) {
-        onUpdateSchedule(habit.id, schedule, count);
+        onUpdateSchedule(habit.id, schedule, count, period);
     }
 
     function periodUnit(schedule: Habit['schedule'], count: number): string {
@@ -81,6 +83,7 @@
     <HabitSchedule
         schedule={habit.schedule}
         count={habit.count}
+        period={habit.period}
         onUpdate={updateSchedule}
     />
     {#if markingDone}

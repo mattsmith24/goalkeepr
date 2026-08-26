@@ -42,6 +42,7 @@ export const habitsTable = sqliteTable('habits', {
         .notNull()
         .default('daily'),
     count: integer().notNull().default(1),
+    period: integer().notNull().default(1),
 });
 
 export const habitRecordsTable = sqliteTable('habit_records', {

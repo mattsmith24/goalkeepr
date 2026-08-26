@@ -250,4 +250,105 @@ describe('currentStreak', () => {
             ).toBe(1);
         });
     });
+
+    describe('period multiplier', () => {
+        it('returns 1 for weekly count 1 period 2 when only today is recorded', () => {
+            expect(currentStreak(new Set([today]), 'weekly', 1, NOW, 2)).toBe(
+                1,
+            );
+        });
+
+        it('returns 1 for weekly count 1 period 2 with a 10-day-old entry (within 21-day window)', () => {
+            const tenDaysAgo = toDateString(new Date(2026, 6, 5));
+            expect(
+                currentStreak(new Set([tenDaysAgo]), 'weekly', 1, NOW, 2),
+            ).toBe(1);
+        });
+
+        it('returns 0 for weekly count 1 period 2 when only an old entry exists', () => {
+            const twentyFiveDaysAgo = toDateString(new Date(2026, 5, 20));
+            expect(
+                currentStreak(
+                    new Set([twentyFiveDaysAgo]),
+                    'weekly',
+                    1,
+                    NOW,
+                    2,
+                ),
+            ).toBe(0);
+        });
+
+        it('counts two periods for weekly count 1 period 2 with entries roughly every 2 weeks', () => {
+            const elevenDaysAgo = toDateString(new Date(2026, 6, 4));
+            const twentyTwoDaysAgo = toDateString(new Date(2026, 5, 23));
+            expect(
+                currentStreak(
+                    new Set([today, elevenDaysAgo, twentyTwoDaysAgo]),
+                    'weekly',
+                    1,
+                    NOW,
+                    2,
+                ),
+            ).toBe(2);
+        });
+
+        it('returns 1 for monthly count 4 period 2 with 4 entries within a 2-month window', () => {
+            const tenDaysAgo = toDateString(new Date(2026, 6, 5));
+            const aMonthAgoDate = toDateString(new Date(2026, 5, 20));
+            const twoMonthsAgoDate = toDateString(new Date(2026, 4, 25));
+            expect(
+                currentStreak(
+                    new Set([
+                        today,
+                        tenDaysAgo,
+                        aMonthAgoDate,
+                        twoMonthsAgoDate,
+                    ]),
+                    'monthly',
+                    4,
+                    NOW,
+                    2,
+                ),
+            ).toBe(1);
+        });
+
+        it('breaks for monthly count 4 period 2 when entries fall outside the 90-day window', () => {
+            const fourMonthsAgoDate = toDateString(new Date(2026, 2, 10));
+            const fiveMonthsAgoDate = toDateString(new Date(2026, 1, 10));
+            const sixMonthsAgoDate = toDateString(new Date(2026, 0, 10));
+            expect(
+                currentStreak(
+                    new Set([
+                        today,
+                        fourMonthsAgoDate,
+                        fiveMonthsAgoDate,
+                        sixMonthsAgoDate,
+                    ]),
+                    'monthly',
+                    4,
+                    NOW,
+                    2,
+                ),
+            ).toBe(0);
+        });
+
+        it('ignores period for daily (period is only meaningful for weekly/monthly)', () => {
+            const twoDaysAgo = toDateString(new Date(2026, 6, 13));
+            const withPeriod1 = currentStreak(
+                new Set([today, twoDaysAgo]),
+                'daily',
+                1,
+                NOW,
+                1,
+            );
+            const withPeriod2 = currentStreak(
+                new Set([today, twoDaysAgo]),
+                'daily',
+                1,
+                NOW,
+                5,
+            );
+            expect(withPeriod1).toBe(withPeriod2);
+        });
+    });
 });

@@ -16,7 +16,8 @@
     args={{
         schedule: 'daily',
         count: 1,
-        onUpdate: (s, c) => console.log('update', s, c),
+        period: 1,
+        onUpdate: (s, c, p) => console.log('update', s, c, p),
     }}
 />
 
@@ -25,7 +26,8 @@
     args={{
         schedule: 'weekly',
         count: 4,
-        onUpdate: (s, c) => console.log('update', s, c),
+        period: 1,
+        onUpdate: (s, c, p) => console.log('update', s, c, p),
     }}
 />
 
@@ -34,7 +36,8 @@
     args={{
         schedule: 'weekly',
         count: 1,
-        onUpdate: (s, c) => console.log('update', s, c),
+        period: 1,
+        onUpdate: (s, c, p) => console.log('update', s, c, p),
     }}
 />
 
@@ -43,7 +46,28 @@
     args={{
         schedule: 'monthly',
         count: 2,
-        onUpdate: (s, c) => console.log('update', s, c),
+        period: 1,
+        onUpdate: (s, c, p) => console.log('update', s, c, p),
+    }}
+/>
+
+<Story
+    name="WeeklyOnceEveryTwoWeeks"
+    args={{
+        schedule: 'weekly',
+        count: 1,
+        period: 2,
+        onUpdate: (s, c, p) => console.log('update', s, c, p),
+    }}
+/>
+
+<Story
+    name="MonthlyFourInTwoMonths"
+    args={{
+        schedule: 'monthly',
+        count: 4,
+        period: 2,
+        onUpdate: (s, c, p) => console.log('update', s, c, p),
     }}
 />
 
@@ -52,7 +76,8 @@
     args={{
         schedule: 'weekly',
         count: 1,
-        onUpdate: (s, c) => console.log('update', s, c),
+        period: 1,
+        onUpdate: (s, c, p) => console.log('update', s, c, p),
     }}
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
@@ -81,7 +106,8 @@
     args={{
         schedule: 'daily',
         count: 1,
-        onUpdate: (s, c) => console.log('update', s, c),
+        period: 1,
+        onUpdate: (s, c, p) => console.log('update', s, c, p),
     }}
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
@@ -94,5 +120,32 @@
         await expect(
             canvas.queryByLabelText(/times per/i),
         ).not.toBeInTheDocument();
+    }}
+/>
+
+<Story
+    name="ExpandedWeeklyPeriod"
+    args={{
+        schedule: 'weekly',
+        count: 1,
+        period: 2,
+        onUpdate: (s, c, p) => console.log('update', s, c, p),
+    }}
+    play={async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        await canvas
+            .getByRole('button', {
+                name: /schedule: weekly, 1 time per 2 weeks/i,
+            })
+            .click();
+
+        const count = canvas.getByLabelText(/times per week/i);
+        await expect(count).toBeInTheDocument();
+        await expect(count).toHaveValue(1);
+
+        const period = canvas.getByLabelText(/period in weeks/i);
+        await expect(period).toBeInTheDocument();
+        await expect(period).toHaveValue(2);
     }}
 />

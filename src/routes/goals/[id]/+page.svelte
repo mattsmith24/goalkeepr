@@ -116,11 +116,13 @@
         id: number,
         schedule: 'daily' | 'weekly' | 'monthly',
         count: number,
+        period: number,
     ) {
         const formData = new FormData();
         formData.set('id', String(id));
         formData.set('schedule', schedule);
         formData.set('count', String(count));
+        formData.set('period', String(period));
         const response = await fetch('?/updateHabitSchedule', {
             method: 'POST',
             body: formData,

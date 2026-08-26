@@ -19,6 +19,7 @@ export interface Habit {
     streak: number;
     schedule: 'daily' | 'weekly' | 'monthly';
     count: number;
+    period: number;
 }
 
 export interface Measurement {
