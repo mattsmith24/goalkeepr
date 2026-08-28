@@ -367,10 +367,16 @@ describe('streakExpiringSoon', () => {
         expect(streakExpiringSoon(new Set([today]), 'daily', NOW)).toBe(false);
     });
 
-    it('returns false when the latest entry is within the nominal daily period', () => {
+    it('returns true when the daily habit was done yesterday but not today', () => {
         expect(streakExpiringSoon(new Set([yesterday]), 'daily', NOW)).toBe(
-            false,
+            true,
         );
+    });
+
+    it('returns false when the daily habit has both today and yesterday recorded', () => {
+        expect(
+            streakExpiringSoon(new Set([today, yesterday]), 'daily', NOW),
+        ).toBe(false);
     });
 
     it('returns false when the daily streak has already expired', () => {

@@ -66,8 +66,10 @@ export function currentStreak(
 
 /*
 streakExpiringSoon - True when the latest record is past the nominal period
-(windowDays) but still within the grace window (windowDays * 1.5). Returns
-false when there's no streak or the streak has already expired.
+(windowDays) but still within the grace window (windowDays * 1.5). For daily
+habits, also true when the latest record is exactly yesterday (records are
+date-only, so the daily grace zone of 1-1.5 days is unreachable otherwise).
+Returns false when there's no streak or the streak has already expired.
 */
 export function streakExpiringSoon(
     dates: Set<string>,
@@ -85,6 +87,7 @@ export function streakExpiringSoon(
     const nowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const daysSinceLatest =
         (nowStart.getTime() - sortedDesc[0].getTime()) / MS_PER_DAY;
+    if (schedule === 'daily' && daysSinceLatest === 1) return true;
     if (daysSinceLatest > lookback) return false;
     return daysSinceLatest > windowDays;
 }
