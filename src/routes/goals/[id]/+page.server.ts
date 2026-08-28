@@ -12,7 +12,7 @@ import {
     measurementsTable,
     milestonesTable,
 } from '$lib/server/db/schema';
-import { currentStreak } from '$lib/dates';
+import { currentStreak, streakExpiringSoon } from '$lib/dates';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
     const id = Number(params.id);
@@ -74,16 +74,26 @@ export const load: PageServerLoad = async ({ locals, params }) => {
     return {
         goal,
         milestones,
-        habits: habits.map((habit) => ({
-            ...habit,
-            streak: currentStreak(
-                datesByHabit.get(habit.id) ?? new Set(),
-                habit.schedule,
-                habit.count,
-                new Date(),
-                habit.period,
-            ),
-        })),
+        habits: habits.map((habit) => {
+            const dates = datesByHabit.get(habit.id) ?? new Set();
+            const now = new Date();
+            return {
+                ...habit,
+                streak: currentStreak(
+                    dates,
+                    habit.schedule,
+                    habit.count,
+                    now,
+                    habit.period,
+                ),
+                expiringSoon: streakExpiringSoon(
+                    dates,
+                    habit.schedule,
+                    now,
+                    habit.period,
+                ),
+            };
+        }),
         measurements: measurements.map((measurement) => ({
             ...measurement,
             records: measurementRecords.filter(

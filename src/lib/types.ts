@@ -17,6 +17,7 @@ export interface Habit {
     goalId: number;
     description: string;
     streak: number;
+    expiringSoon: boolean;
     schedule: 'daily' | 'weekly' | 'monthly';
     count: number;
     period: number;

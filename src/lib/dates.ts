@@ -63,3 +63,28 @@ export function currentStreak(
     }
     return streak;
 }
+
+/*
+streakExpiringSoon - True when the latest record is past the nominal period
+(windowDays) but still within the grace window (windowDays * 1.5). Returns
+false when there's no streak or the streak has already expired.
+*/
+export function streakExpiringSoon(
+    dates: Set<string>,
+    schedule: 'daily' | 'weekly' | 'monthly',
+    now: Date = new Date(),
+    period: number = 1,
+): boolean {
+    if (dates.size === 0) return false;
+    const periodDays = { daily: 1, weekly: 7, monthly: 30 }[schedule];
+    const windowDays = periodDays * period;
+    const lookback = windowDays * 1.5;
+    const sortedDesc = [...dates]
+        .map(fromDateString)
+        .sort((a, b) => b.getTime() - a.getTime());
+    const nowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const daysSinceLatest =
+        (nowStart.getTime() - sortedDesc[0].getTime()) / MS_PER_DAY;
+    if (daysSinceLatest > lookback) return false;
+    return daysSinceLatest > windowDays;
+}

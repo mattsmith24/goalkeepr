@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { currentStreak, fromDateString, toDateString } from './dates';
+import {
+    currentStreak,
+    fromDateString,
+    streakExpiringSoon,
+    toDateString,
+} from './dates';
 
 const NOW = new Date(2026, 6, 15);
 const today = toDateString(NOW);
@@ -350,5 +355,72 @@ describe('currentStreak', () => {
             );
             expect(withPeriod1).toBe(withPeriod2);
         });
+    });
+});
+
+describe('streakExpiringSoon', () => {
+    it('returns false for an empty history', () => {
+        expect(streakExpiringSoon(new Set(), 'daily', NOW)).toBe(false);
+    });
+
+    it('returns false when the latest entry is today (daily)', () => {
+        expect(streakExpiringSoon(new Set([today]), 'daily', NOW)).toBe(false);
+    });
+
+    it('returns false when the latest entry is within the nominal daily period', () => {
+        expect(streakExpiringSoon(new Set([yesterday]), 'daily', NOW)).toBe(
+            false,
+        );
+    });
+
+    it('returns false when the daily streak has already expired', () => {
+        expect(streakExpiringSoon(new Set([threeDaysAgo]), 'daily', NOW)).toBe(
+            false,
+        );
+    });
+
+    it('returns true for a weekly habit when the latest entry is past 7 days but within 10.5', () => {
+        const nineDaysAgo = toDateString(new Date(2026, 6, 6));
+        expect(streakExpiringSoon(new Set([nineDaysAgo]), 'weekly', NOW)).toBe(
+            true,
+        );
+    });
+
+    it('returns false for a weekly habit when the latest entry is within 7 days', () => {
+        expect(streakExpiringSoon(new Set([fourDaysAgo]), 'weekly', NOW)).toBe(
+            false,
+        );
+    });
+
+    it('returns false for a weekly habit when the streak has already expired', () => {
+        expect(
+            streakExpiringSoon(new Set([threeWeeksAgo]), 'weekly', NOW),
+        ).toBe(false);
+    });
+
+    it('returns true for a monthly habit when the latest entry is past 30 days but within 45', () => {
+        const thirtyFiveDaysAgo = toDateString(new Date(2026, 5, 10));
+        expect(
+            streakExpiringSoon(new Set([thirtyFiveDaysAgo]), 'monthly', NOW),
+        ).toBe(true);
+    });
+
+    it('returns false for a monthly habit when the latest entry is within 30 days', () => {
+        expect(streakExpiringSoon(new Set([aMonthAgo]), 'monthly', NOW)).toBe(
+            false,
+        );
+    });
+
+    it('scales the grace window by the period multiplier', () => {
+        const fifteenDaysAgo = toDateString(new Date(2026, 5, 30));
+        expect(
+            streakExpiringSoon(new Set([fifteenDaysAgo]), 'weekly', NOW, 2),
+        ).toBe(true);
+    });
+
+    it('returns false when the weekly period 2 streak has already expired', () => {
+        expect(streakExpiringSoon(new Set([aMonthAgo]), 'weekly', NOW, 2)).toBe(
+            false,
+        );
     });
 });

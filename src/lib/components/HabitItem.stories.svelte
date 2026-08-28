@@ -19,6 +19,7 @@
             goalId: 1,
             description: 'Stretch for 10 minutes each morning',
             streak: 4,
+            expiringSoon: false,
             schedule: 'daily',
             count: 1,
             period: 1,
@@ -39,6 +40,7 @@
             goalId: 1,
             description: 'Stretch',
             streak: 1,
+            expiringSoon: false,
             schedule: 'daily',
             count: 1,
             period: 1,
@@ -63,6 +65,7 @@
             goalId: 1,
             description: 'Review goals',
             streak: 4,
+            expiringSoon: false,
             schedule: 'weekly',
             count: 4,
             period: 1,
@@ -88,6 +91,7 @@
             goalId: 1,
             description: 'Review goals',
             streak: 1,
+            expiringSoon: false,
             schedule: 'weekly',
             count: 1,
             period: 1,
@@ -118,6 +122,7 @@
             goalId: 1,
             description: 'Take measurements',
             streak: 6,
+            expiringSoon: false,
             schedule: 'monthly',
             count: 2,
             period: 1,
@@ -145,6 +150,7 @@
             goalId: 1,
             description: 'Deep clean kitchen',
             streak: 2,
+            expiringSoon: false,
             schedule: 'weekly',
             count: 1,
             period: 2,
@@ -172,6 +178,7 @@
             goalId: 1,
             description: 'Quarterly review',
             streak: 1,
+            expiringSoon: false,
             schedule: 'monthly',
             count: 4,
             period: 2,
@@ -198,6 +205,7 @@
             goalId: 1,
             description: 'Stretch',
             streak: 0,
+            expiringSoon: false,
             schedule: 'daily',
             count: 1,
             period: 1,
@@ -211,5 +219,30 @@
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
         await expect(canvas.getByText('No current streak')).toBeInTheDocument();
+    }}
+/>
+
+<Story
+    name="ExpiringSoon"
+    args={{
+        habit: {
+            id: 1,
+            goalId: 1,
+            description: 'Stretch',
+            streak: 4,
+            expiringSoon: true,
+            schedule: 'daily',
+            count: 1,
+            period: 1,
+        },
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdateSchedule: (id, schedule, count, period) =>
+            console.log('updateSchedule', id, schedule, count, period),
+        onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
+    }}
+    play={async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        await expect(canvas.getByText(/⏳ 4 days streak/)).toBeInTheDocument();
     }}
 />
