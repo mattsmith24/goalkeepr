@@ -459,4 +459,11 @@ describe('streakExpiringSoon', () => {
             streakExpiringSoon(new Set([fiveDaysAgo]), 'daily', NOW, 3),
         ).toBe(false);
     });
+
+    it('returns true for daily period 2 on the boundary day (2 days ago)', () => {
+        const twoDaysAgo = toDateString(new Date(2026, 6, 13));
+        expect(
+            streakExpiringSoon(new Set([twoDaysAgo]), 'daily', NOW, 2),
+        ).toBe(true);
+    });
 });
