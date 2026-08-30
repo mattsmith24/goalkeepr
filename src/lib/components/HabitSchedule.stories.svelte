@@ -117,9 +117,36 @@
         const select = canvas.getByLabelText(/^schedule$/i);
         await expect(select).toBeInTheDocument();
 
+        const period = canvas.getByLabelText(/every n days/i);
+        await expect(period).toBeInTheDocument();
+        await expect(period).toHaveValue(1);
+
         await expect(
             canvas.queryByLabelText(/times per/i),
         ).not.toBeInTheDocument();
+    }}
+/>
+
+<Story
+    name="DailyEveryThreeDays"
+    args={{
+        schedule: 'daily',
+        count: 1,
+        period: 3,
+        onUpdate: (s, c, p) => console.log('update', s, c, p),
+    }}
+    play={async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        await canvas
+            .getByRole('button', {
+                name: /schedule: daily, every 3 days/i,
+            })
+            .click();
+
+        const period = canvas.getByLabelText(/every n days/i);
+        await expect(period).toBeInTheDocument();
+        await expect(period).toHaveValue(3);
     }}
 />
 

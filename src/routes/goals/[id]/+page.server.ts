@@ -288,7 +288,7 @@ export const actions: Actions = {
         const id = Number(data.get('id'));
         const schedule = data.get('schedule')?.toString() ?? '';
         const count = Number(data.get('count'));
-        const periodRaw = Number(data.get('period'));
+        const period = Number(data.get('period'));
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
@@ -302,8 +302,7 @@ export const actions: Actions = {
         if (!Number.isInteger(count) || count < 1) {
             return { success: false, error: 'invalid count' };
         }
-        const period = schedule === 'daily' ? 1 : periodRaw;
-        if (schedule !== 'daily' && (!Number.isInteger(period) || period < 1)) {
+        if (!Number.isInteger(period) || period < 1) {
             return { success: false, error: 'invalid period' };
         }
         const result = await db

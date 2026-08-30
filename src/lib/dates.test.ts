@@ -337,23 +337,32 @@ describe('currentStreak', () => {
             ).toBe(0);
         });
 
-        it('ignores period for daily (period is only meaningful for weekly/monthly)', () => {
+        it('counts a daily period 3 entry within the 4.5-day window', () => {
             const twoDaysAgo = toDateString(new Date(2026, 6, 13));
-            const withPeriod1 = currentStreak(
-                new Set([today, twoDaysAgo]),
-                'daily',
-                1,
-                NOW,
-                1,
-            );
-            const withPeriod2 = currentStreak(
-                new Set([today, twoDaysAgo]),
-                'daily',
-                1,
-                NOW,
-                5,
-            );
-            expect(withPeriod1).toBe(withPeriod2);
+            expect(
+                currentStreak(new Set([twoDaysAgo]), 'daily', 1, NOW, 3),
+            ).toBe(1);
+        });
+
+        it('returns 0 for daily period 3 when the entry is past the 4.5-day lookback', () => {
+            const fiveDaysAgo = toDateString(new Date(2026, 6, 10));
+            expect(
+                currentStreak(new Set([fiveDaysAgo]), 'daily', 1, NOW, 3),
+            ).toBe(0);
+        });
+
+        it('counts two periods for daily period 3 with entries roughly every 3 days', () => {
+            const threeDaysAgo = toDateString(new Date(2026, 6, 12));
+            const sixDaysAgo = toDateString(new Date(2026, 6, 9));
+            expect(
+                currentStreak(
+                    new Set([today, threeDaysAgo, sixDaysAgo]),
+                    'daily',
+                    1,
+                    NOW,
+                    3,
+                ),
+            ).toBe(2);
         });
     });
 });
@@ -428,5 +437,26 @@ describe('streakExpiringSoon', () => {
         expect(streakExpiringSoon(new Set([aMonthAgo]), 'weekly', NOW, 2)).toBe(
             false,
         );
+    });
+
+    it('returns false for daily period 3 when the entry is within the 3-day window', () => {
+        const twoDaysAgo = toDateString(new Date(2026, 6, 13));
+        expect(
+            streakExpiringSoon(new Set([twoDaysAgo]), 'daily', NOW, 3),
+        ).toBe(false);
+    });
+
+    it('returns true for daily period 3 when the entry is past 3 days but within 4.5', () => {
+        const fourDaysAgo = toDateString(new Date(2026, 6, 11));
+        expect(
+            streakExpiringSoon(new Set([fourDaysAgo]), 'daily', NOW, 3),
+        ).toBe(true);
+    });
+
+    it('returns false for daily period 3 when the entry has expired past 4.5 days', () => {
+        const fiveDaysAgo = toDateString(new Date(2026, 6, 10));
+        expect(
+            streakExpiringSoon(new Set([fiveDaysAgo]), 'daily', NOW, 3),
+        ).toBe(false);
     });
 });

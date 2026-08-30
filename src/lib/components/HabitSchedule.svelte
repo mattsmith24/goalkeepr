@@ -31,10 +31,7 @@
     function saveEdit() {
         editing = false;
         const cleanedCount = Math.max(1, Math.floor(draftCount));
-        const cleanedPeriod =
-            draftSchedule === 'daily'
-                ? 1
-                : Math.max(1, Math.floor(draftPeriod));
+        const cleanedPeriod = Math.max(1, Math.floor(draftPeriod));
         if (
             cleanedCount !== count ||
             cleanedPeriod !== period ||
@@ -56,6 +53,7 @@
 
     function countLabel(c: number, s: Schedule, periodN: number): string {
         if (c === 1 && periodN === 1) return '';
+        if (s === 'daily' && c === 1) return `every ${periodN} days`;
         return `${c} ${c === 1 ? 'time' : 'times'} per ${scheduleDetail(periodN)}`;
     }
 </script>
@@ -78,7 +76,20 @@
                 <option value={option}>{option}</option>
             {/each}
         </select>
-        {#if draftSchedule !== 'daily'}
+        {#if draftSchedule === 'daily'}
+            <label for="habit-period" class="sr-only">Every N days</label>
+            <span class="text-sm text-gray-600">every</span>
+            <input
+                id="habit-period"
+                type="number"
+                min="1"
+                bind:value={draftPeriod}
+                class="input w-16 text-sm"
+            />
+            <span class="text-sm text-gray-600">
+                day{draftPeriod === 1 ? '' : 's'}
+            </span>
+        {:else}
             <label for="habit-count" class="sr-only"
                 >Times per {periodLabel(draftSchedule)}</label
             >
