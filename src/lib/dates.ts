@@ -94,3 +94,18 @@ export function streakExpiringSoon(
     if (daysSinceLatest > lookback) return false;
     return daysSinceLatest > windowDays;
 }
+
+/*
+milestoneExpired - True when a milestone has a due date that has passed and
+has not been marked with a done date. Dates are compared at day resolution,
+so a milestone due today is not yet expired.
+*/
+export function milestoneExpired(
+    dueDate: string | null,
+    doneDate: string | null,
+    now: Date = new Date(),
+): boolean {
+    if (dueDate === null || doneDate !== null) return false;
+    const nowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return fromDateString(dueDate).getTime() < nowStart.getTime();
+}

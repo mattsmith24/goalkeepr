@@ -155,7 +155,7 @@
             class="btn-edit block px-2 py-1"
             onclick={startEditDate}
         >
-            Due Date: {milestone.dueDate}
+            {milestone.expired ? '⏳ ' : ''}Due Date: {milestone.dueDate}
         </button>
     {:else}
         <button

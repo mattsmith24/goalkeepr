@@ -12,7 +12,11 @@ import {
     measurementsTable,
     milestonesTable,
 } from '$lib/server/db/schema';
-import { currentStreak, streakExpiringSoon } from '$lib/dates';
+import {
+    currentStreak,
+    milestoneExpired,
+    streakExpiringSoon,
+} from '$lib/dates';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
     const id = Number(params.id);
@@ -73,7 +77,10 @@ export const load: PageServerLoad = async ({ locals, params }) => {
         : [];
     return {
         goal,
-        milestones,
+        milestones: milestones.map((milestone) => ({
+            ...milestone,
+            expired: milestoneExpired(milestone.dueDate, milestone.doneDate),
+        })),
         habits: habits.map((habit) => {
             const dates = datesByHabit.get(habit.id) ?? new Set();
             const now = new Date();

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
     currentStreak,
     fromDateString,
+    milestoneExpired,
     streakExpiringSoon,
     toDateString,
 } from './dates';
@@ -441,9 +442,9 @@ describe('streakExpiringSoon', () => {
 
     it('returns false for daily period 3 when the entry is within the 3-day window', () => {
         const twoDaysAgo = toDateString(new Date(2026, 6, 13));
-        expect(
-            streakExpiringSoon(new Set([twoDaysAgo]), 'daily', NOW, 3),
-        ).toBe(false);
+        expect(streakExpiringSoon(new Set([twoDaysAgo]), 'daily', NOW, 3)).toBe(
+            false,
+        );
     });
 
     it('returns true for daily period 3 when the entry is past 3 days but within 4.5', () => {
@@ -462,8 +463,39 @@ describe('streakExpiringSoon', () => {
 
     it('returns true for daily period 2 on the boundary day (2 days ago)', () => {
         const twoDaysAgo = toDateString(new Date(2026, 6, 13));
-        expect(
-            streakExpiringSoon(new Set([twoDaysAgo]), 'daily', NOW, 2),
-        ).toBe(true);
+        expect(streakExpiringSoon(new Set([twoDaysAgo]), 'daily', NOW, 2)).toBe(
+            true,
+        );
+    });
+});
+
+describe('milestoneExpired', () => {
+    it('returns true when the due date is in the past and there is no done date', () => {
+        expect(milestoneExpired(yesterday, null, NOW)).toBe(true);
+    });
+
+    it('returns true when the due date is far in the past', () => {
+        expect(milestoneExpired(aMonthAgo, null, NOW)).toBe(true);
+    });
+
+    it('returns false when the milestone has a done date even if the due date is past', () => {
+        expect(milestoneExpired(yesterday, today, NOW)).toBe(false);
+    });
+
+    it('returns false when the due date is today', () => {
+        expect(milestoneExpired(today, null, NOW)).toBe(false);
+    });
+
+    it('returns false when the due date is in the future', () => {
+        const future = toDateString(new Date(2026, 6, 20));
+        expect(milestoneExpired(future, null, NOW)).toBe(false);
+    });
+
+    it('returns false when there is no due date', () => {
+        expect(milestoneExpired(null, null, NOW)).toBe(false);
+    });
+
+    it('returns false when there is no due date even if there is a done date', () => {
+        expect(milestoneExpired(null, yesterday, NOW)).toBe(false);
     });
 });

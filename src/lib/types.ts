@@ -10,6 +10,7 @@ export interface Milestone {
     dueDate: string | null;
     doneDate: string | null;
     note: string | null;
+    expired: boolean;
 }
 
 export interface Habit {

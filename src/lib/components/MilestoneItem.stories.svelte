@@ -63,6 +63,31 @@
 />
 
 <Story
+    name="Expired"
+    args={{
+        milestone: {
+            id: 4,
+            goalId: 1,
+            description: 'Renew passport',
+            dueDate: '2026-07-15',
+            doneDate: null,
+            note: null,
+            expired: true,
+        },
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (id, description, dueDate, doneDate, note) =>
+            console.log('update', id, description, dueDate, doneDate, note),
+    }}
+    play={async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        const button = canvas.getByRole('button', { name: /⏳/ });
+        await expect(button).toBeInTheDocument();
+        await expect(button).toHaveTextContent(/Due Date: 2026-07-15/);
+    }}
+/>
+
+<Story
     name="Editing description"
     args={{
         milestone: {
