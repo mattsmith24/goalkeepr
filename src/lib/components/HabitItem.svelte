@@ -116,6 +116,7 @@
         cDomain={[1]}
         cRange={['var(--color-primary-500)', 'var(--color-primary-700)']}
         padding={{ top: 20 }}
+        width={300}
         height={140}
     >
         {#snippet children({ context })}
