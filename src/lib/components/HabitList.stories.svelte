@@ -9,9 +9,11 @@
             goalId: 1,
             description: 'Stretch for 10 minutes each morning',
             streak: 4,
+            expiringSoon: false,
             schedule: 'daily',
             count: 1,
             period: 1,
+            recordDates: [],
         },
     ];
 

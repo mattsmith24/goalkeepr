@@ -99,6 +99,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
                     now,
                     habit.period,
                 ),
+                recordDates: [...dates].sort(),
             };
         }),
         measurements: measurements.map((measurement) => ({

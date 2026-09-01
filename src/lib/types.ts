@@ -22,6 +22,7 @@ export interface Habit {
     schedule: 'daily' | 'weekly' | 'monthly';
     count: number;
     period: number;
+    recordDates: string[];
 }
 
 export interface Measurement {

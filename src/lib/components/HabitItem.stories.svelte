@@ -4,6 +4,20 @@
 
     import HabitItem from './HabitItem.svelte';
 
+    /** @param {number[]} daysAgo */
+    function recentDates(daysAgo) {
+        const dates = [];
+        for (let i = 0; i < daysAgo.length; i++) {
+            // eslint-disable-next-line svelte/prefer-svelte-reactivity
+            const d = new Date();
+            d.setDate(d.getDate() - daysAgo[i]);
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            dates.push(`${d.getFullYear()}-${month}-${day}`);
+        }
+        return dates.sort();
+    }
+
     const { Story } = defineMeta({
         component: HabitItem,
         title: 'HabitItem',
@@ -23,6 +37,7 @@
             schedule: 'daily',
             count: 1,
             period: 1,
+            recordDates: recentDates([0, 1, 2, 3, 5, 7, 10, 14, 21, 30]),
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
@@ -44,6 +59,7 @@
             schedule: 'daily',
             count: 1,
             period: 1,
+            recordDates: recentDates([0]),
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
@@ -69,6 +85,10 @@
             schedule: 'weekly',
             count: 4,
             period: 1,
+            recordDates: recentDates([
+                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+                18, 19,
+            ]),
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
@@ -95,6 +115,7 @@
             schedule: 'weekly',
             count: 1,
             period: 1,
+            recordDates: recentDates([0]),
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
@@ -126,6 +147,11 @@
             schedule: 'monthly',
             count: 2,
             period: 1,
+            recordDates: recentDates([
+                0, 1, 2, 3, 4, 5, 30, 31, 32, 33, 34, 35, 60, 61, 62, 63, 64,
+                65, 90, 91, 92, 93, 94, 95, 120, 121, 122, 123, 124, 125, 150,
+                151, 152, 153, 154, 155,
+            ]),
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
@@ -154,6 +180,7 @@
             schedule: 'weekly',
             count: 1,
             period: 2,
+            recordDates: recentDates([0, 14]),
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
@@ -182,6 +209,7 @@
             schedule: 'monthly',
             count: 4,
             period: 2,
+            recordDates: recentDates([0]),
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
@@ -209,6 +237,7 @@
             schedule: 'daily',
             count: 1,
             period: 1,
+            recordDates: [],
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),
@@ -234,6 +263,7 @@
             schedule: 'daily',
             count: 1,
             period: 1,
+            recordDates: recentDates([1, 2, 3, 4]),
         },
         onDelete: (id) => console.log('delete', id),
         onUpdate: (id, description) => console.log('update', id, description),

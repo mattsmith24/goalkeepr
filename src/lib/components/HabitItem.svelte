@@ -1,5 +1,7 @@
 <script lang="ts">
     import { resolve } from '$app/paths';
+    import { scaleThreshold } from 'd3-scale';
+    import { Calendar, Chart, Layer, Rect, Tooltip } from 'layerchart';
     import EditableItem from './EditableItem.svelte';
     import HabitSchedule from './HabitSchedule.svelte';
     import type { Habit } from '$lib/types';
@@ -24,6 +26,31 @@
     let markingDone = $state(false);
     let draftDate = $state('');
     let draftNote = $state('');
+
+    const now = new Date();
+    const ninetyDaysAgo = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() - 90,
+    );
+
+    const data = $derived.by(() => {
+        const doneDates = new Set(habit.recordDates);
+        const series: { date: Date; value: number | null }[] = [];
+        for (
+            // eslint-disable-next-line svelte/prefer-svelte-reactivity
+            let d = new Date(ninetyDaysAgo);
+            d <= now;
+            d.setDate(d.getDate() + 1)
+        ) {
+            const dateStr = toDateString(d);
+            series.push({
+                date: new Date(d.getFullYear(), d.getMonth(), d.getDate()),
+                value: doneDates.has(dateStr) ? 1 : null,
+            });
+        }
+        return series;
+    });
 
     function updateDescription(description: string) {
         onUpdate(habit.id, description);
@@ -80,6 +107,53 @@
             ? 'No current streak'
             : `${habit.expiringSoon ? '⏳ ' : ''}${habit.streak} ${periodUnit(habit.schedule, habit.streak)} streak`}
     </p>
+
+    <Chart
+        {data}
+        x="date"
+        c="value"
+        cScale={scaleThreshold()}
+        cDomain={[1]}
+        cRange={['var(--color-primary-500)', 'var(--color-primary-700)']}
+        padding={{ top: 20 }}
+        height={140}
+    >
+        {#snippet children({ context })}
+            <Layer>
+                <Calendar start={ninetyDaysAgo} end={now}>
+                    {#snippet children({ cells, cellSize })}
+                        {#each cells as cell (cell.data.date.getTime())}
+                            {@const padding = 1}
+                            <Rect
+                                x={cell.x + padding}
+                                y={cell.y + padding}
+                                width={cellSize[0] - padding * 2}
+                                height={cellSize[1] - padding * 2}
+                                rx={4}
+                                fill={cell.color ?? 'rgb(0 0 0 / 5%)'}
+                                onpointermove={(e) =>
+                                    context.tooltip?.show(e, cell.data)}
+                                onpointerleave={() => context.tooltip?.hide()}
+                            />
+                        {/each}
+                    {/snippet}
+                </Calendar>
+            </Layer>
+
+            <Tooltip.Root>
+                {#snippet children({ data })}
+                    <Tooltip.Header value={data.date} format="day" />
+                    <Tooltip.List>
+                        <Tooltip.Item
+                            label="status"
+                            value={data.value != null ? 'Done' : 'Not done'}
+                        />
+                    </Tooltip.List>
+                {/snippet}
+            </Tooltip.Root>
+        {/snippet}
+    </Chart>
+
     <HabitSchedule
         schedule={habit.schedule}
         count={habit.count}
