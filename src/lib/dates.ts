@@ -19,6 +19,10 @@ export function fromDateString(date: string): Date {
 
 const MS_PER_DAY = 86_400_000;
 
+/*
+currentStreak - Counts the number of days / weeks / months a streak of dates has
+run for given the expected schedule.
+*/
 export function currentStreak(
     dates: Set<string>,
     schedule: 'daily' | 'weekly' | 'monthly',
@@ -28,7 +32,7 @@ export function currentStreak(
 ): number {
     const periodDays = { daily: 1, weekly: 7, monthly: 30 }[schedule];
     const windowDays = periodDays * period;
-    const lookback = windowDays * 1.5;
+    const grace_lookback = windowDays * 1.5;
 
     if (dates.size === 0) return 0;
 
@@ -39,13 +43,13 @@ export function currentStreak(
     const nowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const daysSinceLatest =
         (nowStart.getTime() - sortedDesc[0].getTime()) / MS_PER_DAY;
-    if (daysSinceLatest > lookback) return 0;
+    if (daysSinceLatest > grace_lookback) return 0;
 
     let streak = 0;
     let anchor = nowStart.getTime();
     let i = 0;
     while (i < sortedDesc.length) {
-        const windowStart = anchor - lookback * MS_PER_DAY;
+        let windowStart = anchor - windowDays * MS_PER_DAY;
         let itemsInWindow = 0;
         let oldestInWindow = anchor;
         while (
@@ -57,11 +61,30 @@ export function currentStreak(
             oldestInWindow = sortedDesc[i].getTime();
             i += 1;
         }
+        // Second chance grace period. Allow streak to continue if habit
+        // completed within grace_lookback. Special case for daily habits - they
+        // are not granular enough for the grace period maths but we allow a
+        // streak to continue if the habit hasn't been done today yet.
+        if (
+            itemsInWindow < count &&
+            (windowDays > 6 || anchor == nowStart.getTime())
+        ) {
+            windowStart = anchor - grace_lookback * MS_PER_DAY;
+            while (
+                i < sortedDesc.length &&
+                sortedDesc[i].getTime() > windowStart &&
+                sortedDesc[i].getTime() <= anchor
+            ) {
+                itemsInWindow += 1;
+                oldestInWindow = sortedDesc[i].getTime();
+                i += 1;
+            }
+        }
         if (itemsInWindow < count) break;
         streak += 1;
-        anchor = oldestInWindow;
+        anchor = oldestInWindow - MS_PER_DAY;
     }
-    return streak;
+    return streak * period;
 }
 
 /*

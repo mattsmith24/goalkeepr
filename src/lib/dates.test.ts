@@ -54,24 +54,13 @@ describe('currentStreak', () => {
             );
         });
 
-        it('returns 1 when today and yesterday are both in the current 1.5-day period', () => {
+        it('returns 2 when today and yesterday are done', () => {
             expect(
                 currentStreak(new Set([today, yesterday]), 'daily', 1, NOW),
-            ).toBe(1);
-        });
-
-        it('counts two periods when entries fall into consecutive 1.5-day windows', () => {
-            expect(
-                currentStreak(
-                    new Set([today, yesterday, twoDaysAgo]),
-                    'daily',
-                    1,
-                    NOW,
-                ),
             ).toBe(2);
         });
 
-        it('counts three periods for four consecutive days', () => {
+        it('counts five periods for five consecutive days', () => {
             expect(
                 currentStreak(
                     new Set([
@@ -81,6 +70,17 @@ describe('currentStreak', () => {
                         threeDaysAgo,
                         fourDaysAgo,
                     ]),
+                    'daily',
+                    1,
+                    NOW,
+                ),
+            ).toBe(5);
+        });
+
+        it('counts four periods for four consecutive days starting yesterday', () => {
+            expect(
+                currentStreak(
+                    new Set([yesterday, twoDaysAgo, threeDaysAgo, fourDaysAgo]),
                     'daily',
                     1,
                     NOW,
@@ -107,7 +107,7 @@ describe('currentStreak', () => {
                     1,
                     NOW,
                 ),
-            ).toBe(1);
+            ).toBe(2);
         });
     });
 
@@ -181,10 +181,10 @@ describe('currentStreak', () => {
             );
         });
 
-        it('returns 1 when entries fall within the same 45-day window', () => {
+        it('returns 2 when entries fall within the same 45-day window', () => {
             expect(
                 currentStreak(new Set([today, aMonthAgo]), 'monthly', 1, NOW),
-            ).toBe(1);
+            ).toBe(2);
         });
 
         it('returns 0 when the most recent entry is older than the lookback', () => {
@@ -260,7 +260,7 @@ describe('currentStreak', () => {
     describe('period multiplier', () => {
         it('returns 1 for weekly count 1 period 2 when only today is recorded', () => {
             expect(currentStreak(new Set([today]), 'weekly', 1, NOW, 2)).toBe(
-                1,
+                2,
             );
         });
 
@@ -268,7 +268,7 @@ describe('currentStreak', () => {
             const tenDaysAgo = toDateString(new Date(2026, 6, 5));
             expect(
                 currentStreak(new Set([tenDaysAgo]), 'weekly', 1, NOW, 2),
-            ).toBe(1);
+            ).toBe(2);
         });
 
         it('returns 0 for weekly count 1 period 2 when only an old entry exists', () => {
@@ -295,7 +295,7 @@ describe('currentStreak', () => {
                     NOW,
                     2,
                 ),
-            ).toBe(2);
+            ).toBe(4);
         });
 
         it('returns 1 for monthly count 4 period 2 with 4 entries within a 2-month window', () => {
@@ -315,7 +315,7 @@ describe('currentStreak', () => {
                     NOW,
                     2,
                 ),
-            ).toBe(1);
+            ).toBe(2);
         });
 
         it('breaks for monthly count 4 period 2 when entries fall outside the 90-day window', () => {
@@ -342,7 +342,7 @@ describe('currentStreak', () => {
             const twoDaysAgo = toDateString(new Date(2026, 6, 13));
             expect(
                 currentStreak(new Set([twoDaysAgo]), 'daily', 1, NOW, 3),
-            ).toBe(1);
+            ).toBe(3);
         });
 
         it('returns 0 for daily period 3 when the entry is past the 4.5-day lookback', () => {
@@ -363,7 +363,7 @@ describe('currentStreak', () => {
                     NOW,
                     3,
                 ),
-            ).toBe(2);
+            ).toBe(9);
         });
     });
 });
