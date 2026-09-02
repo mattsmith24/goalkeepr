@@ -24,6 +24,13 @@
     let draftValue = $state('');
     let draftNote = $state('');
 
+    const latestRecord = $derived.by(() => {
+        if (!measurement.records.length) return null;
+        return measurement.records.reduce((latest, record) =>
+            !latest || record.date > latest.date ? record : latest,
+        );
+    });
+
     function updateDescription(description: string) {
         onUpdate(measurement.id, description);
     }
@@ -62,6 +69,9 @@
     onUpdateDescription={updateDescription}
     onDelete={() => onDelete(measurement.id)}
 >
+    <div class="px-2 py-1 text-gray-600">
+        {latestRecord ? latestRecord.value : 'No value yet'}
+    </div>
     <LineChart
         data={measurement.records}
         x={(d) => fromDateString(d.date)}

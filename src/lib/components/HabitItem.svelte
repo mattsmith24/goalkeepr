@@ -102,7 +102,7 @@
     onUpdateDescription={updateDescription}
     onDelete={() => onDelete(habit.id)}
 >
-    <p class="px-2 py-1 text-sm text-gray-600">
+    <p class="px-2 py-1 text-gray-600">
         {habit.streak === 0
             ? 'No current streak'
             : `${habit.expiringSoon ? '⏳ ' : ''}${habit.streak} ${periodUnit(habit.schedule, habit.streak)} streak`}
