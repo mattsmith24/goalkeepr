@@ -49,36 +49,34 @@
     }
 </script>
 
-<li class="my-2 rounded-lg border border-gray-300 px-2 py-1 shadow">
-    <div class="flex items-center gap-2">
+<li
+    class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+>
+    {#if editing}
         <div>
-            {#if editing}
-                <div>
-                    <input
-                        bind:this={inputElement}
-                        bind:value={draft}
-                        onkeydown={handleKeydown}
-                        onblur={cancelEdit}
-                        class="input flex-1"
-                    />
-                </div>
-            {:else}
-                <h3>
-                    <button
-                        type="button"
-                        class="btn-edit px-2 py-1"
-                        onclick={startEdit}
-                    >
-                        {description}
-                    </button>
-                </h3>
-            {/if}
-            {#if children}
-                {@render children()}
-            {/if}
-            <div>
-                <DeleteButton {onDelete} />
-            </div>
+            <input
+                bind:this={inputElement}
+                bind:value={draft}
+                onkeydown={handleKeydown}
+                onblur={cancelEdit}
+                class="input flex-1"
+            />
         </div>
+    {:else}
+        <h3>
+            <button
+                type="button"
+                class="btn-edit px-2 py-1"
+                onclick={startEdit}
+            >
+                {description}
+            </button>
+        </h3>
+    {/if}
+    {#if children}
+        {@render children()}
+    {/if}
+    <div>
+        <DeleteButton {onDelete} />
     </div>
 </li>

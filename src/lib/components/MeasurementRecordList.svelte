@@ -16,7 +16,7 @@
     const { records = [], onDelete, onUpdate }: Props = $props();
 </script>
 
-<ul>
+<ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
     {#each records as record (record.id)}
         <MeasurementRecordItem {record} {onDelete} {onUpdate} />
     {:else}

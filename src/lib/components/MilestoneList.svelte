@@ -20,7 +20,7 @@
 
 <div class="m-2 p-2">
     <h2>Milestones</h2>
-    <ul>
+    <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {#each milestones as milestone (milestone.id)}
             <MilestoneItem {milestone} {onDelete} {onUpdate} />
         {:else}
