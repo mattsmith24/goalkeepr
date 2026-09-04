@@ -27,6 +27,7 @@
 
 <div class="m-2 p-2">
     <h2>Habits</h2>
+    <NewHabitForm />
     <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {#each habits as habit (habit.id)}
             <HabitItem
@@ -40,5 +41,4 @@
             <li class="italic">No habits yet. Build a routine!</li>
         {/each}
     </ul>
-    <NewHabitForm />
 </div>

@@ -4,9 +4,14 @@
     interface Props {
         onDelete: () => void;
         label?: string;
+        class?: string;
     }
 
-    const { onDelete, label = 'Delete' }: Props = $props();
+    const {
+        onDelete,
+        label = 'Delete',
+        class: extraClass = '',
+    }: Props = $props();
 
     let confirming = $state(false);
     let cancelElement: HTMLButtonElement | undefined = $state();
@@ -24,7 +29,7 @@
 </script>
 
 {#if confirming}
-    <span class="flex items-center gap-1 text-sm">
+    <span class="flex items-center gap-1 text-sm {extraClass}">
         <span>Are you sure?</span>
         <button
             type="button"
@@ -45,7 +50,8 @@
 {:else}
     <button
         type="button"
-        class="px-2 py-1 text-sm text-red-600 hover:underline"
+        class="px-2 py-1 text-sm text-red-600 hover:underline {extraClass}"
+        aria-label={label}
         onclick={startConfirm}
     >
         {label}

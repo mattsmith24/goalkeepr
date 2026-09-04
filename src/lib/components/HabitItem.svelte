@@ -161,53 +161,55 @@
         period={habit.period}
         onUpdate={updateSchedule}
     />
-    {#if markingDone}
-        <form
-            class="flex flex-wrap items-center gap-2"
-            onsubmit={(e) => {
-                e.preventDefault();
-                saveMarkDone();
-            }}
-        >
-            <input
-                type="date"
-                bind:value={draftDate}
-                aria-label="Done date"
-                required
-                class="input"
-            />
-            <input
-                type="text"
-                bind:value={draftNote}
-                placeholder="Note (optional)"
-                aria-label="Note"
-                class="input"
-            />
-            <button type="submit" class="btn-link text-sm"> Save </button>
+    {#snippet actions()}
+        {#if markingDone}
+            <form
+                class="flex flex-wrap items-center gap-2"
+                onsubmit={(e) => {
+                    e.preventDefault();
+                    saveMarkDone();
+                }}
+            >
+                <input
+                    type="date"
+                    bind:value={draftDate}
+                    aria-label="Done date"
+                    required
+                    class="input"
+                />
+                <input
+                    type="text"
+                    bind:value={draftNote}
+                    placeholder="Note (optional)"
+                    aria-label="Note"
+                    class="input"
+                />
+                <button type="submit" class="btn-link text-sm"> Save </button>
+                <button
+                    type="button"
+                    class="btn-cancel text-sm"
+                    onclick={cancelMarkDone}
+                >
+                    Cancel
+                </button>
+            </form>
+        {:else}
             <button
                 type="button"
-                class="btn-cancel text-sm"
-                onclick={cancelMarkDone}
+                class="btn-link block px-2 py-1 text-sm"
+                onclick={startMarkDone}
             >
-                Cancel
+                Mark done
             </button>
-        </form>
-    {:else}
-        <button
-            type="button"
-            class="btn-link block px-2 py-1"
-            onclick={startMarkDone}
+        {/if}
+        <a
+            href={resolve('/goals/[id]/habits/[habitId]', {
+                id: String(habit.goalId),
+                habitId: String(habit.id),
+            })}
+            class="btn-link block px-2 py-1 text-sm"
         >
-            Mark done
-        </button>
-    {/if}
-    <a
-        href={resolve('/goals/[id]/habits/[habitId]', {
-            id: String(habit.goalId),
-            habitId: String(habit.id),
-        })}
-        class="btn-link block px-2 py-1"
-    >
-        History
-    </a>
+            History
+        </a>
+    {/snippet}
 </EditableItem>

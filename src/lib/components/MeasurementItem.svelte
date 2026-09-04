@@ -88,62 +88,64 @@
         width={124}
         height={18}
     />
-    {#if recording}
-        <form
-            class="flex flex-wrap items-center gap-2"
-            onsubmit={(e) => {
-                e.preventDefault();
-                saveRecord();
-            }}
-        >
-            <input
-                type="date"
-                bind:value={draftDate}
-                aria-label="Date"
-                required
-                class="input"
-            />
-            <input
-                type="number"
-                step="any"
-                bind:value={draftValue}
-                placeholder="Value"
-                aria-label="Value"
-                required
-                class="input"
-            />
-            <input
-                type="text"
-                bind:value={draftNote}
-                placeholder="Note (optional)"
-                aria-label="Note"
-                class="input"
-            />
-            <button type="submit" class="btn-link text-sm"> Save </button>
+    {#snippet actions()}
+        {#if recording}
+            <form
+                class="flex flex-wrap items-center gap-2"
+                onsubmit={(e) => {
+                    e.preventDefault();
+                    saveRecord();
+                }}
+            >
+                <input
+                    type="date"
+                    bind:value={draftDate}
+                    aria-label="Date"
+                    required
+                    class="input"
+                />
+                <input
+                    type="number"
+                    step="any"
+                    bind:value={draftValue}
+                    placeholder="Value"
+                    aria-label="Value"
+                    required
+                    class="input"
+                />
+                <input
+                    type="text"
+                    bind:value={draftNote}
+                    placeholder="Note (optional)"
+                    aria-label="Note"
+                    class="input"
+                />
+                <button type="submit" class="btn-link text-sm"> Save </button>
+                <button
+                    type="button"
+                    class="btn-cancel text-sm"
+                    onclick={cancelRecord}
+                >
+                    Cancel
+                </button>
+            </form>
+        {:else}
             <button
                 type="button"
-                class="btn-cancel text-sm"
-                onclick={cancelRecord}
+                class="btn-link block px-2 py-1"
+                onclick={startRecord}
             >
-                Cancel
+                Add record
             </button>
-        </form>
-    {:else}
-        <button
-            type="button"
+        {/if}
+        <a
+            href={resolve('/goals/[id]/measurements/[measurementId]', {
+                id: String(measurement.goalId),
+                measurementId: String(measurement.id),
+            })}
             class="btn-link block px-2 py-1"
-            onclick={startRecord}
         >
-            Add record
-        </button>
-    {/if}
-    <a
-        href={resolve('/goals/[id]/measurements/[measurementId]', {
-            id: String(measurement.goalId),
-            measurementId: String(measurement.id),
-        })}
-        class="btn-link block px-2 py-1"
-    >
-        History
-    </a>
+            History
+        </a>
+    {/snippet}
 </EditableItem>

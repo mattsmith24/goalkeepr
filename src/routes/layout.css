@@ -43,3 +43,12 @@ h3 {
 .input {
     @apply border border-gray-800 px-2 py-1;
 }
+
+.actions > * + *::before {
+    content: '|';
+    @apply pr-4 text-sm text-gray-500;
+}
+
+.actions {
+    @apply text-sm;
+}

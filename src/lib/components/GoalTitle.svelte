@@ -51,13 +51,13 @@
         bind:value={draft}
         onkeydown={handleKeydown}
         onblur={cancelEdit}
-        class="input w-full text-2xl font-bold"
+        class="input w-full text-5xl"
     />
 {:else}
-    <h1>
+    <h1 class="text-center text-5xl">
         <button
             type="button"
-            class="btn-edit cursor-text text-left text-3xl"
+            class="btn-edit cursor-text text-center text-5xl"
             onclick={startEdit}
         >
             {goal.description}

@@ -8,10 +8,16 @@
         onUpdateDescription: (description: string) => void;
         onDelete: () => void;
         children?: Snippet;
+        actions?: Snippet;
     }
 
-    const { description, onUpdateDescription, onDelete, children }: Props =
-        $props();
+    const {
+        description,
+        onUpdateDescription,
+        onDelete,
+        children,
+        actions,
+    }: Props = $props();
 
     let editing = $state(false);
     let draft = $state('');
@@ -59,24 +65,25 @@
                 bind:value={draft}
                 onkeydown={handleKeydown}
                 onblur={cancelEdit}
-                class="input flex-1"
+                class="input flex-1 text-3xl"
             />
         </div>
     {:else}
-        <h3>
-            <button
-                type="button"
-                class="btn-edit px-2 py-1"
-                onclick={startEdit}
-            >
-                {description}
-            </button>
-        </h3>
+        <button
+            type="button"
+            class="btn-edit px-2 py-1 text-3xl"
+            onclick={startEdit}
+        >
+            {description}
+        </button>
     {/if}
     {#if children}
         {@render children()}
     {/if}
-    <div>
+    <div class="actions flex">
+        {#if actions}
+            {@render actions()}
+        {/if}
         <DeleteButton {onDelete} />
     </div>
 </li>

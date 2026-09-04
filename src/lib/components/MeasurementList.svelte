@@ -20,6 +20,7 @@
 
 <div class="m-2 p-2">
     <h2>Measurements</h2>
+    <NewMeasurementForm />
     <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {#each measurements as measurement (measurement.id)}
             <MeasurementItem {measurement} {onDelete} {onUpdate} {onRecord} />
@@ -27,5 +28,4 @@
             <li class="italic">No measurements yet. Track something!</li>
         {/each}
     </ul>
-    <NewMeasurementForm />
 </div>
