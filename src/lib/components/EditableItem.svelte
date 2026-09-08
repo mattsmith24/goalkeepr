@@ -80,7 +80,7 @@
     {#if children}
         {@render children()}
     {/if}
-    <div class="actions flex">
+    <div class="actions flex flex-wrap">
         {#if actions}
             {@render actions()}
         {/if}

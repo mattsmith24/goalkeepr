@@ -91,7 +91,7 @@
     {#snippet actions()}
         {#if recording}
             <form
-                class="flex flex-wrap items-center gap-2"
+                class="flex w-full flex-wrap items-center gap-2"
                 onsubmit={(e) => {
                     e.preventDefault();
                     saveRecord();

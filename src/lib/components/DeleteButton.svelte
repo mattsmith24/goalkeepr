@@ -29,7 +29,7 @@
 </script>
 
 {#if confirming}
-    <span class="flex items-center gap-1 text-sm {extraClass}">
+    <span class="flex w-full items-center gap-1 text-sm {extraClass}">
         <span>Are you sure?</span>
         <button
             type="button"
