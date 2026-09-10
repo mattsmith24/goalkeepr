@@ -18,9 +18,9 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
     create: async (event) => {
         const data = await event.request.formData();
-        const goal_description = data.get('goal-description')?.toString() ?? '';
+        const goal_title = data.get('goal-title')?.toString() ?? '';
         const goal: typeof goalsTable.$inferInsert = {
-            description: goal_description,
+            title: goal_title,
             userId: event.locals.user!.id,
         };
         await db.insert(goalsTable).values(goal);
@@ -47,16 +47,16 @@ export const actions: Actions = {
     update: async (event) => {
         const data = await event.request.formData();
         const id = Number(data.get('id'));
-        const description = data.get('description')?.toString().trim() ?? '';
+        const title = data.get('title')?.toString().trim() ?? '';
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
-        if (!description) {
-            return { success: false, error: 'description cannot be empty' };
+        if (!title) {
+            return { success: false, error: 'title cannot be empty' };
         }
         const result = await db
             .update(goalsTable)
-            .set({ description })
+            .set({ title })
             .where(
                 and(
                     eq(goalsTable.id, id),

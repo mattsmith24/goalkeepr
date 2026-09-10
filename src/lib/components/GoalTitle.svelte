@@ -14,7 +14,7 @@
     let inputElement: HTMLInputElement | undefined = $state();
 
     async function startEdit() {
-        draft = goal.description;
+        draft = goal.title;
         editing = true;
         await tick();
         inputElement?.focus();
@@ -30,7 +30,7 @@
         const trimmed = draft.trim();
         editing = false;
         draft = '';
-        if (!trimmed || trimmed === goal.description) return;
+        if (!trimmed || trimmed === goal.title) return;
         onUpdate(goal.id, trimmed);
     }
 
@@ -60,7 +60,7 @@
             class="btn-edit cursor-text text-center text-5xl"
             onclick={startEdit}
         >
-            {goal.description}
+            {goal.title}
         </button>
     </h1>
 {/if}

@@ -115,13 +115,35 @@ export const actions: Actions = {
     update: async (event) => {
         const data = await event.request.formData();
         const id = Number(data.get('id'));
-        const description = data.get('description')?.toString().trim() ?? '';
+        const title = data.get('title')?.toString().trim() ?? '';
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
-        if (!description) {
-            return { success: false, error: 'description cannot be empty' };
+        if (!title) {
+            return { success: false, error: 'title cannot be empty' };
         }
+        const result = await db
+            .update(goalsTable)
+            .set({ title })
+            .where(
+                and(
+                    eq(goalsTable.id, id),
+                    eq(goalsTable.userId, event.locals.user!.id),
+                ),
+            );
+        if (result.changes === 0) {
+            return fail(404, { success: false, error: 'goal not found' });
+        }
+        return { success: true };
+    },
+    updateDescription: async (event) => {
+        const data = await event.request.formData();
+        const id = Number(data.get('id'));
+        const descriptionRaw = data.get('description')?.toString().trim() ?? '';
+        if (!Number.isInteger(id) || id <= 0) {
+            return { success: false, error: 'invalid id' };
+        }
+        const description = descriptionRaw === '' ? null : descriptionRaw;
         const result = await db
             .update(goalsTable)
             .set({ description })

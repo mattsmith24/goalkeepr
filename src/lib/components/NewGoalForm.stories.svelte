@@ -34,7 +34,7 @@
 
         const input = canvas.getByLabelText(/what is your goal\?/i);
         await expect(input).toBeInTheDocument();
-        await expect(input).toHaveAttribute('name', 'goal-description');
+        await expect(input).toHaveAttribute('name', 'goal-title');
 
         const form = canvasElement.querySelector('form');
         await expect(form).not.toBeNull();

@@ -15,9 +15,9 @@
     args={{
         goal: {
             id: 1,
-            description:
-                'I want to win an Olympic gold medal for break dancing',
+            title: 'I want to win an Olympic gold medal for break dancing',
+            description: null,
         },
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, title) => console.log('update', id, title),
     }}
 />

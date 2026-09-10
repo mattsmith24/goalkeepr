@@ -81,7 +81,8 @@ describe('POST /api/import', () => {
     it('imports goals, milestones, habits, measurements, and records with new ids threaded from the authenticated user', async () => {
         const payload = [
             {
-                description: 'Get fit',
+                title: 'Get fit',
+                description: 'I want to feel healthier',
                 milestones: [
                     {
                         description: 'Run 5k',
@@ -128,7 +129,8 @@ describe('POST /api/import', () => {
 
         const valuesArgs = chain.values.mock.calls.map((c) => c[0]);
         expect(valuesArgs[0]).toEqual({
-            description: 'Get fit',
+            title: 'Get fit',
+            description: 'I want to feel healthier',
             userId: 'u1',
         });
         expect(valuesArgs[1]).toEqual([

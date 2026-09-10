@@ -17,8 +17,8 @@
 
 {#if open}
     <form method="POST" action="?/create">
-        <label for="goal-description">What is your goal?</label>
-        <input id="goal-description" name="goal-description" class="input" />
+        <label for="goal-title">What is your goal?</label>
+        <input id="goal-title" name="goal-title" class="input" />
         <input type="submit" value="Add Goal" class="btn-link" />
         <button type="button" class="btn-cancel" onclick={close}>
             Cancel

@@ -21,7 +21,7 @@ const RECORD_VALUE = '70.5';
 const RECORD_NOTE = 'Alice private record note';
 
 type ResourceTable = 'goals' | 'milestones' | 'habits' | 'measurements';
-type ResourceRow = { id: number; description: string };
+type ResourceRow = { id: number; description: string; title?: string };
 type HabitRecordRow = { id: number; date: string; note: string | null };
 type MeasurementRecordRow = {
     id: number;
@@ -41,8 +41,9 @@ function readResource(
 ): ResourceRow | undefined {
     const db = new Database(TEST_DB, { readonly: true });
     try {
+        const column = table === 'goals' ? 'title' : 'description';
         return db
-            .prepare(`SELECT id, description FROM ${table} WHERE id = ?`)
+            .prepare(`SELECT id, ${column} FROM ${table} WHERE id = ?`)
             .get(id) as ResourceRow | undefined;
     } finally {
         db.close();
@@ -203,29 +204,29 @@ test("a user cannot update or delete another user's goal", async () => {
 
     const rootUpdate = await postAction('/?/update', {
         id: goalId,
-        description: 'Bob changed this goal',
+        title: 'Bob changed this goal',
     });
     await expectNotFound(rootUpdate);
     expect(readResource('goals', goalId)).toEqual({
         id: goalId,
-        description: GOAL,
+        title: GOAL,
     });
 
     const detailUpdate = await postAction(`/goals/${goalId}?/update`, {
         id: goalId,
-        description: 'Bob changed this goal again',
+        title: 'Bob changed this goal again',
     });
     await expectNotFound(detailUpdate);
     expect(readResource('goals', goalId)).toEqual({
         id: goalId,
-        description: GOAL,
+        title: GOAL,
     });
 
     const deletion = await postAction('/?/delete', { id: goalId });
     await expectNotFound(deletion);
     expect(readResource('goals', goalId)).toEqual({
         id: goalId,
-        description: GOAL,
+        title: GOAL,
     });
 });
 

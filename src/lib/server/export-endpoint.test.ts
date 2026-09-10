@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const goals = [
-    { id: 1, description: 'Get fit', userId: 'u1' },
-    { id: 2, description: 'Read more', userId: 'u1' },
+    { id: 1, title: 'Get fit', description: null, userId: 'u1' },
+    { id: 2, title: 'Read more', description: null, userId: 'u1' },
 ];
 
 const milestones = [
@@ -103,7 +103,8 @@ describe('GET /api/export', () => {
         const body = await response.json();
         expect(body).toEqual([
             {
-                description: 'Get fit',
+                title: 'Get fit',
+                description: null,
                 milestones: [
                     {
                         description: 'Run 5k',
@@ -134,7 +135,8 @@ describe('GET /api/export', () => {
                 ],
             },
             {
-                description: 'Read more',
+                title: 'Read more',
+                description: null,
                 milestones: [
                     {
                         description: 'Read 12 books',

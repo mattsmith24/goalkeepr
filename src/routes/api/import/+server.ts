@@ -45,7 +45,8 @@ type MeasurementImport = {
 };
 
 type GoalImport = {
-    description: string;
+    title: string;
+    description: string | null;
     milestones: MilestoneImport[];
     habits: HabitImport[];
     measurements: MeasurementImport[];
@@ -121,7 +122,8 @@ function validateGoal(v: unknown): v is GoalImport {
     if (typeof v !== 'object' || v === null) return false;
     const g = v as Record<string, unknown>;
     return (
-        isString(g.description) &&
+        isString(g.title) &&
+        (g.description === undefined || isStringOrNull(g.description)) &&
         Array.isArray(g.milestones) &&
         g.milestones.every(validateMilestone) &&
         Array.isArray(g.habits) &&
@@ -155,7 +157,11 @@ export const POST: RequestHandler = async ({ request, locals }) => {
         for (const goal of raw) {
             const [insertedGoal] = tx
                 .insert(goalsTable)
-                .values({ description: goal.description, userId })
+                .values({
+                    title: goal.title,
+                    description: goal.description,
+                    userId,
+                })
                 .returning({ id: goalsTable.id })
                 .all();
 

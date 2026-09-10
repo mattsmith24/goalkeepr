@@ -14,7 +14,8 @@ export * from './auth.schema';
 
 export const goalsTable = sqliteTable('goals', {
     id: integer().primaryKey({ autoIncrement: true }),
-    description: text().notNull(),
+    title: text().notNull(),
+    description: text(),
     userId: text('user_id')
         .notNull()
         .references(() => user.id, { onDelete: 'cascade' }),

@@ -3,6 +3,7 @@
     import { resolve } from '$app/paths';
     import type { PageProps } from './$types';
     import GoalTitle from '$lib/components/GoalTitle.svelte';
+    import GoalDescription from '$lib/components/GoalDescription.svelte';
     import MilestoneList from '$lib/components/MilestoneList.svelte';
     import HabitList from '$lib/components/HabitList.svelte';
     import MeasurementList from '$lib/components/MeasurementList.svelte';
@@ -22,11 +23,27 @@
         }
     }
 
-    async function handleUpdate(id: number, description: string) {
+    async function handleUpdate(id: number, title: string) {
         const formData = new FormData();
         formData.set('id', String(id));
-        formData.set('description', description);
+        formData.set('title', title);
         const response = await fetch('?/update', {
+            method: 'POST',
+            body: formData,
+        });
+        if (response.ok) {
+            await invalidateAll();
+        }
+    }
+
+    async function handleUpdateDescription(
+        id: number,
+        description: string | null,
+    ) {
+        const formData = new FormData();
+        formData.set('id', String(id));
+        formData.set('description', description ?? '');
+        const response = await fetch('?/updateDescription', {
             method: 'POST',
             body: formData,
         });
@@ -181,6 +198,13 @@
 <a href={resolve('/')} class="btn-link text-sm">&larr; Back</a>
 <div class="m-2 mt-2 p-2">
     <GoalTitle goal={data.goal} onUpdate={handleUpdate} />
+</div>
+<div class="m-2 p-2">
+    <GoalDescription
+        description={data.goal.description}
+        onUpdateDescription={(description) =>
+            handleUpdateDescription(data.goal.id, description)}
+    />
 </div>
 <MilestoneList
     milestones={data.milestones}
