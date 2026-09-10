@@ -65,6 +65,24 @@ test('a description can be edited', async ({ page }) => {
     await expect(page.getByText(original)).not.toBeVisible();
 });
 
+test('a description shows on the home page after being added', async ({
+    page,
+}) => {
+    const goalTitle = `E2E desc home goal ${Date.now()}`;
+    const description = 'I want to feel healthier and more energetic.';
+
+    await addGoalAndOpen(page, goalTitle);
+
+    await page.getByRole('button', { name: /add description/i }).click();
+    await page.getByLabel(/describe this goal/i).fill(description);
+    await page.getByRole('button', { name: /^save$/i }).click();
+
+    await page.goto('/');
+    const card = page.getByRole('listitem').filter({ hasText: goalTitle });
+    await expect(card).toBeVisible();
+    await expect(card.getByText(description)).toBeVisible();
+});
+
 test('cancel discards changes to a description', async ({ page }) => {
     const goalTitle = `E2E desc cancel goal ${Date.now()}`;
     const original = 'Original description.';
