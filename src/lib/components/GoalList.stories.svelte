@@ -6,8 +6,21 @@
     export const goalData = [
         {
             id: 1,
-            description:
-                'I want to win an Olympic gold medal for break dancing',
+            title: 'Win Olympic gold for break dancing',
+            description: 'I want to feel unstoppable.',
+            doneDate: null,
+        },
+        {
+            id: 2,
+            title: 'Read 12 books',
+            description: 'Done ahead of schedule.',
+            doneDate: '2026-09-01',
+        },
+        {
+            id: 3,
+            title: 'Run a marathon',
+            description: null,
+            doneDate: '2026-08-15',
         },
     ];
 
@@ -19,6 +32,17 @@
     });
 </script>
 
-<Story name="Empty" args={{ goals: [] }} />
+<Story name="Empty" args={{ heading: 'Goals', goals: [] }} />
 
-<Story name="Default" args={{ goals: goalData }} />
+<Story name="Default" args={{ heading: 'Goals', goals: goalData }} />
+
+<Story name="Mixed" args={{ heading: 'Goals', goals: goalData }} />
+
+<Story
+    name="Completed only"
+    args={{
+        heading: 'Completed',
+        goals: goalData,
+        emptyMessage: 'No completed goals yet.',
+    }}
+/>

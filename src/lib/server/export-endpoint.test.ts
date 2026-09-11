@@ -4,11 +4,17 @@ const goals = [
     {
         id: 1,
         title: 'Get fit',
-        description:
-            'I want to feel stronger so I can keep up with my kids.',
+        description: 'I want to feel stronger so I can keep up with my kids.',
+        doneDate: null,
         userId: 'u1',
     },
-    { id: 2, title: 'Read more', description: null, userId: 'u1' },
+    {
+        id: 2,
+        title: 'Read more',
+        description: null,
+        doneDate: '2026-09-01',
+        userId: 'u1',
+    },
 ];
 
 const milestones = [
@@ -112,6 +118,7 @@ describe('GET /api/export', () => {
                 title: 'Get fit',
                 description:
                     'I want to feel stronger so I can keep up with my kids.',
+                doneDate: null,
                 milestones: [
                     {
                         description: 'Run 5k',
@@ -144,6 +151,7 @@ describe('GET /api/export', () => {
             {
                 title: 'Read more',
                 description: null,
+                doneDate: '2026-09-01',
                 milestones: [
                     {
                         description: 'Read 12 books',

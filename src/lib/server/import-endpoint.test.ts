@@ -83,6 +83,7 @@ describe('POST /api/import', () => {
             {
                 title: 'Get fit',
                 description: 'I want to feel healthier',
+                doneDate: '2026-09-01',
                 milestones: [
                     {
                         description: 'Run 5k',
@@ -131,6 +132,7 @@ describe('POST /api/import', () => {
         expect(valuesArgs[0]).toEqual({
             title: 'Get fit',
             description: 'I want to feel healthier',
+            doneDate: '2026-09-01',
             userId: 'u1',
         });
         expect(valuesArgs[1]).toEqual([

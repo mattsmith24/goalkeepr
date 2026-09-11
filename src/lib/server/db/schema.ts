@@ -16,6 +16,7 @@ export const goalsTable = sqliteTable('goals', {
     id: integer().primaryKey({ autoIncrement: true }),
     title: text().notNull(),
     description: text(),
+    doneDate: text('done_date'),
     userId: text('user_id')
         .notNull()
         .references(() => user.id, { onDelete: 'cascade' }),

@@ -2,6 +2,7 @@ export interface Goal {
     id: number;
     title: string;
     description: string | null;
+    doneDate: string | null;
 }
 
 export interface Milestone {

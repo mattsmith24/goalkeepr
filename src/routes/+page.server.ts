@@ -1,7 +1,7 @@
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-import { and, eq } from 'drizzle-orm';
+import { and, desc, eq, isNull } from 'drizzle-orm';
 
 import { db } from '$lib/server/db';
 import { goalsTable } from '$lib/server/db/schema';
@@ -11,7 +11,12 @@ export const load: PageServerLoad = async ({ locals }) => {
         goals: await db
             .select()
             .from(goalsTable)
-            .where(eq(goalsTable.userId, locals.user!.id)),
+            .where(eq(goalsTable.userId, locals.user!.id))
+            .orderBy(
+                isNull(goalsTable.doneDate),
+                desc(goalsTable.doneDate),
+                desc(goalsTable.id),
+            ),
     };
 };
 

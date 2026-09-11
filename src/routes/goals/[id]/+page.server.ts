@@ -16,6 +16,7 @@ import {
     currentStreak,
     milestoneExpired,
     streakExpiringSoon,
+    toDateString,
 } from '$lib/dates';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
@@ -147,6 +148,46 @@ export const actions: Actions = {
         const result = await db
             .update(goalsTable)
             .set({ description })
+            .where(
+                and(
+                    eq(goalsTable.id, id),
+                    eq(goalsTable.userId, event.locals.user!.id),
+                ),
+            );
+        if (result.changes === 0) {
+            return fail(404, { success: false, error: 'goal not found' });
+        }
+        return { success: true };
+    },
+    completeGoal: async (event) => {
+        const data = await event.request.formData();
+        const id = Number(data.get('id'));
+        if (!Number.isInteger(id) || id <= 0) {
+            return { success: false, error: 'invalid id' };
+        }
+        const result = await db
+            .update(goalsTable)
+            .set({ doneDate: toDateString() })
+            .where(
+                and(
+                    eq(goalsTable.id, id),
+                    eq(goalsTable.userId, event.locals.user!.id),
+                ),
+            );
+        if (result.changes === 0) {
+            return fail(404, { success: false, error: 'goal not found' });
+        }
+        return { success: true };
+    },
+    reopenGoal: async (event) => {
+        const data = await event.request.formData();
+        const id = Number(data.get('id'));
+        if (!Number.isInteger(id) || id <= 0) {
+            return { success: false, error: 'invalid id' };
+        }
+        const result = await db
+            .update(goalsTable)
+            .set({ doneDate: null })
             .where(
                 and(
                     eq(goalsTable.id, id),

@@ -129,6 +129,30 @@
         }
     }
 
+    async function handleComplete() {
+        const formData = new FormData();
+        formData.set('id', String(data.goal.id));
+        const response = await fetch('?/completeGoal', {
+            method: 'POST',
+            body: formData,
+        });
+        if (response.ok) {
+            await invalidateAll();
+        }
+    }
+
+    async function handleReopen() {
+        const formData = new FormData();
+        formData.set('id', String(data.goal.id));
+        const response = await fetch('?/reopenGoal', {
+            method: 'POST',
+            body: formData,
+        });
+        if (response.ok) {
+            await invalidateAll();
+        }
+    }
+
     async function handleHabitScheduleUpdate(
         id: number,
         schedule: 'daily' | 'weekly' | 'monthly',
@@ -225,6 +249,15 @@
     onRecord={handleMeasurementRecord}
 />
 
-<div class="m-2 mt-8 flex justify-center">
+<div class="m-2 mt-8 flex justify-center gap-4">
+    {#if data.goal.doneDate}
+        <button type="button" class="btn-link" onclick={handleReopen}>
+            Reopen
+        </button>
+    {:else}
+        <button type="button" class="btn-link" onclick={handleComplete}>
+            Mark as Complete
+        </button>
+    {/if}
     <DeleteButton onDelete={handleDelete} label="Delete goal" />
 </div>
