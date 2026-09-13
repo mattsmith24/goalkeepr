@@ -3,6 +3,9 @@
     import EditableItem from './EditableItem.svelte';
     import type { Milestone } from '$lib/types';
 
+    const PROMPT =
+        'What are the details? How does it relate to the goal? What are the success criteria?';
+
     interface Props {
         milestone: Milestone;
         onDelete: (id: number) => void;
@@ -12,6 +15,7 @@
             dueDate: string | null,
             doneDate: string | null,
             note: string | null,
+            extendedDescription: string | null,
         ) => void;
     }
 
@@ -20,10 +24,14 @@
     let editingDate = $state(false);
     let editingDoneDate = $state(false);
     let editingNote = $state(false);
+    let editingExtendedDescription = $state(false);
     let draftDate = $state('');
     let draftDoneDate = $state('');
     let draftNote = $state('');
+    let draftExtendedDescription = $state('');
     let noteInputElement: HTMLInputElement | undefined = $state();
+    let extendedDescriptionTextareaElement: HTMLTextAreaElement | undefined =
+        $state();
 
     function updateDescription(description: string) {
         onUpdate(
@@ -32,6 +40,7 @@
             milestone.dueDate,
             milestone.doneDate,
             milestone.note,
+            milestone.extendedDescription,
         );
     }
 
@@ -56,6 +65,7 @@
             next,
             milestone.doneDate,
             milestone.note,
+            milestone.extendedDescription,
         );
     }
 
@@ -80,6 +90,7 @@
             milestone.dueDate,
             next,
             milestone.note,
+            milestone.extendedDescription,
         );
     }
 
@@ -107,6 +118,7 @@
             milestone.dueDate,
             milestone.doneDate,
             next,
+            milestone.extendedDescription,
         );
     }
 
@@ -117,6 +129,47 @@
         } else if (event.key === 'Escape') {
             event.preventDefault();
             cancelEditNote();
+        }
+    }
+
+    async function startEditExtendedDescription() {
+        draftExtendedDescription = milestone.extendedDescription ?? '';
+        editingExtendedDescription = true;
+        await tick();
+        extendedDescriptionTextareaElement?.focus();
+        extendedDescriptionTextareaElement?.setSelectionRange(
+            draftExtendedDescription.length,
+            draftExtendedDescription.length,
+        );
+    }
+
+    function cancelEditExtendedDescription() {
+        editingExtendedDescription = false;
+        draftExtendedDescription = '';
+    }
+
+    function saveEditExtendedDescription() {
+        const next = draftExtendedDescription.trim() || null;
+        editingExtendedDescription = false;
+        draftExtendedDescription = '';
+        if (next === milestone.extendedDescription) return;
+        onUpdate(
+            milestone.id,
+            milestone.description,
+            milestone.dueDate,
+            milestone.doneDate,
+            milestone.note,
+            next,
+        );
+    }
+
+    function handleExtendedDescriptionKeydown(event: KeyboardEvent) {
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            cancelEditExtendedDescription();
+        } else if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+            event.preventDefault();
+            saveEditExtendedDescription();
         }
     }
 </script>
@@ -204,6 +257,56 @@
             onclick={startEditDoneDate}
         >
             Add Done Date
+        </button>
+    {/if}
+    {#if editingExtendedDescription}
+        <div class="mx-auto max-w-2xl text-center">
+            <label
+                for="milestone-extended-description-edit-{milestone.id}"
+                class="block italic"
+            >
+                {PROMPT}
+            </label>
+            <textarea
+                id="milestone-extended-description-edit-{milestone.id}"
+                bind:this={extendedDescriptionTextareaElement}
+                bind:value={draftExtendedDescription}
+                onkeydown={handleExtendedDescriptionKeydown}
+                class="input mt-1 w-full text-left"
+                rows="6"
+            ></textarea>
+            <div class="mt-2 flex flex-wrap justify-center gap-x-4 text-sm">
+                <button
+                    type="button"
+                    class="btn-link"
+                    onclick={saveEditExtendedDescription}
+                >
+                    Save
+                </button>
+                <button
+                    type="button"
+                    class="btn-cancel"
+                    onclick={cancelEditExtendedDescription}
+                >
+                    Cancel
+                </button>
+            </div>
+        </div>
+    {:else if milestone.extendedDescription}
+        <button
+            type="button"
+            class="btn-edit block px-2 py-1 text-left whitespace-pre-wrap"
+            onclick={startEditExtendedDescription}
+        >
+            {milestone.extendedDescription}
+        </button>
+    {:else}
+        <button
+            type="button"
+            class="btn-link block px-2 py-1 text-left"
+            onclick={startEditExtendedDescription}
+        >
+            Add extended description
         </button>
     {/if}
     {#if editingNote}

@@ -21,10 +21,26 @@
             dueDate: null,
             doneDate: null,
             note: null,
+            extendedDescription: null,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description, dueDate, doneDate, note) =>
-            console.log('update', id, description, dueDate, doneDate, note),
+        onUpdate: (
+            id,
+            description,
+            dueDate,
+            doneDate,
+            note,
+            extendedDescription,
+        ) =>
+            console.log(
+                'update',
+                id,
+                description,
+                dueDate,
+                doneDate,
+                note,
+                extendedDescription,
+            ),
     }}
 />
 
@@ -38,10 +54,26 @@
             dueDate: '2026-09-15',
             doneDate: null,
             note: null,
+            extendedDescription: null,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description, dueDate, doneDate, note) =>
-            console.log('update', id, description, dueDate, doneDate, note),
+        onUpdate: (
+            id,
+            description,
+            dueDate,
+            doneDate,
+            note,
+            extendedDescription,
+        ) =>
+            console.log(
+                'update',
+                id,
+                description,
+                dueDate,
+                doneDate,
+                note,
+                extendedDescription,
+            ),
     }}
 />
 
@@ -55,10 +87,26 @@
             dueDate: '2026-08-01',
             doneDate: '2026-07-30',
             note: 'Submitted online and received confirmation email.',
+            extendedDescription: null,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description, dueDate, doneDate, note) =>
-            console.log('update', id, description, dueDate, doneDate, note),
+        onUpdate: (
+            id,
+            description,
+            dueDate,
+            doneDate,
+            note,
+            extendedDescription,
+        ) =>
+            console.log(
+                'update',
+                id,
+                description,
+                dueDate,
+                doneDate,
+                note,
+                extendedDescription,
+            ),
     }}
 />
 
@@ -72,11 +120,27 @@
             dueDate: '2026-07-15',
             doneDate: null,
             note: null,
+            extendedDescription: null,
             expired: true,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description, dueDate, doneDate, note) =>
-            console.log('update', id, description, dueDate, doneDate, note),
+        onUpdate: (
+            id,
+            description,
+            dueDate,
+            doneDate,
+            note,
+            extendedDescription,
+        ) =>
+            console.log(
+                'update',
+                id,
+                description,
+                dueDate,
+                doneDate,
+                note,
+                extendedDescription,
+            ),
     }}
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
@@ -97,10 +161,26 @@
             dueDate: null,
             doneDate: null,
             note: null,
+            extendedDescription: null,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description, dueDate, doneDate, note) =>
-            console.log('update', id, description, dueDate, doneDate, note),
+        onUpdate: (
+            id,
+            description,
+            dueDate,
+            doneDate,
+            note,
+            extendedDescription,
+        ) =>
+            console.log(
+                'update',
+                id,
+                description,
+                dueDate,
+                doneDate,
+                note,
+                extendedDescription,
+            ),
     }}
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
@@ -126,10 +206,26 @@
             dueDate: null,
             doneDate: null,
             note: null,
+            extendedDescription: null,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description, dueDate, doneDate, note) =>
-            console.log('update', id, description, dueDate, doneDate, note),
+        onUpdate: (
+            id,
+            description,
+            dueDate,
+            doneDate,
+            note,
+            extendedDescription,
+        ) =>
+            console.log(
+                'update',
+                id,
+                description,
+                dueDate,
+                doneDate,
+                note,
+                extendedDescription,
+            ),
     }}
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
@@ -159,10 +255,26 @@
             dueDate: null,
             doneDate: null,
             note: null,
+            extendedDescription: null,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description, dueDate, doneDate, note) =>
-            console.log('update', id, description, dueDate, doneDate, note),
+        onUpdate: (
+            id,
+            description,
+            dueDate,
+            doneDate,
+            note,
+            extendedDescription,
+        ) =>
+            console.log(
+                'update',
+                id,
+                description,
+                dueDate,
+                doneDate,
+                note,
+                extendedDescription,
+            ),
     }}
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
@@ -192,19 +304,124 @@
             dueDate: null,
             doneDate: null,
             note: null,
+            extendedDescription: null,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description, dueDate, doneDate, note) =>
-            console.log('update', id, description, dueDate, doneDate, note),
+        onUpdate: (
+            id,
+            description,
+            dueDate,
+            doneDate,
+            note,
+            extendedDescription,
+        ) =>
+            console.log(
+                'update',
+                id,
+                description,
+                dueDate,
+                doneDate,
+                note,
+                extendedDescription,
+            ),
     }}
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
 
         await canvas.getByRole('button', { name: /add note/i }).click();
 
-        const input = canvas.getByLabelText(/note/i);
+        const input = canvas.getByLabelText(/^note$/i);
         await expect(input).toBeInTheDocument();
         await expect(input).toHaveFocus();
         await expect(input).toHaveValue('');
+    }}
+/>
+
+<Story
+    name="With extended description"
+    args={{
+        milestone: {
+            id: 1,
+            goalId: 1,
+            description: 'Learn the six-step',
+            dueDate: null,
+            doneDate: null,
+            note: null,
+            extendedDescription:
+                'What: Nail the six-step form.\nHow it relates: Direct path to competing.\nWhen: Within 3 months.\nHow measured: Coach sign-off.',
+        },
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (
+            id,
+            description,
+            dueDate,
+            doneDate,
+            note,
+            extendedDescription,
+        ) =>
+            console.log(
+                'update',
+                id,
+                description,
+                dueDate,
+                doneDate,
+                note,
+                extendedDescription,
+            ),
+    }}
+/>
+
+<Story
+    name="Editing extended description"
+    args={{
+        milestone: {
+            id: 1,
+            goalId: 1,
+            description: 'Learn the six-step',
+            dueDate: null,
+            doneDate: null,
+            note: null,
+            extendedDescription: 'Original extended description.',
+        },
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (
+            id,
+            description,
+            dueDate,
+            doneDate,
+            note,
+            extendedDescription,
+        ) =>
+            console.log(
+                'update',
+                id,
+                description,
+                dueDate,
+                doneDate,
+                note,
+                extendedDescription,
+            ),
+    }}
+    play={async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        await canvas
+            .getByRole('button', { name: /original extended description/i })
+            .click();
+
+        const textarea = canvas.getByLabelText(
+            /how does it relate to the goal/i,
+        );
+        await expect(textarea).toBeInTheDocument();
+        await expect(textarea.tagName).toBe('TEXTAREA');
+        await expect(textarea).toHaveFocus();
+        await expect(textarea).toHaveValue('Original extended description.');
+
+        await expect(
+            canvas.getByRole('button', { name: /^save$/i }),
+        ).toBeInTheDocument();
+        await expect(
+            canvas.getByRole('button', { name: /^cancel$/i }),
+        ).toBeInTheDocument();
     }}
 />

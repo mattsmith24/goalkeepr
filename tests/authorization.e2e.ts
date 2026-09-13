@@ -143,7 +143,7 @@ async function createGoalTree(page: Page) {
     await page.getByRole('link', { name: GOAL }).click();
 
     await page.getByRole('button', { name: /add milestone/i }).click();
-    await page.getByLabel(/what is your milestone\?/i).fill(MILESTONE);
+    await page.getByLabel(/^what is the milestone\?$/i).fill(MILESTONE);
     await page.getByRole('button', { name: /^add milestone$/i }).click();
     await expect(
         page.getByRole('listitem').filter({ hasText: MILESTONE }),

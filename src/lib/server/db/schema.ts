@@ -31,6 +31,7 @@ export const milestonesTable = sqliteTable('milestones', {
     dueDate: text('due_date'),
     doneDate: text('done_date'),
     note: text(),
+    extendedDescription: text('extended_description'),
 });
 
 export const habitsTable = sqliteTable('habits', {

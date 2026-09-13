@@ -11,6 +11,7 @@
             dueDate: null,
             doneDate: null,
             note: null,
+            extendedDescription: null,
         },
         {
             id: 2,
@@ -19,6 +20,8 @@
             dueDate: '2026-09-15',
             doneDate: '2026-09-10',
             note: 'Placed third overall.',
+            extendedDescription:
+                'What: Compete at the regional tournament.\nHow it relates: Forces me to apply the six-step under pressure.\nWhen: September 2026.\nHow measured: Placement and self-scored execution quality.',
         },
     ];
 
@@ -35,8 +38,23 @@
     args={{
         milestones: [],
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description, dueDate, doneDate, note) =>
-            console.log('update', id, description, dueDate, doneDate, note),
+        onUpdate: (
+            id,
+            description,
+            dueDate,
+            doneDate,
+            note,
+            extendedDescription,
+        ) =>
+            console.log(
+                'update',
+                id,
+                description,
+                dueDate,
+                doneDate,
+                note,
+                extendedDescription,
+            ),
     }}
 />
 
@@ -45,7 +63,22 @@
     args={{
         milestones: milestoneData,
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description, dueDate, doneDate, note) =>
-            console.log('update', id, description, dueDate, doneDate, note),
+        onUpdate: (
+            id,
+            description,
+            dueDate,
+            doneDate,
+            note,
+            extendedDescription,
+        ) =>
+            console.log(
+                'update',
+                id,
+                description,
+                dueDate,
+                doneDate,
+                note,
+                extendedDescription,
+            ),
     }}
 />

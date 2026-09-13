@@ -204,12 +204,16 @@ export const actions: Actions = {
         const data = await event.request.formData();
         const description =
             data.get('milestone-description')?.toString().trim() ?? '';
+        const extendedDescriptionRaw =
+            data.get('milestone-extended-description')?.toString().trim() ?? '';
         if (!Number.isInteger(goalId) || goalId <= 0) {
             return { success: false, error: 'invalid goal id' };
         }
         if (!description) {
             return { success: false, error: 'description cannot be empty' };
         }
+        const extendedDescription =
+            extendedDescriptionRaw === '' ? null : extendedDescriptionRaw;
         const [goal] = await db
             .select()
             .from(goalsTable)
@@ -222,7 +226,9 @@ export const actions: Actions = {
         if (!goal) {
             return fail(404, { success: false, error: 'goal not found' });
         }
-        await db.insert(milestonesTable).values({ goalId, description });
+        await db
+            .insert(milestonesTable)
+            .values({ goalId, description, extendedDescription });
         return { success: true };
     },
     updateMilestone: async (event) => {
@@ -232,6 +238,8 @@ export const actions: Actions = {
         const dueDateRaw = data.get('dueDate')?.toString().trim() ?? '';
         const doneDateRaw = data.get('doneDate')?.toString().trim() ?? '';
         const noteRaw = data.get('note')?.toString().trim() ?? '';
+        const extendedDescriptionRaw =
+            data.get('extendedDescription')?.toString().trim() ?? '';
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
@@ -247,9 +255,11 @@ export const actions: Actions = {
             return { success: false, error: 'invalid done date' };
         }
         const note = noteRaw === '' ? null : noteRaw;
+        const extendedDescription =
+            extendedDescriptionRaw === '' ? null : extendedDescriptionRaw;
         const result = await db
             .update(milestonesTable)
-            .set({ description, dueDate, doneDate, note })
+            .set({ description, dueDate, doneDate, note, extendedDescription })
             .where(
                 and(
                     eq(milestonesTable.id, id),

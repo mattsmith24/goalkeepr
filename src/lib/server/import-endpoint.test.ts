@@ -90,6 +90,7 @@ describe('POST /api/import', () => {
                         dueDate: null,
                         doneDate: null,
                         note: null,
+                        extendedDescription: null,
                     },
                 ],
                 habits: [
@@ -142,6 +143,7 @@ describe('POST /api/import', () => {
                 dueDate: null,
                 doneDate: null,
                 note: null,
+                extendedDescription: null,
             },
         ]);
         expect(valuesArgs[2]).toEqual({

@@ -12,6 +12,7 @@
             dueDate: string | null,
             doneDate: string | null,
             note: string | null,
+            extendedDescription: string | null,
         ) => void;
     }
 

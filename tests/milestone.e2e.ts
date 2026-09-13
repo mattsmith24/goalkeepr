@@ -31,7 +31,7 @@ test('a milestone can be added, edited and deleted', async ({ page }) => {
     // Add
     await expect(page.getByText(/no milestones yet/i)).toBeVisible();
     await page.getByRole('button', { name: /add milestone/i }).click();
-    await page.getByLabel(/what is your milestone\?/i).fill(milestone);
+    await page.getByLabel(/^what is the milestone\?$/i).fill(milestone);
     await page.getByRole('button', { name: /^add milestone$/i }).click();
 
     const item = page.getByRole('listitem').filter({ hasText: milestone });
@@ -74,7 +74,7 @@ test('a milestone due date can be set, edited and cleared', async ({
 
     // Create
     await page.getByRole('button', { name: /add milestone/i }).click();
-    await page.getByLabel(/what is your milestone\?/i).fill(milestone);
+    await page.getByLabel(/^what is the milestone\?$/i).fill(milestone);
     await page.getByRole('button', { name: /^add milestone$/i }).click();
 
     const item = page.getByRole('listitem').filter({ hasText: milestone });
@@ -126,7 +126,7 @@ test('a milestone done date can be set, edited and cleared', async ({
 
     // Create
     await page.getByRole('button', { name: /add milestone/i }).click();
-    await page.getByLabel(/what is your milestone\?/i).fill(milestone);
+    await page.getByLabel(/^what is the milestone\?$/i).fill(milestone);
     await page.getByRole('button', { name: /^add milestone$/i }).click();
 
     const item = page.getByRole('listitem').filter({ hasText: milestone });
@@ -176,7 +176,7 @@ test('a milestone note can be set, edited and cleared', async ({ page }) => {
 
     // Create
     await page.getByRole('button', { name: /add milestone/i }).click();
-    await page.getByLabel(/what is your milestone\?/i).fill(milestone);
+    await page.getByLabel(/^what is the milestone\?$/i).fill(milestone);
     await page.getByRole('button', { name: /^add milestone$/i }).click();
 
     const item = page.getByRole('listitem').filter({ hasText: milestone });
@@ -214,4 +214,50 @@ test('a milestone note can be set, edited and cleared', async ({ page }) => {
     await clearInput.press('Enter');
 
     await expect(item.getByRole('button', { name: /add note/i })).toBeVisible();
+});
+
+test('a milestone extended description can be set when adding, then edited and cleared inline', async ({
+    page,
+}) => {
+    const goal = `E2E milestone extended goal ${Date.now()}`;
+    const description = `E2E extended milestone ${Date.now()}`;
+    const extended = `E2E extended description ${Date.now()}`;
+    const editedExtended = `${extended} edited`;
+
+    await addGoalAndOpen(page, goal);
+
+    // Add with both fields populated
+    await page.getByRole('button', { name: /add milestone/i }).click();
+    await page.getByLabel(/^what is the milestone\?$/i).fill(description);
+    await page.getByLabel(/how does it relate to the goal/i).fill(extended);
+    await page.getByRole('button', { name: /^add milestone$/i }).click();
+
+    const item = page.getByRole('listitem').filter({ hasText: description });
+    await expect(item).toBeVisible();
+    await expect(
+        item.getByRole('button', { name: new RegExp(extended) }),
+    ).toBeVisible();
+
+    // Edit inline
+    await item.getByRole('button', { name: new RegExp(extended) }).click();
+    const textarea = item.getByLabel(/how does it relate to the goal/i);
+    await expect(textarea).toBeFocused();
+    await textarea.fill(editedExtended);
+    await item.getByRole('button', { name: /^save$/i }).click();
+
+    await expect(
+        item.getByRole('button', { name: new RegExp(editedExtended) }),
+    ).toBeVisible();
+
+    // Clear inline
+    await item
+        .getByRole('button', { name: new RegExp(editedExtended) })
+        .click();
+    const clearTextarea = item.getByLabel(/how does it relate to the goal/i);
+    await clearTextarea.fill('');
+    await item.getByRole('button', { name: /^save$/i }).click();
+
+    await expect(
+        item.getByRole('button', { name: /add extended description/i }),
+    ).toBeVisible();
 });

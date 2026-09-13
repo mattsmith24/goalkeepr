@@ -18,6 +18,7 @@ type MilestoneImport = {
     dueDate: string | null;
     doneDate: string | null;
     note: string | null;
+    extendedDescription: string | null;
 };
 
 type HabitRecordImport = {
@@ -72,7 +73,8 @@ function validateMilestone(v: unknown): v is MilestoneImport {
         isString(m.description) &&
         isStringOrNull(m.dueDate) &&
         isStringOrNull(m.doneDate) &&
-        isStringOrNull(m.note)
+        isStringOrNull(m.note) &&
+        isStringOrNull(m.extendedDescription)
     );
 }
 
@@ -183,6 +185,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
                             dueDate: m.dueDate,
                             doneDate: m.doneDate,
                             note: m.note,
+                            extendedDescription: m.extendedDescription,
                         })),
                     )
                     .run();

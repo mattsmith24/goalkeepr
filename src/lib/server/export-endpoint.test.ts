@@ -25,6 +25,8 @@ const milestones = [
         dueDate: null,
         doneDate: null,
         note: null,
+        extendedDescription:
+            'What: Run 5k.\nHow it relates: First measurable fitness milestone.\nWhen: Within 2 months.\nHow measured: Completed 5k run.',
     },
     {
         id: 11,
@@ -33,6 +35,7 @@ const milestones = [
         dueDate: null,
         doneDate: null,
         note: null,
+        extendedDescription: null,
     },
 ];
 
@@ -125,6 +128,8 @@ describe('GET /api/export', () => {
                         dueDate: null,
                         doneDate: null,
                         note: null,
+                        extendedDescription:
+                            'What: Run 5k.\nHow it relates: First measurable fitness milestone.\nWhen: Within 2 months.\nHow measured: Completed 5k run.',
                     },
                 ],
                 habits: [
@@ -158,6 +163,7 @@ describe('GET /api/export', () => {
                         dueDate: null,
                         doneDate: null,
                         note: null,
+                        extendedDescription: null,
                     },
                 ],
                 habits: [

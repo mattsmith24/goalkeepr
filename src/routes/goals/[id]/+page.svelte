@@ -58,6 +58,7 @@
         dueDate: string | null,
         doneDate: string | null,
         note: string | null,
+        extendedDescription: string | null,
     ) {
         const formData = new FormData();
         formData.set('id', String(id));
@@ -65,6 +66,7 @@
         formData.set('dueDate', dueDate ?? '');
         formData.set('doneDate', doneDate ?? '');
         formData.set('note', note ?? '');
+        formData.set('extendedDescription', extendedDescription ?? '');
         const response = await fetch('?/updateMilestone', {
             method: 'POST',
             body: formData,
