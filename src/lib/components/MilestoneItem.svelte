@@ -179,6 +179,56 @@
     onUpdateDescription={updateDescription}
     onDelete={() => onDelete(milestone.id)}
 >
+    {#if editingExtendedDescription}
+        <div class="mx-auto max-w-2xl text-center">
+            <label
+                for="milestone-extended-description-edit-{milestone.id}"
+                class="block italic"
+            >
+                {PROMPT}
+            </label>
+            <textarea
+                id="milestone-extended-description-edit-{milestone.id}"
+                bind:this={extendedDescriptionTextareaElement}
+                bind:value={draftExtendedDescription}
+                onkeydown={handleExtendedDescriptionKeydown}
+                class="input mt-1 w-full text-left"
+                rows="6"
+            ></textarea>
+            <div class="mt-2 flex flex-wrap justify-center gap-x-4 text-sm">
+                <button
+                    type="button"
+                    class="btn-link"
+                    onclick={saveEditExtendedDescription}
+                >
+                    Save
+                </button>
+                <button
+                    type="button"
+                    class="btn-cancel"
+                    onclick={cancelEditExtendedDescription}
+                >
+                    Cancel
+                </button>
+            </div>
+        </div>
+    {:else if milestone.extendedDescription}
+        <button
+            type="button"
+            class="btn-edit block px-2 py-1 text-left whitespace-pre-wrap italic"
+            onclick={startEditExtendedDescription}
+        >
+            {milestone.extendedDescription}
+        </button>
+    {:else}
+        <button
+            type="button"
+            class="btn-link block px-2 py-1 text-left"
+            onclick={startEditExtendedDescription}
+        >
+            Add extended description
+        </button>
+    {/if}
     {#if editingDate}
         <div class="flex items-center gap-2">
             <input
@@ -257,56 +307,6 @@
             onclick={startEditDoneDate}
         >
             Add Done Date
-        </button>
-    {/if}
-    {#if editingExtendedDescription}
-        <div class="mx-auto max-w-2xl text-center">
-            <label
-                for="milestone-extended-description-edit-{milestone.id}"
-                class="block italic"
-            >
-                {PROMPT}
-            </label>
-            <textarea
-                id="milestone-extended-description-edit-{milestone.id}"
-                bind:this={extendedDescriptionTextareaElement}
-                bind:value={draftExtendedDescription}
-                onkeydown={handleExtendedDescriptionKeydown}
-                class="input mt-1 w-full text-left"
-                rows="6"
-            ></textarea>
-            <div class="mt-2 flex flex-wrap justify-center gap-x-4 text-sm">
-                <button
-                    type="button"
-                    class="btn-link"
-                    onclick={saveEditExtendedDescription}
-                >
-                    Save
-                </button>
-                <button
-                    type="button"
-                    class="btn-cancel"
-                    onclick={cancelEditExtendedDescription}
-                >
-                    Cancel
-                </button>
-            </div>
-        </div>
-    {:else if milestone.extendedDescription}
-        <button
-            type="button"
-            class="btn-edit block px-2 py-1 text-left whitespace-pre-wrap"
-            onclick={startEditExtendedDescription}
-        >
-            {milestone.extendedDescription}
-        </button>
-    {:else}
-        <button
-            type="button"
-            class="btn-link block px-2 py-1 text-left"
-            onclick={startEditExtendedDescription}
-        >
-            Add extended description
         </button>
     {/if}
     {#if editingNote}
