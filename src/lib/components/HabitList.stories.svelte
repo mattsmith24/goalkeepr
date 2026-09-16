@@ -44,3 +44,14 @@
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
 />
+
+<Story
+    name="ReadOnly"
+    args={{
+        habits: habitData,
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (id, description) => console.log('update', id, description),
+        onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
+        readOnly: true,
+    }}
+/>

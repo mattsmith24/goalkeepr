@@ -5,9 +5,10 @@
     interface Props {
         goal: Goal;
         onUpdate: (id: number, description: string) => void;
+        readOnly?: boolean;
     }
 
-    const { goal, onUpdate }: Props = $props();
+    const { goal, onUpdate, readOnly = false }: Props = $props();
 
     let editing = $state(false);
     let draft = $state('');
@@ -45,7 +46,9 @@
     }
 </script>
 
-{#if editing}
+{#if readOnly}
+    <h1 class="text-center text-5xl">{goal.title}</h1>
+{:else if editing}
     <input
         bind:this={inputElement}
         bind:value={draft}

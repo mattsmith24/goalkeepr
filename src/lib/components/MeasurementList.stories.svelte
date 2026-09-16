@@ -57,3 +57,15 @@
             console.log('record', id, date, value, note),
     }}
 />
+
+<Story
+    name="ReadOnly"
+    args={{
+        measurements: measurementData,
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (id, description) => console.log('update', id, description),
+        onRecord: (id, date, value, note) =>
+            console.log('record', id, date, value, note),
+        readOnly: true,
+    }}
+/>

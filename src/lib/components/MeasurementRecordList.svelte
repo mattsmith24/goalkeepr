@@ -11,14 +11,20 @@
             value: number,
             note: string | null,
         ) => void;
+        readOnly?: boolean;
     }
 
-    const { records = [], onDelete, onUpdate }: Props = $props();
+    const {
+        records = [],
+        onDelete,
+        onUpdate,
+        readOnly = false,
+    }: Props = $props();
 </script>
 
 <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
     {#each records as record (record.id)}
-        <MeasurementRecordItem {record} {onDelete} {onUpdate} />
+        <MeasurementRecordItem {record} {onDelete} {onUpdate} {readOnly} />
     {:else}
         <li class="italic">No records yet.</li>
     {/each}

@@ -9,6 +9,7 @@ import {
     measurementRecordsTable,
     measurementsTable,
 } from '$lib/server/db/schema';
+import { assertMeasurementRecordEditable } from '$lib/server/goal-guard';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
     const goalId = Number(params.id);
@@ -42,7 +43,15 @@ export const load: PageServerLoad = async ({ locals, params }) => {
         .from(measurementRecordsTable)
         .where(eq(measurementRecordsTable.measurementId, measurementId))
         .orderBy(desc(measurementRecordsTable.date));
-    return { measurement, records };
+    const [goal] = await db
+        .select({ doneDate: goalsTable.doneDate })
+        .from(goalsTable)
+        .where(eq(goalsTable.id, measurement.goalId));
+    return {
+        measurement,
+        records,
+        goalDoneDate: goal?.doneDate ?? null,
+    };
 };
 
 export const actions: Actions = {
@@ -63,6 +72,11 @@ export const actions: Actions = {
             return { success: false, error: 'invalid value' };
         }
         const note = noteRaw === '' ? null : noteRaw;
+        const guard = await assertMeasurementRecordEditable(
+            id,
+            event.locals.user!.id,
+        );
+        if (guard) return guard;
         const userGoalIds = db
             .select({ id: goalsTable.id })
             .from(goalsTable)
@@ -95,6 +109,11 @@ export const actions: Actions = {
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
+        const guard = await assertMeasurementRecordEditable(
+            id,
+            event.locals.user!.id,
+        );
+        if (guard) return guard;
         const userGoalIds = db
             .select({ id: goalsTable.id })
             .from(goalsTable)

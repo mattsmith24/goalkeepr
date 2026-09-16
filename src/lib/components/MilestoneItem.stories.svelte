@@ -425,3 +425,38 @@
         ).toBeInTheDocument();
     }}
 />
+
+<Story
+    name="ReadOnly"
+    args={{
+        milestone: {
+            id: 1,
+            goalId: 1,
+            description: 'Learn the six-step',
+            dueDate: '2026-09-15',
+            doneDate: null,
+            note: null,
+            extendedDescription:
+                'What: Nail the six-step form.\nHow it relates: Direct path to competing.',
+        },
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (
+            id,
+            description,
+            dueDate,
+            doneDate,
+            note,
+            extendedDescription,
+        ) =>
+            console.log(
+                'update',
+                id,
+                description,
+                dueDate,
+                doneDate,
+                note,
+                extendedDescription,
+            ),
+        readOnly: true,
+    }}
+/>

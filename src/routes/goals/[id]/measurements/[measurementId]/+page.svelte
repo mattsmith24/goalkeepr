@@ -6,6 +6,8 @@
 
     let { data }: PageProps = $props();
 
+    const readOnly = $derived(data.goalDoneDate !== null);
+
     async function handleMeasurementRecordDelete(id: number) {
         const formData = new FormData();
         formData.set('id', String(id));
@@ -49,5 +51,6 @@
         records={data.records}
         onDelete={handleMeasurementRecordDelete}
         onUpdate={handleMeasurementRecordUpdate}
+        {readOnly}
     />
 </div>

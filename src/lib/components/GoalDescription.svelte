@@ -7,9 +7,14 @@
     interface Props {
         description: string | null;
         onUpdateDescription: (description: string | null) => void;
+        readOnly?: boolean;
     }
 
-    const { description, onUpdateDescription }: Props = $props();
+    const {
+        description,
+        onUpdateDescription,
+        readOnly = false,
+    }: Props = $props();
 
     let editing = $state(false);
     let draft = $state('');
@@ -48,7 +53,13 @@
     }
 </script>
 
-{#if editing}
+{#if readOnly}
+    {#if description}
+        <div class="mx-auto max-w-2xl text-center">
+            <p class="whitespace-pre-wrap italic">{description}</p>
+        </div>
+    {/if}
+{:else if editing}
     <div class="mx-auto max-w-2xl text-center">
         <label for="goal-description" class="block italic">
             {PROMPT}

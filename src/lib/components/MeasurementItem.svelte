@@ -15,9 +15,16 @@
             value: number,
             note: string | null,
         ) => void;
+        readOnly?: boolean;
     }
 
-    const { measurement, onDelete, onUpdate, onRecord }: Props = $props();
+    const {
+        measurement,
+        onDelete,
+        onUpdate,
+        onRecord,
+        readOnly = false,
+    }: Props = $props();
 
     let recording = $state(false);
     let draftDate = $state('');
@@ -64,88 +71,116 @@
     }
 </script>
 
-<EditableItem
-    description={measurement.description}
-    onUpdateDescription={updateDescription}
-    onDelete={() => onDelete(measurement.id)}
->
-    <div class="px-2 py-1 text-gray-600">
-        {latestRecord ? latestRecord.value : 'No value yet'}
-    </div>
-    <LineChart
-        data={measurement.records}
-        x={(d) => fromDateString(d.date)}
-        y="value"
-        yDomain={null}
-        axis={false}
-        grid={false}
-        props={{
-            highlight: {
-                points: { r: 3, class: 'stroke-2 stroke-surface-100' },
-            },
-            /*, spline: {class: 'stroke-blue-600'},*/
-        }}
-        width={124}
-        height={18}
-    />
-    {#snippet actions()}
-        {#if recording}
-            <form
-                class="flex w-full flex-wrap items-center gap-2"
-                onsubmit={(e) => {
-                    e.preventDefault();
-                    saveRecord();
-                }}
-            >
-                <input
-                    type="date"
-                    bind:value={draftDate}
-                    aria-label="Date"
-                    required
-                    class="input"
-                />
-                <input
-                    type="number"
-                    step="any"
-                    bind:value={draftValue}
-                    placeholder="Value"
-                    aria-label="Value"
-                    required
-                    class="input"
-                />
-                <input
-                    type="text"
-                    bind:value={draftNote}
-                    placeholder="Note (optional)"
-                    aria-label="Note"
-                    class="input"
-                />
-                <button type="submit" class="btn-link text-sm"> Save </button>
+{#if readOnly}
+    <li
+        class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+    >
+        <span class="block text-3xl">{measurement.description}</span>
+        <div class="px-2 py-1 text-gray-600">
+            {latestRecord ? latestRecord.value : 'No value yet'}
+        </div>
+        <LineChart
+            data={measurement.records}
+            x={(d) => fromDateString(d.date)}
+            y="value"
+            yDomain={null}
+            axis={false}
+            grid={false}
+            props={{
+                highlight: {
+                    points: { r: 3, class: 'stroke-2 stroke-surface-100' },
+                },
+            }}
+            width={124}
+            height={18}
+        />
+    </li>
+{:else}
+    <EditableItem
+        description={measurement.description}
+        onUpdateDescription={updateDescription}
+        onDelete={() => onDelete(measurement.id)}
+    >
+        <div class="px-2 py-1 text-gray-600">
+            {latestRecord ? latestRecord.value : 'No value yet'}
+        </div>
+        <LineChart
+            data={measurement.records}
+            x={(d) => fromDateString(d.date)}
+            y="value"
+            yDomain={null}
+            axis={false}
+            grid={false}
+            props={{
+                highlight: {
+                    points: { r: 3, class: 'stroke-2 stroke-surface-100' },
+                },
+                /*, spline: {class: 'stroke-blue-600'},*/
+            }}
+            width={124}
+            height={18}
+        />
+        {#snippet actions()}
+            {#if recording}
+                <form
+                    class="flex w-full flex-wrap items-center gap-2"
+                    onsubmit={(e) => {
+                        e.preventDefault();
+                        saveRecord();
+                    }}
+                >
+                    <input
+                        type="date"
+                        bind:value={draftDate}
+                        aria-label="Date"
+                        required
+                        class="input"
+                    />
+                    <input
+                        type="number"
+                        step="any"
+                        bind:value={draftValue}
+                        placeholder="Value"
+                        aria-label="Value"
+                        required
+                        class="input"
+                    />
+                    <input
+                        type="text"
+                        bind:value={draftNote}
+                        placeholder="Note (optional)"
+                        aria-label="Note"
+                        class="input"
+                    />
+                    <button type="submit" class="btn-link text-sm">
+                        Save
+                    </button>
+                    <button
+                        type="button"
+                        class="btn-cancel text-sm"
+                        onclick={cancelRecord}
+                    >
+                        Cancel
+                    </button>
+                </form>
+            {:else}
                 <button
                     type="button"
-                    class="btn-cancel text-sm"
-                    onclick={cancelRecord}
+                    class="btn-link block px-2 py-1"
+                    onclick={startRecord}
                 >
-                    Cancel
+                    Add record
                 </button>
-            </form>
-        {:else}
-            <button
-                type="button"
+            {/if}
+            <a
+                href={resolve('/goals/[id]/measurements/[measurementId]', {
+                    id: String(measurement.goalId),
+                    measurementId: String(measurement.id),
+                })}
                 class="btn-link block px-2 py-1"
-                onclick={startRecord}
             >
-                Add record
-            </button>
-        {/if}
-        <a
-            href={resolve('/goals/[id]/measurements/[measurementId]', {
-                id: String(measurement.goalId),
-                measurementId: String(measurement.id),
-            })}
-            class="btn-link block px-2 py-1"
-        >
-            History
-        </a>
-    {/snippet}
-</EditableItem>
+                History
+            </a>
+        {/snippet}
+    </EditableItem>
+{/if}

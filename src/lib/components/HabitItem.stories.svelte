@@ -276,3 +276,26 @@
         await expect(canvas.getByText(/⏳ 4 days streak/)).toBeInTheDocument();
     }}
 />
+
+<Story
+    name="ReadOnly"
+    args={{
+        habit: {
+            id: 1,
+            goalId: 1,
+            description: 'Stretch for 10 minutes each morning',
+            streak: 4,
+            expiringSoon: false,
+            schedule: 'daily',
+            count: 1,
+            period: 1,
+            recordDates: recentDates([0, 1, 2, 3]),
+        },
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdateSchedule: (id, schedule, count, period) =>
+            console.log('updateSchedule', id, schedule, count, period),
+        onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
+        readOnly: true,
+    }}
+/>

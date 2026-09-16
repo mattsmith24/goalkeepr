@@ -82,3 +82,29 @@
             ),
     }}
 />
+
+<Story
+    name="ReadOnly"
+    args={{
+        milestones: milestoneData,
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (
+            id,
+            description,
+            dueDate,
+            doneDate,
+            note,
+            extendedDescription,
+        ) =>
+            console.log(
+                'update',
+                id,
+                description,
+                dueDate,
+                doneDate,
+                note,
+                extendedDescription,
+            ),
+        readOnly: true,
+    }}
+/>

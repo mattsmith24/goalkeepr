@@ -7,9 +7,10 @@
         record: HabitRecord;
         onDelete: (id: number) => void;
         onUpdate: (id: number, date: string, note: string | null) => void;
+        readOnly?: boolean;
     }
 
-    const { record, onDelete, onUpdate }: Props = $props();
+    const { record, onDelete, onUpdate, readOnly = false }: Props = $props();
 
     let editingDate = $state(false);
     let editingNote = $state(false);
@@ -67,71 +68,90 @@
     }
 </script>
 
-<li
-    class="my-2 flex items-center gap-2 rounded border border-gray-300 px-2 py-1"
->
-    {#if editingDate}
-        <input
-            type="date"
-            bind:value={draftDate}
-            aria-label="Date"
-            class="input"
-        />
-        <button type="button" class="btn-link text-sm" onclick={saveEditDate}>
-            Save
-        </button>
-        <button
-            type="button"
-            class="btn-cancel text-sm"
-            onclick={cancelEditDate}
-        >
-            Cancel
-        </button>
-    {:else}
-        <button
-            type="button"
-            class="btn-edit font-medium"
-            onclick={startEditDate}
-        >
-            {record.date}
-        </button>
-    {/if}
-    {#if editingNote}
-        <input
-            bind:this={noteInputElement}
-            bind:value={draftNote}
-            onkeydown={handleNoteKeydown}
-            aria-label="Note"
-            class="input flex-1"
-        />
-        <button type="button" class="btn-link text-sm" onclick={saveEditNote}>
-            Save
-        </button>
-        <button
-            type="button"
-            class="btn-cancel text-sm"
-            onclick={cancelEditNote}
-        >
-            Cancel
-        </button>
-    {:else if record.note}
-        <button
-            type="button"
-            class="btn-edit flex-1 text-left"
-            onclick={startEditNote}
-        >
-            — {record.note}
-        </button>
-    {:else}
-        <button
-            type="button"
-            class="btn-link flex-1 text-left text-sm"
-            onclick={startEditNote}
-        >
-            Add note
-        </button>
-    {/if}
-    {#if !editingDate && !editingNote}
-        <DeleteButton onDelete={() => onDelete(record.id)} />
-    {/if}
-</li>
+{#if readOnly}
+    <li
+        class="my-2 flex items-center gap-2 rounded border border-gray-300 px-2 py-1"
+    >
+        <span class="font-medium">{record.date}</span>
+        {#if record.note}
+            <span class="flex-1 text-left">— {record.note}</span>
+        {/if}
+    </li>
+{:else}
+    <li
+        class="my-2 flex items-center gap-2 rounded border border-gray-300 px-2 py-1"
+    >
+        {#if editingDate}
+            <input
+                type="date"
+                bind:value={draftDate}
+                aria-label="Date"
+                class="input"
+            />
+            <button
+                type="button"
+                class="btn-link text-sm"
+                onclick={saveEditDate}
+            >
+                Save
+            </button>
+            <button
+                type="button"
+                class="btn-cancel text-sm"
+                onclick={cancelEditDate}
+            >
+                Cancel
+            </button>
+        {:else}
+            <button
+                type="button"
+                class="btn-edit font-medium"
+                onclick={startEditDate}
+            >
+                {record.date}
+            </button>
+        {/if}
+        {#if editingNote}
+            <input
+                bind:this={noteInputElement}
+                bind:value={draftNote}
+                onkeydown={handleNoteKeydown}
+                aria-label="Note"
+                class="input flex-1"
+            />
+            <button
+                type="button"
+                class="btn-link text-sm"
+                onclick={saveEditNote}
+            >
+                Save
+            </button>
+            <button
+                type="button"
+                class="btn-cancel text-sm"
+                onclick={cancelEditNote}
+            >
+                Cancel
+            </button>
+        {:else if record.note}
+            <button
+                type="button"
+                class="btn-edit flex-1 text-left"
+                onclick={startEditNote}
+            >
+                — {record.note}
+            </button>
+        {:else}
+            <button
+                type="button"
+                class="btn-link flex-1 text-left text-sm"
+                onclick={startEditNote}
+            >
+                Add note
+            </button>
+        {/if}
+        {#if !editingDate && !editingNote}
+            <DeleteButton onDelete={() => onDelete(record.id)} />
+        {/if}
+    </li>
+{/if}

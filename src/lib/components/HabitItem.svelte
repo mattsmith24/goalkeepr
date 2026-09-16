@@ -18,10 +18,17 @@
             period: number,
         ) => void;
         onMarkDone: (id: number, date: string, note: string | null) => void;
+        readOnly?: boolean;
     }
 
-    const { habit, onDelete, onUpdate, onUpdateSchedule, onMarkDone }: Props =
-        $props();
+    const {
+        habit,
+        onDelete,
+        onUpdate,
+        onUpdateSchedule,
+        onMarkDone,
+        readOnly = false,
+    }: Props = $props();
 
     let markingDone = $state(false);
     let draftDate = $state('');
@@ -97,119 +104,183 @@
     }
 </script>
 
-<EditableItem
-    description={habit.description}
-    onUpdateDescription={updateDescription}
-    onDelete={() => onDelete(habit.id)}
->
-    <p class="px-2 py-1 text-gray-600">
-        {habit.streak === 0
-            ? 'No current streak'
-            : `${habit.expiringSoon ? '⏳ ' : ''}${habit.streak} ${periodUnit(habit.schedule, habit.streak)} streak`}
-    </p>
-
-    <Chart
-        {data}
-        x="date"
-        c="value"
-        cScale={scaleThreshold()}
-        cDomain={[1]}
-        cRange={['var(--color-primary-500)', 'var(--color-primary-700)']}
-        padding={{ top: 20 }}
-        width={300}
-        height={140}
+{#if readOnly}
+    <li
+        class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
     >
-        {#snippet children({ context })}
-            <Layer>
-                <Calendar start={ninetyDaysAgo} end={now}>
-                    {#snippet children({ cells, cellSize })}
-                        {#each cells as cell (cell.data.date.getTime())}
-                            {@const padding = 1}
-                            <Rect
-                                x={cell.x + padding}
-                                y={cell.y + padding}
-                                width={cellSize[0] - padding * 2}
-                                height={cellSize[1] - padding * 2}
-                                rx={4}
-                                fill={cell.color ?? 'rgb(0 0 0 / 5%)'}
-                                onpointermove={(e) =>
-                                    context.tooltip?.show(e, cell.data)}
-                                onpointerleave={() => context.tooltip?.hide()}
+        <span class="block text-3xl">{habit.description}</span>
+        <p class="px-2 py-1 text-gray-600">
+            {habit.streak === 0
+                ? 'No current streak'
+                : `${habit.expiringSoon ? '⏳ ' : ''}${habit.streak} ${periodUnit(habit.schedule, habit.streak)} streak`}
+        </p>
+
+        <Chart
+            {data}
+            x="date"
+            c="value"
+            cScale={scaleThreshold()}
+            cDomain={[1]}
+            cRange={['var(--color-primary-500)', 'var(--color-primary-700)']}
+            padding={{ top: 20 }}
+            width={300}
+            height={140}
+        >
+            {#snippet children({ context })}
+                <Layer>
+                    <Calendar start={ninetyDaysAgo} end={now}>
+                        {#snippet children({ cells, cellSize })}
+                            {#each cells as cell (cell.data.date.getTime())}
+                                {@const padding = 1}
+                                <Rect
+                                    x={cell.x + padding}
+                                    y={cell.y + padding}
+                                    width={cellSize[0] - padding * 2}
+                                    height={cellSize[1] - padding * 2}
+                                    rx={4}
+                                    fill={cell.color ?? 'rgb(0 0 0 / 5%)'}
+                                    onpointermove={(e) =>
+                                        context.tooltip?.show(e, cell.data)}
+                                    onpointerleave={() =>
+                                        context.tooltip?.hide()}
+                                />
+                            {/each}
+                        {/snippet}
+                    </Calendar>
+                </Layer>
+
+                <Tooltip.Root>
+                    {#snippet children({ data })}
+                        <Tooltip.Header value={data.date} format="day" />
+                        <Tooltip.List>
+                            <Tooltip.Item
+                                label="status"
+                                value={data.value != null ? 'Done' : 'Not done'}
                             />
-                        {/each}
+                        </Tooltip.List>
                     {/snippet}
-                </Calendar>
-            </Layer>
+                </Tooltip.Root>
+            {/snippet}
+        </Chart>
+    </li>
+{:else}
+    <EditableItem
+        description={habit.description}
+        onUpdateDescription={updateDescription}
+        onDelete={() => onDelete(habit.id)}
+    >
+        <p class="px-2 py-1 text-gray-600">
+            {habit.streak === 0
+                ? 'No current streak'
+                : `${habit.expiringSoon ? '⏳ ' : ''}${habit.streak} ${periodUnit(habit.schedule, habit.streak)} streak`}
+        </p>
 
-            <Tooltip.Root>
-                {#snippet children({ data })}
-                    <Tooltip.Header value={data.date} format="day" />
-                    <Tooltip.List>
-                        <Tooltip.Item
-                            label="status"
-                            value={data.value != null ? 'Done' : 'Not done'}
-                        />
-                    </Tooltip.List>
-                {/snippet}
-            </Tooltip.Root>
-        {/snippet}
-    </Chart>
+        <Chart
+            {data}
+            x="date"
+            c="value"
+            cScale={scaleThreshold()}
+            cDomain={[1]}
+            cRange={['var(--color-primary-500)', 'var(--color-primary-700)']}
+            padding={{ top: 20 }}
+            width={300}
+            height={140}
+        >
+            {#snippet children({ context })}
+                <Layer>
+                    <Calendar start={ninetyDaysAgo} end={now}>
+                        {#snippet children({ cells, cellSize })}
+                            {#each cells as cell (cell.data.date.getTime())}
+                                {@const padding = 1}
+                                <Rect
+                                    x={cell.x + padding}
+                                    y={cell.y + padding}
+                                    width={cellSize[0] - padding * 2}
+                                    height={cellSize[1] - padding * 2}
+                                    rx={4}
+                                    fill={cell.color ?? 'rgb(0 0 0 / 5%)'}
+                                    onpointermove={(e) =>
+                                        context.tooltip?.show(e, cell.data)}
+                                    onpointerleave={() =>
+                                        context.tooltip?.hide()}
+                                />
+                            {/each}
+                        {/snippet}
+                    </Calendar>
+                </Layer>
 
-    <HabitSchedule
-        schedule={habit.schedule}
-        count={habit.count}
-        period={habit.period}
-        onUpdate={updateSchedule}
-    />
-    {#snippet actions()}
-        {#if markingDone}
-            <form
-                class="flex w-full flex-wrap items-center gap-2"
-                onsubmit={(e) => {
-                    e.preventDefault();
-                    saveMarkDone();
-                }}
-            >
-                <input
-                    type="date"
-                    bind:value={draftDate}
-                    aria-label="Done date"
-                    required
-                    class="input"
-                />
-                <input
-                    type="text"
-                    bind:value={draftNote}
-                    placeholder="Note (optional)"
-                    aria-label="Note"
-                    class="input"
-                />
-                <button type="submit" class="btn-link text-sm"> Save </button>
+                <Tooltip.Root>
+                    {#snippet children({ data })}
+                        <Tooltip.Header value={data.date} format="day" />
+                        <Tooltip.List>
+                            <Tooltip.Item
+                                label="status"
+                                value={data.value != null ? 'Done' : 'Not done'}
+                            />
+                        </Tooltip.List>
+                    {/snippet}
+                </Tooltip.Root>
+            {/snippet}
+        </Chart>
+
+        <HabitSchedule
+            schedule={habit.schedule}
+            count={habit.count}
+            period={habit.period}
+            onUpdate={updateSchedule}
+        />
+        {#snippet actions()}
+            {#if markingDone}
+                <form
+                    class="flex w-full flex-wrap items-center gap-2"
+                    onsubmit={(e) => {
+                        e.preventDefault();
+                        saveMarkDone();
+                    }}
+                >
+                    <input
+                        type="date"
+                        bind:value={draftDate}
+                        aria-label="Done date"
+                        required
+                        class="input"
+                    />
+                    <input
+                        type="text"
+                        bind:value={draftNote}
+                        placeholder="Note (optional)"
+                        aria-label="Note"
+                        class="input"
+                    />
+                    <button type="submit" class="btn-link text-sm">
+                        Save
+                    </button>
+                    <button
+                        type="button"
+                        class="btn-cancel text-sm"
+                        onclick={cancelMarkDone}
+                    >
+                        Cancel
+                    </button>
+                </form>
+            {:else}
                 <button
                     type="button"
-                    class="btn-cancel text-sm"
-                    onclick={cancelMarkDone}
+                    class="btn-link block px-2 py-1 text-sm"
+                    onclick={startMarkDone}
                 >
-                    Cancel
+                    Mark done
                 </button>
-            </form>
-        {:else}
-            <button
-                type="button"
+            {/if}
+            <a
+                href={resolve('/goals/[id]/habits/[habitId]', {
+                    id: String(habit.goalId),
+                    habitId: String(habit.id),
+                })}
                 class="btn-link block px-2 py-1 text-sm"
-                onclick={startMarkDone}
             >
-                Mark done
-            </button>
-        {/if}
-        <a
-            href={resolve('/goals/[id]/habits/[habitId]', {
-                id: String(habit.goalId),
-                habitId: String(habit.id),
-            })}
-            class="btn-link block px-2 py-1 text-sm"
-        >
-            History
-        </a>
-    {/snippet}
-</EditableItem>
+                History
+            </a>
+        {/snippet}
+    </EditableItem>
+{/if}

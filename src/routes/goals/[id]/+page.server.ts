@@ -13,6 +13,12 @@ import {
     milestonesTable,
 } from '$lib/server/db/schema';
 import {
+    assertGoalEditable,
+    assertHabitEditable,
+    assertMeasurementEditable,
+    assertMilestoneEditable,
+} from '$lib/server/goal-guard';
+import {
     currentStreak,
     milestoneExpired,
     streakExpiringSoon,
@@ -123,6 +129,8 @@ export const actions: Actions = {
         if (!title) {
             return { success: false, error: 'title cannot be empty' };
         }
+        const guard = await assertGoalEditable(id, event.locals.user!.id);
+        if (guard) return guard;
         const result = await db
             .update(goalsTable)
             .set({ title })
@@ -145,6 +153,8 @@ export const actions: Actions = {
             return { success: false, error: 'invalid id' };
         }
         const description = descriptionRaw === '' ? null : descriptionRaw;
+        const guard = await assertGoalEditable(id, event.locals.user!.id);
+        if (guard) return guard;
         const result = await db
             .update(goalsTable)
             .set({ description })
@@ -214,18 +224,8 @@ export const actions: Actions = {
         }
         const extendedDescription =
             extendedDescriptionRaw === '' ? null : extendedDescriptionRaw;
-        const [goal] = await db
-            .select()
-            .from(goalsTable)
-            .where(
-                and(
-                    eq(goalsTable.id, goalId),
-                    eq(goalsTable.userId, event.locals.user!.id),
-                ),
-            );
-        if (!goal) {
-            return fail(404, { success: false, error: 'goal not found' });
-        }
+        const guard = await assertGoalEditable(goalId, event.locals.user!.id);
+        if (guard) return guard;
         await db
             .insert(milestonesTable)
             .values({ goalId, description, extendedDescription });
@@ -246,6 +246,8 @@ export const actions: Actions = {
         if (!description) {
             return { success: false, error: 'description cannot be empty' };
         }
+        const guard = await assertMilestoneEditable(id, event.locals.user!.id);
+        if (guard) return guard;
         const dueDate = dueDateRaw === '' ? null : dueDateRaw;
         if (dueDate !== null && !/^\d{4}-\d{2}-\d{2}$/.test(dueDate)) {
             return { success: false, error: 'invalid due date' };
@@ -285,6 +287,8 @@ export const actions: Actions = {
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
+        const guard = await assertMilestoneEditable(id, event.locals.user!.id);
+        if (guard) return guard;
         const result = await db
             .delete(milestonesTable)
             .where(
@@ -317,18 +321,8 @@ export const actions: Actions = {
         if (!description) {
             return { success: false, error: 'description cannot be empty' };
         }
-        const [goal] = await db
-            .select()
-            .from(goalsTable)
-            .where(
-                and(
-                    eq(goalsTable.id, goalId),
-                    eq(goalsTable.userId, event.locals.user!.id),
-                ),
-            );
-        if (!goal) {
-            return fail(404, { success: false, error: 'goal not found' });
-        }
+        const guard = await assertGoalEditable(goalId, event.locals.user!.id);
+        if (guard) return guard;
         await db.insert(habitsTable).values({ goalId, description });
         return { success: true };
     },
@@ -342,6 +336,8 @@ export const actions: Actions = {
         if (!description) {
             return { success: false, error: 'description cannot be empty' };
         }
+        const guard = await assertHabitEditable(id, event.locals.user!.id);
+        if (guard) return guard;
         const result = await db
             .update(habitsTable)
             .set({ description })
@@ -386,6 +382,8 @@ export const actions: Actions = {
         if (!Number.isInteger(period) || period < 1) {
             return { success: false, error: 'invalid period' };
         }
+        const guard = await assertHabitEditable(id, event.locals.user!.id);
+        if (guard) return guard;
         const result = await db
             .update(habitsTable)
             .set({ schedule, count, period })
@@ -414,6 +412,8 @@ export const actions: Actions = {
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
+        const guard = await assertHabitEditable(id, event.locals.user!.id);
+        if (guard) return guard;
         const result = await db
             .delete(habitsTable)
             .where(
@@ -447,6 +447,8 @@ export const actions: Actions = {
             return { success: false, error: 'invalid date' };
         }
         const note = noteRaw === '' ? null : noteRaw;
+        const guard = await assertHabitEditable(habitId, event.locals.user!.id);
+        if (guard) return guard;
         const [habit] = await db
             .select()
             .from(habitsTable)
@@ -481,18 +483,8 @@ export const actions: Actions = {
         if (!description) {
             return { success: false, error: 'description cannot be empty' };
         }
-        const [goal] = await db
-            .select()
-            .from(goalsTable)
-            .where(
-                and(
-                    eq(goalsTable.id, goalId),
-                    eq(goalsTable.userId, event.locals.user!.id),
-                ),
-            );
-        if (!goal) {
-            return fail(404, { success: false, error: 'goal not found' });
-        }
+        const guard = await assertGoalEditable(goalId, event.locals.user!.id);
+        if (guard) return guard;
         await db.insert(measurementsTable).values({ goalId, description });
         return { success: true };
     },
@@ -506,6 +498,11 @@ export const actions: Actions = {
         if (!description) {
             return { success: false, error: 'description cannot be empty' };
         }
+        const guard = await assertMeasurementEditable(
+            id,
+            event.locals.user!.id,
+        );
+        if (guard) return guard;
         const result = await db
             .update(measurementsTable)
             .set({ description })
@@ -537,6 +534,11 @@ export const actions: Actions = {
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
+        const guard = await assertMeasurementEditable(
+            id,
+            event.locals.user!.id,
+        );
+        if (guard) return guard;
         const result = await db
             .delete(measurementsTable)
             .where(
@@ -597,6 +599,11 @@ export const actions: Actions = {
         }
         const value = Number(valueRaw);
         const note = noteRaw === '' ? null : noteRaw;
+        const guard = await assertMeasurementEditable(
+            measurementId,
+            event.locals.user!.id,
+        );
+        if (guard) return guard;
         const [measurement] = await db
             .select()
             .from(measurementsTable)

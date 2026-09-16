@@ -11,6 +11,8 @@
 
     let { data }: PageProps = $props();
 
+    const readOnly = $derived(data.goal.doneDate !== null);
+
     async function handleDelete() {
         const formData = new FormData();
         formData.set('id', String(data.goal.id));
@@ -223,19 +225,21 @@
 
 <a href={resolve('/')} class="btn-link text-sm">&larr; Back</a>
 <div class="m-2 mt-2 p-2">
-    <GoalTitle goal={data.goal} onUpdate={handleUpdate} />
+    <GoalTitle goal={data.goal} onUpdate={handleUpdate} {readOnly} />
 </div>
 <div class="m-2 p-2">
     <GoalDescription
         description={data.goal.description}
         onUpdateDescription={(description) =>
             handleUpdateDescription(data.goal.id, description)}
+        {readOnly}
     />
 </div>
 <MilestoneList
     milestones={data.milestones}
     onDelete={handleMilestoneDelete}
     onUpdate={handleMilestoneUpdate}
+    {readOnly}
 />
 <HabitList
     habits={data.habits}
@@ -243,12 +247,14 @@
     onUpdate={handleHabitUpdate}
     onMarkDone={handleHabitMarkDone}
     onUpdateSchedule={handleHabitScheduleUpdate}
+    {readOnly}
 />
 <MeasurementList
     measurements={data.measurements}
     onDelete={handleMeasurementDelete}
     onUpdate={handleMeasurementUpdate}
     onRecord={handleMeasurementRecord}
+    {readOnly}
 />
 
 <div class="m-2 mt-8 flex justify-center gap-4">

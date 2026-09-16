@@ -73,3 +73,41 @@
         ).toBeInTheDocument();
     }}
 />
+
+<Story
+    name="ReadOnly"
+    args={{
+        description:
+            'I want to run a marathon because staying active helps me show up as a calmer parent and partner.',
+        onUpdateDescription: (description) =>
+            console.log('update', description),
+        readOnly: true,
+    }}
+    play={async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        await expect(
+            canvas.getByText(/i want to run a marathon/i),
+        ).toBeInTheDocument();
+        await expect(
+            canvas.queryByRole('button', { name: /edit description/i }),
+        ).not.toBeInTheDocument();
+    }}
+/>
+
+<Story
+    name="ReadOnlyEmpty"
+    args={{
+        description: null,
+        onUpdateDescription: (description) =>
+            console.log('update', description),
+        readOnly: true,
+    }}
+    play={async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        await expect(
+            canvas.queryByRole('button', { name: /add description/i }),
+        ).not.toBeInTheDocument();
+    }}
+/>

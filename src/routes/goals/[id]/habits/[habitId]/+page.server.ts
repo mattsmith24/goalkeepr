@@ -9,6 +9,7 @@ import {
     habitRecordsTable,
     habitsTable,
 } from '$lib/server/db/schema';
+import { assertHabitRecordEditable } from '$lib/server/goal-guard';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
     const goalId = Number(params.id);
@@ -42,7 +43,11 @@ export const load: PageServerLoad = async ({ locals, params }) => {
         .from(habitRecordsTable)
         .where(eq(habitRecordsTable.habitId, habitId))
         .orderBy(desc(habitRecordsTable.date));
-    return { habit, records };
+    const [goal] = await db
+        .select({ doneDate: goalsTable.doneDate })
+        .from(goalsTable)
+        .where(eq(goalsTable.id, habit.goalId));
+    return { habit, records, goalDoneDate: goal?.doneDate ?? null };
 };
 
 export const actions: Actions = {
@@ -58,6 +63,11 @@ export const actions: Actions = {
             return { success: false, error: 'invalid date' };
         }
         const note = noteRaw === '' ? null : noteRaw;
+        const guard = await assertHabitRecordEditable(
+            id,
+            event.locals.user!.id,
+        );
+        if (guard) return guard;
         const userGoalIds = db
             .select({ id: goalsTable.id })
             .from(goalsTable)
@@ -88,6 +98,11 @@ export const actions: Actions = {
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
+        const guard = await assertHabitRecordEditable(
+            id,
+            event.locals.user!.id,
+        );
+        if (guard) return guard;
         const userGoalIds = db
             .select({ id: goalsTable.id })
             .from(goalsTable)

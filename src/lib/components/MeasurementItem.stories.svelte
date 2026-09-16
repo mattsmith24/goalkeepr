@@ -61,3 +61,20 @@
         await expect(canvas.queryByText('21')).not.toBeInTheDocument();
     }}
 />
+
+<Story
+    name="ReadOnly"
+    args={{
+        measurement: {
+            id: 1,
+            goalId: 1,
+            description: 'Body weight',
+            records: records,
+        },
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (id, description) => console.log('update', id, description),
+        onRecord: (id, date, value, note) =>
+            console.log('record', id, date, value, note),
+        readOnly: true,
+    }}
+/>

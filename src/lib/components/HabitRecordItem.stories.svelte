@@ -124,3 +124,18 @@
         await expect(input).toHaveValue('');
     }}
 />
+
+<Story
+    name="ReadOnly"
+    args={{
+        record: {
+            id: 1,
+            habitId: 1,
+            date: '2026-08-01',
+            note: 'Felt great',
+        },
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (id, date, note) => console.log('update', id, date, note),
+        readOnly: true,
+    }}
+/>

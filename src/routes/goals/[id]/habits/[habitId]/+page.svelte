@@ -6,6 +6,8 @@
 
     let { data }: PageProps = $props();
 
+    const readOnly = $derived(data.goalDoneDate !== null);
+
     async function handleHabitRecordDelete(id: number) {
         const formData = new FormData();
         formData.set('id', String(id));
@@ -47,5 +49,6 @@
         records={data.records}
         onDelete={handleHabitRecordDelete}
         onUpdate={handleHabitRecordUpdate}
+        {readOnly}
     />
 </div>

@@ -17,7 +17,22 @@
             id: 1,
             title: 'I want to win an Olympic gold medal for break dancing',
             description: null,
+            doneDate: null,
         },
         onUpdate: (id, title) => console.log('update', id, title),
+    }}
+/>
+
+<Story
+    name="ReadOnly"
+    args={{
+        goal: {
+            id: 2,
+            title: 'I want to win an Olympic gold medal for break dancing',
+            description: null,
+            doneDate: '2026-09-16',
+        },
+        onUpdate: (id, title) => console.log('update', id, title),
+        readOnly: true,
     }}
 />
