@@ -90,10 +90,15 @@
         }
     }
 
-    async function handleHabitUpdate(id: number, description: string) {
+    async function handleHabitUpdate(
+        id: number,
+        description: string,
+        extendedDescription: string | null,
+    ) {
         const formData = new FormData();
         formData.set('id', String(id));
         formData.set('description', description);
+        formData.set('extendedDescription', extendedDescription ?? '');
         const response = await fetch('?/updateHabit', {
             method: 'POST',
             body: formData,
@@ -177,10 +182,15 @@
         }
     }
 
-    async function handleMeasurementUpdate(id: number, description: string) {
+    async function handleMeasurementUpdate(
+        id: number,
+        description: string,
+        extendedDescription: string | null,
+    ) {
         const formData = new FormData();
         formData.set('id', String(id));
         formData.set('description', description);
+        formData.set('extendedDescription', extendedDescription ?? '');
         const response = await fetch('?/updateMeasurement', {
             method: 'POST',
             body: formData,

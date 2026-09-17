@@ -46,6 +46,7 @@ export const habitsTable = sqliteTable('habits', {
         .default('daily'),
     count: integer().notNull().default(1),
     period: integer().notNull().default(1),
+    extendedDescription: text('extended_description'),
 });
 
 export const habitRecordsTable = sqliteTable('habit_records', {
@@ -63,6 +64,7 @@ export const measurementsTable = sqliteTable('measurements', {
         .notNull()
         .references(() => goalsTable.id, { onDelete: 'cascade' }),
     description: text().notNull(),
+    extendedDescription: text('extended_description'),
 });
 
 export const measurementRecordsTable = sqliteTable('measurement_records', {

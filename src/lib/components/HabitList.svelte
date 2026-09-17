@@ -6,7 +6,11 @@
     interface Props {
         habits: Habit[];
         onDelete: (id: number) => void;
-        onUpdate: (id: number, description: string) => void;
+        onUpdate: (
+            id: number,
+            description: string,
+            extendedDescription: string | null,
+        ) => void;
         onMarkDone: (id: number, date: string, note: string | null) => void;
         onUpdateSchedule?: (
             id: number,

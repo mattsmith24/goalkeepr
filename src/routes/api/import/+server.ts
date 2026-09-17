@@ -37,11 +37,13 @@ type HabitImport = {
     schedule: 'daily' | 'weekly' | 'monthly';
     count: number;
     period: number;
+    extendedDescription: string | null;
     records: HabitRecordImport[];
 };
 
 type MeasurementImport = {
     description: string;
+    extendedDescription: string | null;
     records: MeasurementRecordImport[];
 };
 
@@ -106,6 +108,8 @@ function validateHabit(v: unknown): v is HabitImport {
         Number.isInteger(h.count) &&
         (h.count as number) >= 1 &&
         hasPeriod &&
+        (h.extendedDescription === undefined ||
+            isStringOrNull(h.extendedDescription)) &&
         Array.isArray(h.records) &&
         h.records.every(validateHabitRecord)
     );
@@ -116,6 +120,8 @@ function validateMeasurement(v: unknown): v is MeasurementImport {
     const m = v as Record<string, unknown>;
     return (
         isString(m.description) &&
+        (m.extendedDescription === undefined ||
+            isStringOrNull(m.extendedDescription)) &&
         Array.isArray(m.records) &&
         m.records.every(validateMeasurementRecord)
     );
@@ -200,6 +206,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
                         schedule: habit.schedule,
                         count: habit.count,
                         period: habit.period,
+                        extendedDescription: habit.extendedDescription ?? null,
                     })
                     .returning({ id: habitsTable.id })
                     .all();
@@ -223,6 +230,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
                     .values({
                         goalId: insertedGoal.id,
                         description: measurement.description,
+                        extendedDescription:
+                            measurement.extendedDescription ?? null,
                     })
                     .returning({ id: measurementsTable.id })
                     .all();

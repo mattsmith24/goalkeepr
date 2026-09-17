@@ -14,6 +14,7 @@
             count: 1,
             period: 1,
             recordDates: [],
+            extendedDescription: null,
         },
     ];
 
@@ -30,7 +31,8 @@
     args={{
         habits: [],
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
 />
@@ -40,7 +42,8 @@
     args={{
         habits: habitData,
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
     }}
 />
@@ -50,7 +53,8 @@
     args={{
         habits: habitData,
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
         readOnly: true,
     }}

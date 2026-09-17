@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { tick } from 'svelte';
     import { resolve } from '$app/paths';
     import { scaleThreshold } from 'd3-scale';
     import { Calendar, Chart, Layer, Rect, Tooltip } from 'layerchart';
@@ -7,10 +8,17 @@
     import type { Habit } from '$lib/types';
     import { toDateString } from '$lib/dates';
 
+    const PROMPT =
+        'What are the details? How does it relate to the goal? What are the success criteria?';
+
     interface Props {
         habit: Habit;
         onDelete: (id: number) => void;
-        onUpdate: (id: number, description: string) => void;
+        onUpdate: (
+            id: number,
+            description: string,
+            extendedDescription: string | null,
+        ) => void;
         onUpdateSchedule: (
             id: number,
             schedule: 'daily' | 'weekly' | 'monthly',
@@ -33,6 +41,10 @@
     let markingDone = $state(false);
     let draftDate = $state('');
     let draftNote = $state('');
+    let editingExtendedDescription = $state(false);
+    let draftExtendedDescription = $state('');
+    let extendedDescriptionTextareaElement: HTMLTextAreaElement | undefined =
+        $state();
 
     const now = new Date();
     const ninetyDaysAgo = new Date(
@@ -60,7 +72,7 @@
     });
 
     function updateDescription(description: string) {
-        onUpdate(habit.id, description);
+        onUpdate(habit.id, description, habit.extendedDescription);
     }
 
     function updateSchedule(
@@ -102,6 +114,40 @@
         if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
         onMarkDone(habit.id, date, note);
     }
+
+    async function startEditExtendedDescription() {
+        draftExtendedDescription = habit.extendedDescription ?? '';
+        editingExtendedDescription = true;
+        await tick();
+        extendedDescriptionTextareaElement?.focus();
+        extendedDescriptionTextareaElement?.setSelectionRange(
+            draftExtendedDescription.length,
+            draftExtendedDescription.length,
+        );
+    }
+
+    function cancelEditExtendedDescription() {
+        editingExtendedDescription = false;
+        draftExtendedDescription = '';
+    }
+
+    function saveEditExtendedDescription() {
+        const next = draftExtendedDescription.trim() || null;
+        editingExtendedDescription = false;
+        draftExtendedDescription = '';
+        if (next === habit.extendedDescription) return;
+        onUpdate(habit.id, habit.description, next);
+    }
+
+    function handleExtendedDescriptionKeydown(event: KeyboardEvent) {
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            cancelEditExtendedDescription();
+        } else if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+            event.preventDefault();
+            saveEditExtendedDescription();
+        }
+    }
 </script>
 
 {#if readOnly}
@@ -109,6 +155,11 @@
         class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
     >
         <span class="block text-3xl">{habit.description}</span>
+        {#if habit.extendedDescription}
+            <p class="mt-2 whitespace-pre-wrap text-gray-700 italic">
+                {habit.extendedDescription}
+            </p>
+        {/if}
         <p class="px-2 py-1 text-gray-600">
             {habit.streak === 0
                 ? 'No current streak'
@@ -169,6 +220,56 @@
         onUpdateDescription={updateDescription}
         onDelete={() => onDelete(habit.id)}
     >
+        {#if editingExtendedDescription}
+            <div class="mx-auto max-w-2xl text-center">
+                <label
+                    for="habit-extended-description-edit-{habit.id}"
+                    class="block italic"
+                >
+                    {PROMPT}
+                </label>
+                <textarea
+                    id="habit-extended-description-edit-{habit.id}"
+                    bind:this={extendedDescriptionTextareaElement}
+                    bind:value={draftExtendedDescription}
+                    onkeydown={handleExtendedDescriptionKeydown}
+                    class="input mt-1 w-full text-left"
+                    rows="6"
+                ></textarea>
+                <div class="mt-2 flex flex-wrap justify-center gap-x-4 text-sm">
+                    <button
+                        type="button"
+                        class="btn-link"
+                        onclick={saveEditExtendedDescription}
+                    >
+                        Save
+                    </button>
+                    <button
+                        type="button"
+                        class="btn-cancel"
+                        onclick={cancelEditExtendedDescription}
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        {:else if habit.extendedDescription}
+            <button
+                type="button"
+                class="btn-edit block px-2 py-1 text-left whitespace-pre-wrap italic"
+                onclick={startEditExtendedDescription}
+            >
+                {habit.extendedDescription}
+            </button>
+        {:else}
+            <button
+                type="button"
+                class="btn-link block px-2 py-1 text-left"
+                onclick={startEditExtendedDescription}
+            >
+                Add extended description
+            </button>
+        {/if}
         <p class="px-2 py-1 text-gray-600">
             {habit.streak === 0
                 ? 'No current streak'

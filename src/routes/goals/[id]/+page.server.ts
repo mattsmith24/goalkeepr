@@ -315,21 +315,29 @@ export const actions: Actions = {
         const data = await event.request.formData();
         const description =
             data.get('habit-description')?.toString().trim() ?? '';
+        const extendedDescriptionRaw =
+            data.get('habit-extended-description')?.toString().trim() ?? '';
         if (!Number.isInteger(goalId) || goalId <= 0) {
             return { success: false, error: 'invalid goal id' };
         }
         if (!description) {
             return { success: false, error: 'description cannot be empty' };
         }
+        const extendedDescription =
+            extendedDescriptionRaw === '' ? null : extendedDescriptionRaw;
         const guard = await assertGoalEditable(goalId, event.locals.user!.id);
         if (guard) return guard;
-        await db.insert(habitsTable).values({ goalId, description });
+        await db
+            .insert(habitsTable)
+            .values({ goalId, description, extendedDescription });
         return { success: true };
     },
     updateHabit: async (event) => {
         const data = await event.request.formData();
         const id = Number(data.get('id'));
         const description = data.get('description')?.toString().trim() ?? '';
+        const extendedDescriptionRaw =
+            data.get('extendedDescription')?.toString().trim() ?? '';
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
@@ -338,9 +346,11 @@ export const actions: Actions = {
         }
         const guard = await assertHabitEditable(id, event.locals.user!.id);
         if (guard) return guard;
+        const extendedDescription =
+            extendedDescriptionRaw === '' ? null : extendedDescriptionRaw;
         const result = await db
             .update(habitsTable)
-            .set({ description })
+            .set({ description, extendedDescription })
             .where(
                 and(
                     eq(habitsTable.id, id),
@@ -477,21 +487,30 @@ export const actions: Actions = {
         const data = await event.request.formData();
         const description =
             data.get('measurement-description')?.toString().trim() ?? '';
+        const extendedDescriptionRaw =
+            data.get('measurement-extended-description')?.toString().trim() ??
+            '';
         if (!Number.isInteger(goalId) || goalId <= 0) {
             return { success: false, error: 'invalid goal id' };
         }
         if (!description) {
             return { success: false, error: 'description cannot be empty' };
         }
+        const extendedDescription =
+            extendedDescriptionRaw === '' ? null : extendedDescriptionRaw;
         const guard = await assertGoalEditable(goalId, event.locals.user!.id);
         if (guard) return guard;
-        await db.insert(measurementsTable).values({ goalId, description });
+        await db
+            .insert(measurementsTable)
+            .values({ goalId, description, extendedDescription });
         return { success: true };
     },
     updateMeasurement: async (event) => {
         const data = await event.request.formData();
         const id = Number(data.get('id'));
         const description = data.get('description')?.toString().trim() ?? '';
+        const extendedDescriptionRaw =
+            data.get('extendedDescription')?.toString().trim() ?? '';
         if (!Number.isInteger(id) || id <= 0) {
             return { success: false, error: 'invalid id' };
         }
@@ -503,9 +522,11 @@ export const actions: Actions = {
             event.locals.user!.id,
         );
         if (guard) return guard;
+        const extendedDescription =
+            extendedDescriptionRaw === '' ? null : extendedDescriptionRaw;
         const result = await db
             .update(measurementsTable)
-            .set({ description })
+            .set({ description, extendedDescription })
             .where(
                 and(
                     eq(measurementsTable.id, id),

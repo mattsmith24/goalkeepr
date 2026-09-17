@@ -47,6 +47,7 @@ const habits = [
         schedule: 'daily',
         count: 1,
         period: 1,
+        extendedDescription: null,
     },
     {
         id: 21,
@@ -55,6 +56,7 @@ const habits = [
         schedule: 'weekly',
         count: 4,
         period: 1,
+        extendedDescription: null,
     },
 ];
 
@@ -63,7 +65,9 @@ const habitRecords = [
     { id: 101, habitId: 20, date: '2026-08-16', note: null },
 ];
 
-const measurements = [{ id: 30, goalId: 1, description: 'Weight' }];
+const measurements = [
+    { id: 30, goalId: 1, description: 'Weight', extendedDescription: null },
+];
 
 const measurementRecords = [
     {
@@ -138,6 +142,7 @@ describe('GET /api/export', () => {
                         schedule: 'daily',
                         count: 1,
                         period: 1,
+                        extendedDescription: null,
                         records: [
                             { date: '2026-08-17', note: null },
                             { date: '2026-08-16', note: null },
@@ -147,6 +152,7 @@ describe('GET /api/export', () => {
                 measurements: [
                     {
                         description: 'Weight',
+                        extendedDescription: null,
                         records: [
                             { date: '2026-08-17', value: 70.5, note: null },
                         ],
@@ -172,6 +178,7 @@ describe('GET /api/export', () => {
                         schedule: 'weekly',
                         count: 4,
                         period: 1,
+                        extendedDescription: null,
                         records: [],
                     },
                 ],

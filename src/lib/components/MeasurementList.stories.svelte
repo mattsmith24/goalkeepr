@@ -14,6 +14,7 @@
                 { date: '2026-08-18', value: 19 },
                 { date: '2026-08-19', value: 19 },
             ],
+            extendedDescription: null,
         },
         {
             id: 2,
@@ -25,6 +26,7 @@
                 { date: '2026-08-18', value: 169 },
                 { date: '2026-08-30', value: 169 },
             ],
+            extendedDescription: null,
         },
     ];
 
@@ -41,7 +43,8 @@
     args={{
         measurements: [],
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
         onRecord: (id, date, value, note) =>
             console.log('record', id, date, value, note),
     }}
@@ -52,7 +55,8 @@
     args={{
         measurements: measurementData,
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
         onRecord: (id, date, value, note) =>
             console.log('record', id, date, value, note),
     }}
@@ -63,7 +67,8 @@
     args={{
         measurements: measurementData,
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
         onRecord: (id, date, value, note) =>
             console.log('record', id, date, value, note),
         readOnly: true,

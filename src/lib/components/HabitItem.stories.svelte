@@ -38,9 +38,11 @@
             count: 1,
             period: 1,
             recordDates: recentDates([0, 1, 2, 3, 5, 7, 10, 14, 21, 30]),
+            extendedDescription: null,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
         onUpdateSchedule: (id, schedule, count, period) =>
             console.log('updateSchedule', id, schedule, count, period),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
@@ -60,9 +62,11 @@
             count: 1,
             period: 1,
             recordDates: recentDates([0]),
+            extendedDescription: null,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
         onUpdateSchedule: (id, schedule, count, period) =>
             console.log('updateSchedule', id, schedule, count, period),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
@@ -89,9 +93,11 @@
                 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
                 18, 19,
             ]),
+            extendedDescription: null,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
         onUpdateSchedule: (id, schedule, count, period) =>
             console.log('updateSchedule', id, schedule, count, period),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
@@ -116,9 +122,11 @@
             count: 1,
             period: 1,
             recordDates: recentDates([0]),
+            extendedDescription: null,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
         onUpdateSchedule: (id, schedule, count, period) =>
             console.log('updateSchedule', id, schedule, count, period),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
@@ -152,9 +160,11 @@
                 65, 90, 91, 92, 93, 94, 95, 120, 121, 122, 123, 124, 125, 150,
                 151, 152, 153, 154, 155,
             ]),
+            extendedDescription: null,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
         onUpdateSchedule: (id, schedule, count, period) =>
             console.log('updateSchedule', id, schedule, count, period),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
@@ -181,9 +191,11 @@
             count: 1,
             period: 2,
             recordDates: recentDates([0, 14]),
+            extendedDescription: null,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
         onUpdateSchedule: (id, schedule, count, period) =>
             console.log('updateSchedule', id, schedule, count, period),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
@@ -210,9 +222,11 @@
             count: 4,
             period: 2,
             recordDates: recentDates([0]),
+            extendedDescription: null,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
         onUpdateSchedule: (id, schedule, count, period) =>
             console.log('updateSchedule', id, schedule, count, period),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
@@ -238,9 +252,11 @@
             count: 1,
             period: 1,
             recordDates: [],
+            extendedDescription: null,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
         onUpdateSchedule: (id, schedule, count, period) =>
             console.log('updateSchedule', id, schedule, count, period),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
@@ -264,9 +280,11 @@
             count: 1,
             period: 1,
             recordDates: recentDates([1, 2, 3, 4]),
+            extendedDescription: null,
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
         onUpdateSchedule: (id, schedule, count, period) =>
             console.log('updateSchedule', id, schedule, count, period),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
@@ -274,6 +292,77 @@
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
         await expect(canvas.getByText(/⏳ 4 days streak/)).toBeInTheDocument();
+    }}
+/>
+
+<Story
+    name="With extended description"
+    args={{
+        habit: {
+            id: 1,
+            goalId: 1,
+            description: 'Stretch for 10 minutes each morning',
+            streak: 4,
+            expiringSoon: false,
+            schedule: 'daily',
+            count: 1,
+            period: 1,
+            recordDates: recentDates([0, 1, 2, 3]),
+            extendedDescription:
+                'What: 10 minutes of full-body stretching.\nHow it relates: Builds daily mobility base.\nHow measured: Stretch every joint, log the session.',
+        },
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
+        onUpdateSchedule: (id, schedule, count, period) =>
+            console.log('updateSchedule', id, schedule, count, period),
+        onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
+    }}
+/>
+
+<Story
+    name="Editing extended description"
+    args={{
+        habit: {
+            id: 1,
+            goalId: 1,
+            description: 'Stretch for 10 minutes each morning',
+            streak: 4,
+            expiringSoon: false,
+            schedule: 'daily',
+            count: 1,
+            period: 1,
+            recordDates: recentDates([0, 1, 2, 3]),
+            extendedDescription: 'Original extended description.',
+        },
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
+        onUpdateSchedule: (id, schedule, count, period) =>
+            console.log('updateSchedule', id, schedule, count, period),
+        onMarkDone: (id, date, note) => console.log('markDone', id, date, note),
+    }}
+    play={async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        await canvas
+            .getByRole('button', { name: /original extended description/i })
+            .click();
+
+        const textarea = canvas.getByLabelText(
+            /how does it relate to the goal/i,
+        );
+        await expect(textarea).toBeInTheDocument();
+        await expect(textarea.tagName).toBe('TEXTAREA');
+        await expect(textarea).toHaveFocus();
+        await expect(textarea).toHaveValue('Original extended description.');
+
+        await expect(
+            canvas.getByRole('button', { name: /^save$/i }),
+        ).toBeInTheDocument();
+        await expect(
+            canvas.getByRole('button', { name: /^cancel$/i }),
+        ).toBeInTheDocument();
     }}
 />
 
@@ -290,9 +379,12 @@
             count: 1,
             period: 1,
             recordDates: recentDates([0, 1, 2, 3]),
+            extendedDescription:
+                'What: 10 minutes of full-body stretching.\nHow it relates: Builds daily mobility base.',
         },
         onDelete: (id) => console.log('delete', id),
-        onUpdate: (id, description) => console.log('update', id, description),
+        onUpdate: (id, description, extendedDescription) =>
+            console.log('update', id, description, extendedDescription),
         onUpdateSchedule: (id, schedule, count, period) =>
             console.log('updateSchedule', id, schedule, count, period),
         onMarkDone: (id, date, note) => console.log('markDone', id, date, note),

@@ -26,6 +26,7 @@ export interface Habit {
     count: number;
     period: number;
     recordDates: string[];
+    extendedDescription: string | null;
 }
 
 export interface Measurement {
@@ -33,6 +34,7 @@ export interface Measurement {
     goalId: number;
     description: string;
     records: MeasurementRecord[];
+    extendedDescription: string | null;
 }
 
 export interface HabitRecord {

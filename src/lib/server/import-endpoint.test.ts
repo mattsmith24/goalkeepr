@@ -99,12 +99,14 @@ describe('POST /api/import', () => {
                         schedule: 'daily',
                         count: 1,
                         period: 1,
+                        extendedDescription: null,
                         records: [{ date: '2026-08-17', note: null }],
                     },
                 ],
                 measurements: [
                     {
                         description: 'Weight',
+                        extendedDescription: null,
                         records: [
                             {
                                 date: '2026-08-17',
@@ -152,6 +154,7 @@ describe('POST /api/import', () => {
             schedule: 'daily',
             count: 1,
             period: 1,
+            extendedDescription: null,
         });
         expect(valuesArgs[3]).toEqual([
             { habitId: 2, date: '2026-08-17', note: null },
@@ -159,6 +162,7 @@ describe('POST /api/import', () => {
         expect(valuesArgs[4]).toEqual({
             goalId: 1,
             description: 'Weight',
+            extendedDescription: null,
         });
         expect(valuesArgs[5]).toEqual([
             {
