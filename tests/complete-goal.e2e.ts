@@ -42,7 +42,9 @@ async function goalsSection(
         exact: true,
         level: 2,
     });
-    return headingEl.locator('xpath=..');
+    return headingEl.locator(
+        'xpath=ancestor::div[contains(concat(" ", normalize-space(@class), " "), " m-2 ")][1]',
+    );
 }
 
 test('marking a goal complete moves it from Goals to the Completed section', async ({

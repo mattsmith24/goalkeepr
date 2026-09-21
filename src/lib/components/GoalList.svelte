@@ -19,9 +19,13 @@
 </script>
 
 <div class="m-2 p-2">
-    <h2 class="text-center">{heading}</h2>
     {#if children}
-        {@render children()}
+        <div class="flex items-center justify-between gap-4">
+            <h2 class="text-[x-large]">{heading}</h2>
+            {@render children()}
+        </div>
+    {:else}
+        <h2>{heading}</h2>
     {/if}
     {#if goals.length === 0}
         <p class="text-center italic">{emptyMessage}</p>

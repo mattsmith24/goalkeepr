@@ -89,9 +89,7 @@
 >
     {#snippet template(args)}
         <GoalList heading={args.heading} goals={args.goals}>
-            <div class="mb-6 flex justify-center">
-                <NewGoalForm />
-            </div>
+            <NewGoalForm />
         </GoalList>
     {/snippet}
 </Story>
