@@ -19,10 +19,11 @@
     heading="Goals"
     goals={activeGoals}
     emptyMessage="No goals yet. Time to dream!"
-/>
-<div class="mb-6 flex justify-center">
-    <NewGoalForm />
-</div>
+>
+    <div class="mb-6 flex justify-center">
+        <NewGoalForm />
+    </div>
+</GoalList>
 <GoalList
     heading="Completed"
     goals={completedGoals}

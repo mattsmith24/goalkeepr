@@ -1,4 +1,5 @@
 <script lang="ts">
+    import type { Snippet } from 'svelte';
     import type { Goal } from '$lib/types';
     import GoalItem from './GoalItem.svelte';
 
@@ -6,17 +7,22 @@
         goals: Goal[];
         heading?: string;
         emptyMessage?: string;
+        children?: Snippet;
     }
 
     const {
         goals = [],
         heading = 'Goals',
         emptyMessage = 'No goals yet. Time to dream!',
+        children,
     }: Props = $props();
 </script>
 
 <div class="m-2 p-2">
     <h2 class="text-center">{heading}</h2>
+    {#if children}
+        {@render children()}
+    {/if}
     {#if goals.length === 0}
         <p class="text-center italic">{emptyMessage}</p>
     {:else}
