@@ -34,13 +34,13 @@ test('adding a description saves it to the goal', async ({ page }) => {
     await page.getByLabel(/describe this goal/i).fill(description);
     await page.getByRole('button', { name: /^save$/i }).click();
 
-    await expect(page.getByText(description)).toBeVisible();
+    await expect(page.getByRole('button', { name: description })).toBeVisible();
     await expect(
         page.getByRole('button', { name: /add description/i }),
     ).not.toBeVisible();
     await expect(
         page.getByRole('button', { name: /edit description/i }),
-    ).toBeVisible();
+    ).toHaveCount(0);
 });
 
 test('a description can be edited', async ({ page }) => {
@@ -53,16 +53,16 @@ test('a description can be edited', async ({ page }) => {
     await page.getByRole('button', { name: /add description/i }).click();
     await page.getByLabel(/describe this goal/i).fill(original);
     await page.getByRole('button', { name: /^save$/i }).click();
-    await expect(page.getByText(original)).toBeVisible();
+    await expect(page.getByRole('button', { name: original })).toBeVisible();
 
-    await page.getByRole('button', { name: /edit description/i }).click();
+    await page.getByRole('button', { name: original }).click();
     const textarea = page.getByLabel(/describe this goal/i);
     await expect(textarea).toHaveValue(original);
     await textarea.fill(updated);
     await page.getByRole('button', { name: /^save$/i }).click();
 
-    await expect(page.getByText(updated)).toBeVisible();
-    await expect(page.getByText(original)).not.toBeVisible();
+    await expect(page.getByRole('button', { name: updated })).toBeVisible();
+    await expect(page.getByRole('button', { name: original })).toHaveCount(0);
 });
 
 test('a description shows on the home page after being added', async ({
@@ -93,14 +93,14 @@ test('cancel discards changes to a description', async ({ page }) => {
     await page.getByRole('button', { name: /add description/i }).click();
     await page.getByLabel(/describe this goal/i).fill(original);
     await page.getByRole('button', { name: /^save$/i }).click();
-    await expect(page.getByText(original)).toBeVisible();
+    await expect(page.getByRole('button', { name: original })).toBeVisible();
 
-    await page.getByRole('button', { name: /edit description/i }).click();
+    await page.getByRole('button', { name: original }).click();
     await page.getByLabel(/describe this goal/i).fill(draft);
     await page.getByRole('button', { name: /^cancel$/i }).click();
 
-    await expect(page.getByText(original)).toBeVisible();
-    await expect(page.getByText(draft)).not.toBeVisible();
+    await expect(page.getByRole('button', { name: original })).toBeVisible();
+    await expect(page.getByRole('button', { name: draft })).toHaveCount(0);
 });
 
 test('escape cancels editing a description', async ({ page }) => {
@@ -113,9 +113,9 @@ test('escape cancels editing a description', async ({ page }) => {
     await page.getByLabel(/describe this goal/i).fill(original);
     await page.getByRole('button', { name: /^save$/i }).click();
 
-    await page.getByRole('button', { name: /edit description/i }).click();
+    await page.getByRole('button', { name: original }).click();
     await page.keyboard.press('Escape');
 
     await expect(page.getByLabel(/describe this goal/i)).not.toBeVisible();
-    await expect(page.getByText(original)).toBeVisible();
+    await expect(page.getByRole('button', { name: original })).toBeVisible();
 });

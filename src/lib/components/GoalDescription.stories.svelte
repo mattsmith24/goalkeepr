@@ -41,11 +41,11 @@
         const canvas = within(canvasElement);
 
         await expect(
-            canvas.getByText(/i want to run a marathon/i),
+            canvas.getByRole('button', { name: /i want to run a marathon/i }),
         ).toBeInTheDocument();
         await expect(
-            canvas.getByRole('button', { name: /edit description/i }),
-        ).toBeInTheDocument();
+            canvas.queryByRole('button', { name: /edit description/i }),
+        ).not.toBeInTheDocument();
     }}
 />
 
@@ -59,7 +59,9 @@
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
 
-        await canvas.getByRole('button', { name: /edit description/i }).click();
+        await canvas
+            .getByRole('button', { name: /existing description/i })
+            .click();
 
         const textarea = canvas.getByLabelText(/describe this goal/i);
         await expect(textarea).toBeInTheDocument();

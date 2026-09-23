@@ -83,12 +83,13 @@
     </div>
 {:else if description}
     <div class="mx-auto max-w-2xl text-center">
-        <p class="whitespace-pre-wrap italic">{description}</p>
-        <div class="actions mt-2 flex flex-wrap justify-center">
-            <button type="button" class="btn-link" onclick={startEdit}>
-                Edit description
-            </button>
-        </div>
+        <button
+            type="button"
+            class="btn-edit cursor-text text-center whitespace-pre-wrap italic"
+            onclick={startEdit}
+        >
+            {description}
+        </button>
     </div>
 {:else}
     <div class="text-center">
