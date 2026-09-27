@@ -26,9 +26,13 @@
 </script>
 
 <div class="m-2 p-2">
-    <h2>Milestones</h2>
     {#if !readOnly}
-        <NewMilestoneForm />
+        <div class="flex items-center justify-between gap-4">
+            <h2 class="text-[x-large]">Milestones</h2>
+            <NewMilestoneForm />
+        </div>
+    {:else}
+        <h2>Milestones</h2>
     {/if}
     <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {#each milestones as milestone (milestone.id)}

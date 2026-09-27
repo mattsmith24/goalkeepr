@@ -32,9 +32,13 @@
 </script>
 
 <div class="m-2 p-2">
-    <h2>Habits</h2>
     {#if !readOnly}
-        <NewHabitForm />
+        <div class="flex items-center justify-between gap-4">
+            <h2 class="text-[x-large]">Habits</h2>
+            <NewHabitForm />
+        </div>
+    {:else}
+        <h2>Habits</h2>
     {/if}
     <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {#each habits as habit (habit.id)}

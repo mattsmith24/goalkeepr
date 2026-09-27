@@ -30,9 +30,13 @@
 </script>
 
 <div class="m-2 p-2">
-    <h2>Measurements</h2>
     {#if !readOnly}
-        <NewMeasurementForm />
+        <div class="flex items-center justify-between gap-4">
+            <h2 class="text-[x-large]">Measurements</h2>
+            <NewMeasurementForm />
+        </div>
+    {:else}
+        <h2>Measurements</h2>
     {/if}
     <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {#each measurements as measurement (measurement.id)}
