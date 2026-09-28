@@ -43,11 +43,16 @@
     let extendedDescriptionTextareaElement: HTMLTextAreaElement | undefined =
         $state();
 
+    const sortedRecords = $derived.by(() =>
+        [...measurement.records].sort((a, b) => {
+            if (a.date !== b.date) return a.date < b.date ? -1 : 1;
+            return a.id - b.id;
+        }),
+    );
+
     const latestRecord = $derived.by(() => {
-        if (!measurement.records.length) return null;
-        return measurement.records.reduce((latest, record) =>
-            !latest || record.date > latest.date ? record : latest,
-        );
+        if (!sortedRecords.length) return null;
+        return sortedRecords[sortedRecords.length - 1];
     });
 
     function updateDescription(description: string) {
@@ -131,7 +136,7 @@
             {latestRecord ? latestRecord.value : 'No value yet'}
         </div>
         <LineChart
-            data={measurement.records}
+            data={sortedRecords}
             x={(d) => fromDateString(d.date)}
             y="value"
             yDomain={null}
@@ -206,7 +211,7 @@
             {latestRecord ? latestRecord.value : 'No value yet'}
         </div>
         <LineChart
-            data={measurement.records}
+            data={sortedRecords}
             x={(d) => fromDateString(d.date)}
             y="value"
             yDomain={null}
