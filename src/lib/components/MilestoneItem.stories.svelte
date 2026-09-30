@@ -279,7 +279,7 @@
     play={async ({ canvasElement }) => {
         const canvas = within(canvasElement);
 
-        await canvas.getByRole('button', { name: /add done date/i }).click();
+        await canvas.getByRole('button', { name: /mark as done/i }).click();
 
         const dateInput = canvas.getByLabelText(/done date/i);
         await expect(dateInput).toBeInTheDocument();
@@ -291,6 +291,47 @@
         await expect(
             canvas.getByRole('button', { name: /^cancel$/i }),
         ).toBeInTheDocument();
+    }}
+/>
+
+<Story
+    name="Done shows tick"
+    args={{
+        milestone: {
+            id: 3,
+            goalId: 1,
+            description: 'Submit application form',
+            dueDate: '2026-08-01',
+            doneDate: '2026-07-30',
+            note: null,
+            extendedDescription: null,
+        },
+        onDelete: (id) => console.log('delete', id),
+        onUpdate: (
+            id,
+            description,
+            dueDate,
+            doneDate,
+            note,
+            extendedDescription,
+        ) =>
+            console.log(
+                'update',
+                id,
+                description,
+                dueDate,
+                doneDate,
+                note,
+                extendedDescription,
+            ),
+    }}
+    play={async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        const titleButton = canvas.getByRole('button', {
+            name: /submit application form/i,
+        });
+        await expect(titleButton).toHaveTextContent(/✅/);
     }}
 />
 

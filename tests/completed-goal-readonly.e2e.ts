@@ -110,7 +110,7 @@ test('completing a goal locks the goal page UI and rejects server edits', async 
         milestoneItem.getByRole('button', { name: /add due date/i }),
     ).toHaveCount(0);
     await expect(
-        milestoneItem.getByRole('button', { name: /add done date/i }),
+        milestoneItem.getByRole('button', { name: /mark as done/i }),
     ).toHaveCount(0);
     await expect(
         milestoneItem.getByRole('button', { name: /add note/i }),

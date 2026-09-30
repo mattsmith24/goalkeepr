@@ -131,11 +131,11 @@ test('a milestone done date can be set, edited and cleared', async ({
 
     const item = page.getByRole('listitem').filter({ hasText: milestone });
     await expect(
-        item.getByRole('button', { name: /add done date/i }),
+        item.getByRole('button', { name: /mark as done/i }),
     ).toBeVisible();
 
     // Set
-    await item.getByRole('button', { name: /add done date/i }).click();
+    await item.getByRole('button', { name: /mark as done/i }).click();
     const dateInput = item.getByLabel(/done date/i);
     await dateInput.fill(doneDate);
     await item.getByRole('button', { name: /^save$/i }).click();
@@ -162,7 +162,7 @@ test('a milestone done date can be set, edited and cleared', async ({
     await item.getByRole('button', { name: /^save$/i }).click();
 
     await expect(
-        item.getByRole('button', { name: /add done date/i }),
+        item.getByRole('button', { name: /mark as done/i }),
     ).toBeVisible();
 });
 

@@ -179,7 +179,17 @@
     <li
         class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
     >
-        <span class="block text-3xl">{milestone.description}</span>
+        <span class="block text-3xl">
+            {milestone.description}
+            {#if milestone.doneDate}
+                <span
+                    class="ml-2 inline-flex items-center text-2xl"
+                    aria-label="Done"
+                >
+                    ✅
+                </span>
+            {/if}
+        </span>
         {#if milestone.extendedDescription}
             <p class="mt-2 whitespace-pre-wrap text-gray-700 italic">
                 {milestone.extendedDescription}
@@ -205,6 +215,17 @@
         onUpdateDescription={updateDescription}
         onDelete={() => onDelete(milestone.id)}
     >
+        {#snippet titleSuffix()}
+            {#if milestone.doneDate}
+                <span
+                    class="inline-flex items-center text-2xl"
+                    aria-label="Done"
+                    data-testid="milestone-done-tick"
+                >
+                    ✅
+                </span>
+            {/if}
+        {/snippet}
         {#if editingExtendedDescription}
             <div class="mx-auto max-w-2xl text-center">
                 <label
@@ -332,7 +353,7 @@
                 class="btn-link block px-2 py-1"
                 onclick={startEditDoneDate}
             >
-                Add Done Date
+                Mark as Done
             </button>
         {/if}
         {#if editingNote}

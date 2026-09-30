@@ -9,6 +9,7 @@
         onDelete: () => void;
         children?: Snippet;
         actions?: Snippet;
+        titleSuffix?: Snippet;
     }
 
     const {
@@ -17,6 +18,7 @@
         onDelete,
         children,
         actions,
+        titleSuffix,
     }: Props = $props();
 
     let editing = $state(false);
@@ -71,10 +73,11 @@
     {:else}
         <button
             type="button"
-            class="btn-edit px-2 py-1 text-3xl"
+            class="btn-edit inline-flex items-baseline gap-2 px-2 py-1 text-3xl"
             onclick={startEdit}
         >
-            {description}
+            <span>{description}</span>
+            {#if titleSuffix}{@render titleSuffix()}{/if}
         </button>
     {/if}
     {#if children}
