@@ -9,6 +9,12 @@ export const auth = betterAuth({
     baseURL: env.BETTER_AUTH_URL,
     secret: env.BETTER_AUTH_SECRET,
     database: drizzleAdapter(db, { provider: 'sqlite' }),
+    advanced: {
+        // Namespaces session cookies so running several instances (dev,
+        // preview, production) on the same domain doesn't have them clobber
+        // each other. Must live under `advanced` — a top-level key is ignored.
+        cookiePrefix: env.AUTH_COOKIE_PREFIX || 'goalkeepr',
+    },
     emailAndPassword: {
         enabled: true,
         disableSignUp:
