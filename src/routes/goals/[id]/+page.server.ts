@@ -219,16 +219,15 @@ export const actions: Actions = {
         if (!Number.isInteger(goalId) || goalId <= 0) {
             return { success: false, error: 'invalid goal id' };
         }
-        if (!description) {
-            return { success: false, error: 'description cannot be empty' };
-        }
         const extendedDescription =
             extendedDescriptionRaw === '' ? null : extendedDescriptionRaw;
         const guard = await assertGoalEditable(goalId, event.locals.user!.id);
         if (guard) return guard;
-        await db
-            .insert(milestonesTable)
-            .values({ goalId, description, extendedDescription });
+        await db.insert(milestonesTable).values({
+            goalId,
+            description: description || 'New Milestone',
+            extendedDescription,
+        });
         return { success: true };
     },
     updateMilestone: async (event) => {
@@ -320,16 +319,15 @@ export const actions: Actions = {
         if (!Number.isInteger(goalId) || goalId <= 0) {
             return { success: false, error: 'invalid goal id' };
         }
-        if (!description) {
-            return { success: false, error: 'description cannot be empty' };
-        }
         const extendedDescription =
             extendedDescriptionRaw === '' ? null : extendedDescriptionRaw;
         const guard = await assertGoalEditable(goalId, event.locals.user!.id);
         if (guard) return guard;
-        await db
-            .insert(habitsTable)
-            .values({ goalId, description, extendedDescription });
+        await db.insert(habitsTable).values({
+            goalId,
+            description: description || 'New Habit',
+            extendedDescription,
+        });
         return { success: true };
     },
     updateHabit: async (event) => {
@@ -493,16 +491,15 @@ export const actions: Actions = {
         if (!Number.isInteger(goalId) || goalId <= 0) {
             return { success: false, error: 'invalid goal id' };
         }
-        if (!description) {
-            return { success: false, error: 'description cannot be empty' };
-        }
         const extendedDescription =
             extendedDescriptionRaw === '' ? null : extendedDescriptionRaw;
         const guard = await assertGoalEditable(goalId, event.locals.user!.id);
         if (guard) return guard;
-        await db
-            .insert(measurementsTable)
-            .values({ goalId, description, extendedDescription });
+        await db.insert(measurementsTable).values({
+            goalId,
+            description: description || 'New Measurement',
+            extendedDescription,
+        });
         return { success: true };
     },
     updateMeasurement: async (event) => {

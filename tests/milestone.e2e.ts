@@ -1,64 +1,32 @@
 import { test, expect } from '@playwright/test';
 import { resetDb } from './db';
 import { signUpAndSignIn } from './auth';
+import { addChild, addGoalAndOpen, renameItem, DEFAULT_TITLE } from './add';
 
 test.beforeEach(async ({ page }) => {
     resetDb();
     await signUpAndSignIn(page);
 });
 
-async function addGoalAndOpen(
-    page: import('@playwright/test').Page,
-    description: string,
-) {
-    await page.goto('/');
-    await page.getByRole('button', { name: /add goal/i }).click();
-    await page.getByLabel(/what is your goal\?/i).fill(description);
-    await page.getByRole('button', { name: /^add goal$/i }).click();
-    await page.getByRole('link', { name: description }).click();
-    await expect(
-        page.getByRole('heading', { level: 1, name: description }),
-    ).toBeVisible();
-}
-
 test('a milestone can be added, edited and deleted', async ({ page }) => {
     const goal = `E2E milestone goal ${Date.now()}`;
-    const milestone = `E2E milestone ${Date.now()}`;
     const edited = `E2E edited milestone ${Date.now()}`;
 
     await addGoalAndOpen(page, goal);
 
     // Add
     await expect(page.getByText(/no milestones yet/i)).toBeVisible();
-    await page.getByRole('button', { name: /add milestone/i }).click();
-    await page.getByLabel(/^what is the milestone\?$/i).fill(milestone);
-    await page.getByRole('button', { name: /^add milestone$/i }).click();
-
-    const item = page.getByRole('listitem').filter({ hasText: milestone });
-    await expect(item).toBeVisible();
+    const item = await addChild(page, 'milestone');
 
     // Edit
-    await item.getByRole('button', { name: milestone, exact: true }).click();
-    const input = page.getByRole('textbox');
-    await expect(input).toBeFocused();
-    await input.fill(edited);
-    await input.press('Enter');
-
-    await expect(
-        page.getByRole('listitem').filter({ hasText: edited }),
-    ).toBeVisible();
-    await expect(
-        page.getByRole('listitem').filter({ hasText: milestone }),
-    ).not.toBeVisible();
+    await renameItem(item, DEFAULT_TITLE.milestone, edited);
 
     // Delete
-    const editedItem = page.getByRole('listitem').filter({ hasText: edited });
-    await editedItem
-        .getByRole('button', { name: 'Delete', exact: true })
-        .click();
-    await editedItem.getByRole('button', { name: 'Yes', exact: true }).click();
+    await item.getByRole('button', { name: 'Delete', exact: true }).click();
+    await item.getByRole('button', { name: 'Yes', exact: true }).click();
 
-    await expect(editedItem).not.toBeVisible();
+    // The empty-state message only renders when the list is empty, so it
+    // also proves the deleted card is gone.
     await expect(page.getByText(/no milestones yet/i)).toBeVisible();
 });
 
@@ -66,18 +34,14 @@ test('a milestone due date can be set, edited and cleared', async ({
     page,
 }) => {
     const goal = `E2E milestone date goal ${Date.now()}`;
-    const milestone = `E2E dated milestone ${Date.now()}`;
     const dueDate = '2026-12-31';
     const newDueDate = '2027-01-15';
 
     await addGoalAndOpen(page, goal);
 
     // Create
-    await page.getByRole('button', { name: /add milestone/i }).click();
-    await page.getByLabel(/^what is the milestone\?$/i).fill(milestone);
-    await page.getByRole('button', { name: /^add milestone$/i }).click();
+    const item = await addChild(page, 'milestone');
 
-    const item = page.getByRole('listitem').filter({ hasText: milestone });
     await expect(
         item.getByRole('button', { name: /add due date/i }),
     ).toBeVisible();
@@ -118,18 +82,14 @@ test('a milestone done date can be set, edited and cleared', async ({
     page,
 }) => {
     const goal = `E2E milestone done date goal ${Date.now()}`;
-    const milestone = `E2E done milestone ${Date.now()}`;
     const doneDate = '2026-08-15';
     const newDoneDate = '2026-08-20';
 
     await addGoalAndOpen(page, goal);
 
     // Create
-    await page.getByRole('button', { name: /add milestone/i }).click();
-    await page.getByLabel(/^what is the milestone\?$/i).fill(milestone);
-    await page.getByRole('button', { name: /^add milestone$/i }).click();
+    const item = await addChild(page, 'milestone');
 
-    const item = page.getByRole('listitem').filter({ hasText: milestone });
     await expect(
         item.getByRole('button', { name: /mark as done/i }),
     ).toBeVisible();
@@ -168,18 +128,14 @@ test('a milestone done date can be set, edited and cleared', async ({
 
 test('a milestone note can be set, edited and cleared', async ({ page }) => {
     const goal = `E2E milestone note goal ${Date.now()}`;
-    const milestone = `E2E noted milestone ${Date.now()}`;
     const note = `E2E note ${Date.now()}`;
     const editedNote = `${note} edited`;
 
     await addGoalAndOpen(page, goal);
 
     // Create
-    await page.getByRole('button', { name: /add milestone/i }).click();
-    await page.getByLabel(/^what is the milestone\?$/i).fill(milestone);
-    await page.getByRole('button', { name: /^add milestone$/i }).click();
+    const item = await addChild(page, 'milestone');
 
-    const item = page.getByRole('listitem').filter({ hasText: milestone });
     await expect(item.getByRole('button', { name: /add note/i })).toBeVisible();
 
     // Set
@@ -216,7 +172,7 @@ test('a milestone note can be set, edited and cleared', async ({ page }) => {
     await expect(item.getByRole('button', { name: /add note/i })).toBeVisible();
 });
 
-test('a milestone extended description can be set when adding, then edited and cleared inline', async ({
+test('a milestone extended description can be added, edited and cleared inline', async ({
     page,
 }) => {
     const goal = `E2E milestone extended goal ${Date.now()}`;
@@ -226,23 +182,29 @@ test('a milestone extended description can be set when adding, then edited and c
 
     await addGoalAndOpen(page, goal);
 
-    // Add with both fields populated
-    await page.getByRole('button', { name: /add milestone/i }).click();
-    await page.getByLabel(/^what is the milestone\?$/i).fill(description);
-    await page.getByLabel(/how does it relate to the goal/i).fill(extended);
-    await page.getByRole('button', { name: /^add milestone$/i }).click();
+    // Add, then fill in the fields inline
+    const item = await addChild(page, 'milestone', description);
+    await expect(
+        item.getByRole('button', { name: /add extended description/i }),
+    ).toBeVisible();
 
-    const item = page.getByRole('listitem').filter({ hasText: description });
-    await expect(item).toBeVisible();
+    await item
+        .getByRole('button', { name: /add extended description/i })
+        .click();
+    const textarea = item.getByLabel(/how does it relate to the goal/i);
+    await expect(textarea).toBeFocused();
+    await textarea.fill(extended);
+    await item.getByRole('button', { name: /^save$/i }).click();
+
     await expect(
         item.getByRole('button', { name: new RegExp(extended) }),
     ).toBeVisible();
 
     // Edit inline
     await item.getByRole('button', { name: new RegExp(extended) }).click();
-    const textarea = item.getByLabel(/how does it relate to the goal/i);
-    await expect(textarea).toBeFocused();
-    await textarea.fill(editedExtended);
+    const editTextarea = item.getByLabel(/how does it relate to the goal/i);
+    await expect(editTextarea).toBeFocused();
+    await editTextarea.fill(editedExtended);
     await item.getByRole('button', { name: /^save$/i }).click();
 
     await expect(

@@ -1,37 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { resetDb } from './db';
 import { signUpAndSignIn } from './auth';
+import { addGoal, openGoal } from './add';
 
 test.beforeEach(async ({ page }) => {
     resetDb();
     await signUpAndSignIn(page);
 });
-
-async function addGoal(
-    page: import('@playwright/test').Page,
-    description: string,
-) {
-    await page.goto('/');
-    await page.getByRole('button', { name: /add goal/i }).click();
-    await page.getByLabel(/what is your goal\?/i).fill(description);
-    await page.getByRole('button', { name: /^add goal$/i }).click();
-    await expect(
-        page.getByRole('listitem').filter({ hasText: description }),
-    ).toBeVisible();
-}
-
-async function openGoal(
-    page: import('@playwright/test').Page,
-    description: string,
-) {
-    await page
-        .getByRole('link', { name: description, exact: true })
-        .first()
-        .click();
-    await expect(
-        page.getByRole('heading', { name: description }),
-    ).toBeVisible();
-}
 
 async function goalsSection(
     page: import('@playwright/test').Page,

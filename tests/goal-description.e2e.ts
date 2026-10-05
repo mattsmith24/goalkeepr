@@ -1,25 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { resetDb } from './db';
 import { signUpAndSignIn } from './auth';
+import { addGoalAndOpen } from './add';
 
 test.beforeEach(async ({ page }) => {
     resetDb();
     await signUpAndSignIn(page);
 });
-
-async function addGoalAndOpen(
-    page: import('@playwright/test').Page,
-    description: string,
-) {
-    await page.goto('/');
-    await page.getByRole('button', { name: /add goal/i }).click();
-    await page.getByLabel(/what is your goal\?/i).fill(description);
-    await page.getByRole('button', { name: /^add goal$/i }).click();
-    await page.getByRole('link', { name: description, exact: true }).click();
-    await expect(
-        page.getByRole('heading', { name: description }),
-    ).toBeVisible();
-}
 
 test('adding a description saves it to the goal', async ({ page }) => {
     const goalTitle = `E2E desc goal ${Date.now()}`;

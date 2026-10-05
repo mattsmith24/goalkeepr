@@ -10,6 +10,7 @@ import Database from 'better-sqlite3';
 import { signUpAndSignIn } from './auth';
 import { TEST_DB } from './constants';
 import { resetDb } from './db';
+import { addChild, addGoal, openGoal } from './add';
 
 const BASE_URL = 'http://localhost:4173';
 const GOAL = 'Alice private goal';
@@ -125,10 +126,7 @@ function readMeasurementRecord(measurementId: number): MeasurementRecordRow {
 }
 
 async function createGoal(page: Page): Promise<number> {
-    await page.goto('/');
-    await page.getByRole('button', { name: /add goal/i }).click();
-    await page.getByLabel(/what is your goal\?/i).fill(GOAL);
-    await page.getByRole('button', { name: /^add goal$/i }).click();
+    await addGoal(page, GOAL);
 
     const link = page.getByRole('link', { name: GOAL });
     await expect(link).toBeVisible();
@@ -140,28 +138,11 @@ async function createGoal(page: Page): Promise<number> {
 
 async function createGoalTree(page: Page) {
     const goalId = await createGoal(page);
-    await page.getByRole('link', { name: GOAL }).click();
+    await openGoal(page, GOAL);
 
-    await page.getByRole('button', { name: /add milestone/i }).click();
-    await page.getByLabel(/^what is the milestone\?$/i).fill(MILESTONE);
-    await page.getByRole('button', { name: /^add milestone$/i }).click();
-    await expect(
-        page.getByRole('listitem').filter({ hasText: MILESTONE }),
-    ).toBeVisible();
-
-    await page.getByRole('button', { name: /add habit/i }).click();
-    await page.getByLabel(/what is your habit\?/i).fill(HABIT);
-    await page.getByRole('button', { name: /^add habit$/i }).click();
-    await expect(
-        page.getByRole('listitem').filter({ hasText: HABIT }),
-    ).toBeVisible();
-
-    await page.getByRole('button', { name: /add measurement/i }).click();
-    await page.getByLabel(/what are you measuring\?/i).fill(MEASUREMENT);
-    await page.getByRole('button', { name: /^add measurement$/i }).click();
-    await expect(
-        page.getByRole('listitem').filter({ hasText: MEASUREMENT }),
-    ).toBeVisible();
+    await addChild(page, 'milestone', MILESTONE);
+    await addChild(page, 'habit', HABIT);
+    await addChild(page, 'measurement', MEASUREMENT);
 
     return {
         goalId,

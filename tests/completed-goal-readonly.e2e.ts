@@ -1,61 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { resetDb } from './db';
 import { signUpAndSignIn } from './auth';
+import { addChild, addGoalAndOpen } from './add';
 
 test.beforeEach(async ({ page }) => {
     resetDb();
     await signUpAndSignIn(page);
 });
-
-async function addGoalAndOpen(
-    page: import('@playwright/test').Page,
-    description: string,
-) {
-    await page.goto('/');
-    await page.getByRole('button', { name: /add goal/i }).click();
-    await page.getByLabel(/what is your goal\?/i).fill(description);
-    await page.getByRole('button', { name: /^add goal$/i }).click();
-    await page.getByRole('link', { name: description }).click();
-    await expect(
-        page.getByRole('heading', { level: 1, name: description }),
-    ).toBeVisible();
-}
-
-async function addMilestone(
-    page: import('@playwright/test').Page,
-    description: string,
-) {
-    await page.getByRole('button', { name: /add milestone/i }).click();
-    await page.getByLabel(/^what is the milestone\?$/i).fill(description);
-    await page.getByRole('button', { name: /^add milestone$/i }).click();
-    await expect(
-        page.getByRole('listitem').filter({ hasText: description }),
-    ).toBeVisible();
-}
-
-async function addHabit(
-    page: import('@playwright/test').Page,
-    description: string,
-) {
-    await page.getByRole('button', { name: /add habit/i }).click();
-    await page.getByLabel(/^what is your habit\?$/i).fill(description);
-    await page.getByRole('button', { name: /^add habit$/i }).click();
-    await expect(
-        page.getByRole('listitem').filter({ hasText: description }),
-    ).toBeVisible();
-}
-
-async function addMeasurement(
-    page: import('@playwright/test').Page,
-    description: string,
-) {
-    await page.getByRole('button', { name: /add measurement/i }).click();
-    await page.getByLabel(/^what are you measuring\?$/i).fill(description);
-    await page.getByRole('button', { name: /^add measurement$/i }).click();
-    await expect(
-        page.getByRole('listitem').filter({ hasText: description }),
-    ).toBeVisible();
-}
 
 test('completing a goal locks the goal page UI and rejects server edits', async ({
     page,
@@ -68,9 +19,9 @@ test('completing a goal locks the goal page UI and rejects server edits', async 
     await addGoalAndOpen(page, goal);
 
     // Populate with a milestone, habit, measurement.
-    await addMilestone(page, milestone);
-    await addHabit(page, habit);
-    await addMeasurement(page, measurement);
+    await addChild(page, 'milestone', milestone);
+    await addChild(page, 'habit', habit);
+    await addChild(page, 'measurement', measurement);
 
     // Complete the goal.
     await page

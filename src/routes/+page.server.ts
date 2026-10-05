@@ -23,9 +23,9 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
     create: async (event) => {
         const data = await event.request.formData();
-        const goal_title = data.get('goal-title')?.toString() ?? '';
+        const title = data.get('goal-title')?.toString().trim() ?? '';
         const goal: typeof goalsTable.$inferInsert = {
-            title: goal_title,
+            title: title || 'New Goal',
             userId: event.locals.user!.id,
         };
         await db.insert(goalsTable).values(goal);
