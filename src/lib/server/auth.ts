@@ -20,12 +20,6 @@ export const auth = betterAuth({
         disableSignUp:
             env.SIGNUPS_ENABLED === 'false' || env.SIGNUPS_ENABLED === '0',
     },
-    socialProviders: {
-        github: {
-            clientId: env.GITHUB_CLIENT_ID,
-            clientSecret: env.GITHUB_CLIENT_SECRET,
-        },
-    },
     plugins: [
         sveltekitCookies(getRequestEvent), // make sure this is the last plugin in the array
     ],
